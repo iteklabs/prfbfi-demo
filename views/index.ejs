@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+    <!--*******************
+        Preloader start
+    ********************-->
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <!--*******************
+        Preloader end
+    ********************-->
+
+    <!--**********************************
+        Main wrapper start
+    ***********************************-->
+    <div id="main-wrapper">
+
+        <!--**********************************
+            Nav header start
+        ***********************************-->
+        <%- include('./partials/header_logo'); -%>
+
+            <!--**********************************
+            Nav header end
+        ***********************************-->
+
+            <!--**********************************
+            Header start
+        ***********************************-->
+            <%- include('./partials/header',{titel:language.dashboard}); -%>
+
+                <!--**********************************
+            Header end ti-comment-alt
+        ***********************************-->
+
+                <!--**********************************
+            Sidebar start
+        ***********************************-->
+                <%- include('./partials/sidebar'); -%>
+
+                    <!--**********************************
+            Sidebar end
+        ***********************************-->
+
+
+                    <!--**********************************
+            Content body start
+        ***********************************-->
+                    <div class="content-body">
+
+                        <% if (role.warehouse_category == "Raw Materials") { %>
+                            <%- include('./chart/raw_mat'); -%>
+                        <% } else if (role.warehouse_category == "Finished Goods") { %>
+                            <%- include('./chart/finished_goods'); -%>
+                        <% } else { %>
+                            <%- include('./chart/finished_goods'); -%>
+                            <%- include('./chart/raw_mat'); -%>
+                        <% } %>
+                       
+
+                        
+
+                        
+                    </div>
+
+
+
+
+                    <!--**********************************
+            Footer start
+        ***********************************-->
+                    <%- include('./partials/footer'); -%>
+
+                        <!--**********************************
+            Footer end
+        ***********************************-->
+
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+      <!-- start Toastr -->
+      <%- include('./partials/toastr'); -%>
+      <!-- End Toastr -->
+
+    <!--**********************************
+        Scripts
+    ***********************************-->
+    <%- include('./partials/script'); -%>.
+
+    <!-- <script src="../public/js/moment.js"></script> -->
+      
+
+        <!--**********************************
+        Scripts end
+    ***********************************-->
+</body>
+
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+
+</head>
+
+<body>
+    <!--*******************
+        Preloader start
+    ********************-->
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <!--*******************
+        Preloader end
+    ********************-->
+
+    <!--**********************************
+        Main wrapper start
+    ***********************************-->
+    <div id="main-wrapper">
+
+        <!--**********************************
+            Nav header start
+        ***********************************-->
+        <%- include('./partials/header_logo'); -%>
+
+            <!--**********************************
+            Nav header end
+        ***********************************-->
+
+            <!--**********************************
+            Header start
+        ***********************************-->
+            <%- include('./partials/header',{titel: language.expense}); -%>
+
+                <!--**********************************
+            Header end ti-comment-alt
+        ***********************************-->
+
+                <!--**********************************
+            Sidebar start
+        ***********************************-->
+                <%- include('./partials/sidebar'); -%>
+
+                    <!--**********************************
+            Sidebar end
+        ***********************************-->
+
+                    <!--**********************************
+            Content body start
+        ***********************************-->
+                    <div class="content-body">
+                        <div class="container-fluid">
+
+                            <!-- row -->
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h4 class="card-title"><%= language.new_expenses %> </h4>
+                                            <button type="button" class="btn btn-rounded btn-outline-info"
+                                                onclick="history.back()"><i class="la la-undo"></i> <%= language.go_back %> </button>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <div class="form-validation">
+
+                                                <form class="needs-validation" action="/all_expenses/view/add_expenses"
+                                                    method="post" id="form">
+
+                                                    <div class="row g-5 mb-4">
+
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"><%= language.type %> <span class="text-red">*</span></label>
+                                                                <select class="form-control" name="type"
+                                                                    id="type" required>
+                                                                    <option value selected disabled>Select One</option>
+                                                                    <% data.forEach((data)=> { %>
+                                                                        <option value="<%= data.name %>">
+                                                                            <%= data.name %>
+                                                                        </option>
+                                                                        <% }) %>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label for="date" class="col-form-label"><%= language.date_of_expense %>  <span class="text-red">*</span>
+                                                                </label>
+                                                                <input type="date" class="form-control" id="date" name="date" required>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="row g-5 mb-4">
+
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label for="amount" class="col-form-label"><%= language.amount %>  (<%= master_shop[0].currency %>) <span class="text-red">*</span>
+                                                                </label>
+                                                                <input type="number" class="form-control" id="amount"
+                                                                    placeholder="Expense Amount" name="amount" step="0.01" required>
+                    
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label for="note" class="col-form-label"><%= language.note %>  </label>
+                                                                <input type="text" class="form-control" id="note"
+                                                                    placeholder="Expense Note" name="note">
+                    
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <button class="btn btn-primary" type="submit" id="submit"><%= language.submit %> </button>
+                                                    </div>
+
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--**********************************
+            Content body end
+        ***********************************-->
+
+                    <!--**********************************
+            Footer start
+        ***********************************-->
+                    <%- include('./partials/footer'); -%>
+
+                        <!--**********************************
+            Footer end
+        ***********************************-->
+
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!-- start Toastr -->
+    <%- include('./partials/toastr'); -%>
+        <!-- End Toastr -->
+
+        <!--**********************************
+        Scripts
+    ***********************************-->
+        <%- include('./partials/script'); -%>
+
+            <!--**********************************
+        Scripts end
+    ***********************************-->
+</body>
+
+</html>

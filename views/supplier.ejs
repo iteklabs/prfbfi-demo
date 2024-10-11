@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+
+</head>
+
+<body>
+    <!--*******************
+    Preloader start
+********************-->
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <!--*******************
+    Preloader end
+********************-->
+
+    <!--**********************************
+    Main wrapper start
+***********************************-->
+    <div id="main-wrapper">
+
+        <!--**********************************
+        Nav header start
+    ***********************************-->
+        <%- include('./partials/header_logo'); -%>
+
+            <!--**********************************
+        Nav header end
+    ***********************************-->
+
+            <!--**********************************
+        Header start
+    ***********************************-->
+            <%- include('./partials/header',{titel: language.supplier}); -%>
+
+                <!--**********************************
+        Header end ti-comment-alt
+    ***********************************-->
+
+                <!--**********************************
+        Sidebar start
+    ***********************************-->
+                <%- include('./partials/sidebar'); -%>
+
+                    <!--**********************************
+        Sidebar end
+    ***********************************-->
+
+                    <div class="content-body">
+                        <div class="container-fluid">
+                            <!-- row -->
+
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title col-6"><%= language.all_suppliers %></h4>
+                                        <div class="card-title col-6 text-end">
+                                            <button type="button" class="btn btn-rounded btn-info"
+                                                data-toggle="modal" data-target="#exampleModal">
+                                                <%= language.add_suppliers %> 
+                                                <span class="btn-icon-start text-info"><i
+                                                        class="fa fa-plus color-info"></i>
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="card-header">
+                                        
+                                        <div class="card-title col-12 text-end">
+    
+                                            <button type="button" class="btn btn-rounded btn-info"
+                                                data-toggle="modal" data-target="#exampleModalCutom">
+                                                Migrate Suppliers
+                                                <span class="btn-icon-start text-info"><i
+                                                        class="fa fa-plus color-info"></i>
+                                                </span>
+                                            </button>
+                                            
+                                            
+
+                                        </div>
+                                    </div>
+
+
+                                    <div class="card-body">
+                                        <div class="table-responsive" id="download_pdf">
+                                            <table id="example" class="table table-responsive-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th><%= language.no %> </th>
+                                                        <th><%= language.name %> </th>
+                                                        <th>Code </th>
+                                                        <th><%= language.mobile %> </th>
+                                                        <th><%= language.email %> </th>
+                                                        <!--<th><%= language.payable %> </th>-->
+                                                        <!--<th><%= language.receivable %> </th>-->
+                                                        <th><%= language.edit %> </th>
+                                                        <!-- <th><%= language.payment %> </th> -->
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% var i = 1 %>
+                                                        <% payment.forEach((user)=> { %>
+
+                                                            <% if(master_shop[0].currency_placement == 1) { %>
+
+                                                                <tr>
+                                                                    <td>
+                                                                        <%= i %>
+                                                                    </td>
+                                                                    <td>
+                                                                        <%= user.name %>
+                                                                    </td>
+                                                                    <td>
+                                                                        <%= user.suppliers_code %>
+                                                                    </td>
+                                                                    <td>
+                                                                        <%= user.mobile %>
+                                                                    </td>
+                                                                    <td>
+                                                                        <%= user.email %>
+                                                                    </td>
+                                                                    <!--<td>-->
+                                                                    <!--    <%= user.purchase.toLocaleString() %> <%= master_shop[0].currency %>-->
+                                                                    <!--</td>-->
+                                                                    <!--<td>-->
+                                                                    <!--    <%= user.purchase_return.toLocaleString() %> <%= master_shop[0].currency %>-->
+                                                                    <!--</td>-->
+                                                                    <td>
+                                                                        <button type="button" class="badge badge-lg badge-success">
+    
+                                                                            <a data-toggle="modal" id="supplier_id"
+                                                                                data-target="#EditModal"
+                                                                                data-name="<%= user.name %>"
+                                                                                data-mobile="<%= user.mobile %>"
+                                                                                data-email="<%= user.email %>"
+                                                                                data-company="<%= user.company %>"
+                                                                                data-address="<%= user.address %>"
+                                                                                data-contactperson="<%= user.contactperson %>"
+                                                                                data-landline="<%= user.landline %>"
+                                                                                data-id="<%= user._id %>"><i class="la la-pencil"></i>
+                                                                                <%= language.edit %> </a>
+                                                                        </button>
+                                                                    </td>
+                                                                    <td>
+                                                                        <% if(user.purchase == 0 && user.purchase_return == 0) { %>
+                                                                            
+                                                                            <!-- <button type="button" class="badge light badge-lg badge-info" disabled>
+                                                                                <i class="la la-sign-in-alt"></i> <%= language.payment %> 
+                                                                            </button> -->
+
+                                                                        <% } else { %>
+    
+                                                                            <!-- <a href="/supplier/view/payment/<%= user._id %>">
+                                                                                <button type="button" class="badge badge-lg badge-primary">
+                                                                                    <i class="la la-sign-in-alt"></i> <%= language.payment %>
+                                                                                </button>
+                                                                            </a> -->
+                                                                        <% } %>
+                                                                    </td>
+                                                                </tr>
+
+                                                            <% } else { %>
+                                                                
+                                                                <tr>
+                                                                    <td>
+                                                                        <%= i %>
+                                                                    </td>
+                                                                    <td>
+                                                                        <%= user.name %>
+                                                                    </td>
+                                                                    <td>
+                                                                        <%= user.suppliers_code %>
+                                                                    </td>
+                                                                    <td>
+                                                                        <%= user.mobile %>
+                                                                    </td>
+                                                                    <td>
+                                                                        <%= user.email %>
+                                                                    </td>
+                                                                    <!--<td>-->
+                                                                    <!--    <%= master_shop[0].currency %> <%= user.purchase.toLocaleString() %>-->
+                                                                    <!--</td>-->
+                                                                    <!--<td>-->
+                                                                    <!--    <%= master_shop[0].currency %> <%= user.purchase_return.toLocaleString() %>-->
+                                                                    <!--</td>-->
+                                                                    <td>
+                                                                        <button type="button" class="badge badge-lg badge-success">
+    
+                                                                            <a data-toggle="modal" id="supplier_id"
+                                                                                data-target="#EditModal"
+                                                                                data-name="<%= user.name %>"
+                                                                                data-mobile="<%= user.mobile %>"
+                                                                                data-email="<%= user.email %>"
+                                                                                data-company="<%= user.company %>"
+                                                                                data-address="<%= user.address %>"
+                                                                                data-code="<%= user.suppliers_code %>"
+                                                                                data-contactperson="<%= user.contactperson %>"
+                                                                                data-landline="<%= user.landline %>"
+                                                                                data-id="<%= user._id %>"><i class="la la-pencil"></i>
+                                                                                <%= language.edit %> </a>
+                                                                        </button>
+                                                                    </td>
+                                                                    <!-- <td> -->
+                                                                        <% if(user.purchase == 0 && user.purchase_return == 0) { %>
+                                                                            <!-- <a href="/supplier/view/payment/<%= user._id %>">
+                                                                                <button type="button" class="badge light badge-lg badge-info" disabled>
+                                                                                    <i class="la la-sign-in-alt"></i> <%= language.payment %>
+                                                                                </button>
+                                                                            </a> -->
+                                                                        <% } else { %>
+    
+                                                                            <!-- <a href="/supplier/view/payment/<%= user._id %>">
+                                                                                <button type="button" class="badge badge-lg badge-primary">
+                                                                                    <i class="la la-sign-in-alt"></i> <%= language.payment %> 
+                                                                                </button>
+                                                                            </a> -->
+                                                                        <% } %>
+                                                                    <!-- </td> -->
+                                                                </tr>
+
+                                                            <% } %>
+
+                                                        <% i++ %>
+                                                    <% }) %>
+
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- modal start -->
+                    <!-- Button trigger modal -->
+
+                    <!-- Modal -->
+
+                    <form action="/supplier/view" method="post">
+                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog  modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-primary ">
+                                        <h5 class="modal-title text-white" id="exampleModalLabel">
+                                            <%= language.add_new_suppliers %>
+                                        </h5>
+
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="mb-3 col-md-6">
+                                                <label for="recipient-name" class="col-form-label"><%= language.name %>  <span class="text-red">*</span>
+                                                </label>
+                                                <input type="text" class="form-control" id="recipient-name"
+                                                    placeholder="Supplier Name" name="name" required>
+                                            </div>
+                                            <div class="mb-3 col-md-6">
+                                                <label for="recipient-email" class="col-form-label"><%= language.email %>  
+                                                </label>
+                                                <input type="email" class="form-control" id="recipient-email"
+                                                    placeholder="email" name="email" >
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="mb-3 col-md-6">
+                                                <label for="recipient-mobile" class="col-form-label"><%= language.mobile %> 
+                                                </label>
+                                                <input type="number" class="form-control" id="recipient-mobile"
+                                                    placeholder="mobile" name="mobile" >
+                                            </div>
+
+                                            <div class="mb-3 col-md-6">
+                                                <label for="recipient-company" class="col-form-label"><%= language.company %>  
+                                                </label>
+                                                <input type="text" class="form-control" id="recipient-email"
+                                                    placeholder="company" name="company" >
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row">
+                                            <div class="mb-3 col-md-6">
+                                                <label for="recipient-address" class="col-form-label"><%= language.address %>
+                                                </label>
+                                                <input type="text" class="form-control mb-4" id="recipient-address"
+                                                    name="address" >
+                                            </div>
+
+                                            <div class="mb-3 col-md-6">
+                                                <label for="recipient-company" class="col-form-label">Company Code
+                                                </label>
+                                                <input type="text" class="form-control" id="recipient-code"
+                                                    name="code" >
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="row">
+                                            <div class="mb-3 col-md-6">
+                                                <label for="recipient-email" class="col-form-label">Contact Person 
+                                                </label>
+                                                <input type="text" class="form-control" id="contactperson"
+                                                    value="" name="contactperson">
+                                            </div>
+    
+                                            <div class="mb-3 col-md-6">
+                                                <label for="recipient-password" class="col-form-label">Landline
+                                                </label>
+                                                <input type="text" class="form-control" id="andline"
+                                                    value="" name="landline">
+                                            </div>
+                                        </div>
+                                         
+
+                                        <button type="submit" class="btn btn-primary w-100"><%= language.submit %> </button>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="d-flex">
+                                            <button type="button" class="btn btn-danger"
+                                                data-dismiss="modal"><%= language.close %> </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- modal end -->
+
+                    <!-- Edit Modal -->
+
+
+                    <form id="edit_form" action="/supplier/view/<%= user._id %>" method="post">
+                        <div class="modal fade " id="EditModal" tabindex="-1" role="dialog"
+                            aria-labelledby="EditModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-primary ">
+                                        <h5 class="modal-title text-white" id="EditModalLabel">
+                                            <%= language.edit_suppliers_details %> 
+                                        </h5>
+
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="mb-3 col-md-6">
+                                                <label for="recipient-name" class="col-form-label"><%= language.name %>  <span class="text-red">*</span>
+                                                </label>
+                                                <input type="text" class="form-control" id="edit-name"
+                                                    name="name" required>
+                                            </div>
+                                            <div class="mb-3 col-md-6">
+                                                <label for="recipient-email" class="col-form-label"><%= language.email %> 
+                                                </label>
+                                                <input type="email" class="form-control" id="edit-email"
+                                                    name="email" >
+                                            </div>
+
+                                            
+                                        </div>
+
+
+                                        <div class="row">
+                                            <div class="mb-3 col-md-6">
+                                                <label for="recipient-mobile" class="col-form-label"><%= language.mobile %>  
+                                                </label>
+                                                <input type="number" class="form-control" id="edit-mobile"
+                                                    name="mobile" >
+                                            </div>
+
+                                            <div class="mb-3 col-md-6">
+                                                <label for="recipient-company" class="col-form-label"><%= language.company %> 
+                                                </label>
+                                                <input type="text" class="form-control" id="edit-company"
+                                                    name="company" >
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row">
+                                            <div class="mb-3 col-md-6">
+                                                <label for="recipient-address" class="col-form-label"><%= language.address %> 
+                                                </label>
+                                                <input type="text" class="form-control mb-4" id="edit-address"
+                                                    name="address" >
+                                            </div>
+
+                                            <div class="mb-3 col-md-6">
+                                                <label for="recipient-company" class="col-form-label">Company Code
+                                                </label>
+                                                <input type="text" class="form-control" id="edit-code"
+                                                    name="code" >
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row">
+                                            <div class="mb-3 col-md-6">
+                                                <label for="recipient-email" class="col-form-label">Contact Person 
+                                                </label>
+                                                <input type="text" class="form-control" id="edit-contactperson"
+                                                    value="<%= user.contactperson%>" name="contactperson">
+                                            </div>
+
+                                            <div class="mb-3 col-md-6">
+                                                <label for="recipient-password" class="col-form-label">Landline
+                                                </label>
+                                                <input type="text" class="form-control" id="edit-landline"
+                                                    value="<%= user.landline %>" name="landline">
+                                            </div>
+                                        </div>
+                                        
+                                        <button type="submit" class="btn btn-primary w-100"><%= language.submit %> </button>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="d-flex">
+                                            <button type="button" class="btn btn-danger"
+                                                data-dismiss="modal"><%= language.close %> </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Edit modal end -->
+
+
+                     <!-- Migration Modal -->
+                     <form class="needs-validation" action="/supplier/supplier_import_migrate_file" method="post" enctype="multipart/form-data">
+                        <div class="modal fade" id="exampleModalCutom" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-primary ">
+                                        <h5 class="modal-title text-white" id="exampleModalLabel">
+                                            Migration Tools 
+                                        </h5>
+
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="mb-3 col-md-6">
+                                              
+                                                 <a href="/supplier/products_export_migrate_file" class="btn btn-rounded btn-info text-white">
+                                                     <span>Download Migration Template</span> 
+                                                 </a>
+                                            </div>
+                                    
+                                            
+                                        </div>
+
+                                        <div class="row">
+                                      
+                                
+                                             <input class="d-none" type="file" id="file-1" name="supplier_product_file" required>
+                                            <div class="d-flex align-items-end">
+                                                <label class="btn btn-rounded btn-info text-white" id="supplier_product_file" for="file-1">Upload Migration File</label>
+                                            </div>
+      
+                                       </div>                          
+                                                                
+
+                                                             
+
+                                                        
+
+                                        <button type="submit" class="btn btn-primary w-100"><%= language.submit %></button>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="d-flex">
+                                            <button type="button" class="btn btn-danger"
+                                                data-dismiss="modal"><%= language.close %></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- Migration End -->
+
+                    <!--**********************************
+            Footer start
+        ***********************************-->
+                    <%- include('./partials/footer'); -%>
+
+                        <!--**********************************
+            Footer end
+        ***********************************-->
+
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!-- start Toastr -->
+    <%- include('./partials/toastr'); -%>
+    <!-- End Toastr -->
+
+    <!--**********************************
+        Scripts
+    ***********************************-->
+  
+    <%- include('./partials/script'); -%>
+
+        <!--**********************************
+        Scripts end
+    ***********************************-->
+
+    <script>
+        $(document).on("click", "#supplier_id", function () {
+        let dataId = $(this).attr("data-id");
+        let dataName = $(this).attr("data-name");
+        let dataaddress = $(this).attr("data-address");
+        let dataEmail = $(this).attr("data-email");
+        let dataMobile = $(this).attr("data-mobile");
+        let datacompany= $(this).attr("data-company");
+        let dataContactperson = $(this).attr("data-contactperson");
+        let datalandline = $(this).attr("data-landline");
+        let datacode = $(this).attr("data-code");
+        
+      
+
+        $("#edit_form").attr('action', '/supplier/view/' + dataId);
+        $('#edit-name').attr('value', dataName);
+        $('#edit-address').attr('value', dataaddress);
+        $('#edit-email').attr('value', dataEmail);
+        $('#edit-mobile').attr('value', dataMobile);
+        $('#edit-contactperson').attr('value', dataContactperson);
+        $('#edit-landline').attr('value', datalandline);
+        $('#edit-company').attr('value', datacompany);
+        $('#edit-code').attr('value', datacode);
+        
+
+        
+
+    });
+    </script>
+</body>
+
+</html>

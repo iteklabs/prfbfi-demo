@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+
+</head>
+
+<body>
+    <!--*******************
+    Preloader start
+********************-->
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <!--*******************
+    Preloader end
+********************-->
+
+    <!--**********************************
+    Main wrapper start
+***********************************-->
+    <div id="main-wrapper">
+
+        <!--**********************************
+        Nav header start
+    ***********************************-->
+        <%- include('./partials/header_logo'); -%>
+
+            <!--**********************************
+        Nav header end
+    ***********************************-->
+
+            <!--**********************************
+        Header start
+    ***********************************-->
+            <%- include('./partials/header',{titel: "Incoming for Raw Materials"}); -%>
+
+                <!--**********************************
+        Header end ti-comment-alt
+    ***********************************-->
+
+                <!--**********************************
+        Sidebar start
+    ***********************************-->
+                <%- include('./partials/sidebar'); -%>
+
+                    <!--**********************************
+        Sidebar end
+    ***********************************-->
+
+                    <div class="content-body">
+                        <div class="container-fluid">
+                            <!-- row -->
+
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    
+                                    <div class="card-header">
+                                        <h4 class="card-title col-6"><%= language.all_purchase %> </h4>
+                                        <div class="card-title col-6 text-end">
+
+                                            <a href="/all_purchases/view/add_purchases" class="btn btn-rounded btn-info text-white"> <%= language.add_purchases %>
+                                                <span class="btn-icon-start text-info">
+                                                    <i class="fa fa-plus color-info"></i>
+                                                </span>
+                                            </a>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+
+                                        <div class="d-none">
+                                            <input type="hidden" value="<%= master_shop[0].currency %>" id="hidden_currency">
+                                            <input type="hidden" value="<%= master_shop[0].currency_placement %>" id="hidden_currency_placement">
+                                        </div>
+
+                                        <div class="table-responsive">
+                                            <table id="example" class="table table-responsive-sm text-center">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Document Number</th>
+                                                        <th><%= language.date %> </th>
+                                                        <th><%= language.supplier %> </th>
+                                                        <th><%= language.warehouse %> </th>
+                                                        <th>Room </th>
+                                                        <th>Qty  </th>
+                                                        <th>Bay  </th>
+                                                        <th>Bin  </th>
+                                                        <th>Type  </th>
+                                                        <th>Location </th>
+                                                        <!-- <th>Status </th> -->
+                                                        <th>View </th>
+                                                        <!-- <th><%= language.edit %> </th> -->
+                                                        <!-- <th><%= language.action %> </th> -->
+                                                        <th><%= language.barcode %> </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% purchases.forEach((purchases)=> { %>
+
+                                                        <% if(master_shop[0].currency_placement == 1) { %>
+
+                                                            <tr>
+                                                                <td class="text-nowrap">
+                                                                    <% if(purchases.return_data=="True" ){ %>
+                                                                        <small data-toggle="tooltip" data-placement="top" title="Returned">
+                                                                            <svg class="mt-3" width="30" height="30" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                <rect width="15" height="15" rx="15.5" fill="red"></rect>
+                                                                            </svg>
+                                                                        </small>
+                                                                        <%= purchases.invoice %>
+                                                                    <% }else {%>
+                                                                        
+                                                                        <%= purchases.invoice %>
+                                                                    <% } %>
+                                                                </td>
+
+                                                                <td class="text-nowrap">
+                                                                    <%= purchases.date %>
+                                                                </td>
+
+                                                                <td class="text-nowrap">
+                                                                    <%= purchases.suppliers %>
+                                                                </td>
+                                                                
+                                                                <td class="text-nowrap">
+                                                                    <%= purchases.warehouse_name %>
+                                                                </td>
+
+                                                                <td class="text-nowrap">
+                                                                    <%= purchases.room %>
+                                                                </td>
+                                                                
+                                                                 <td class="text-nowrap">
+                                                                    <%= purchases_qty.total_product_quantity.toLocaleString() %>
+                                                                </td>
+
+                                                              
+
+                                                                <!-- <td class="text-nowrap">
+                                                                    <a href="/all_purchases/view/<%= purchases._id %>">
+                                                                        <button type="button"
+                                                                            class="btn btn-success"><%= language.edit %> </button>
+                                                                    </a>
+                                                                </td> -->
+                                                                
+                                                                <td class="text-nowrap">
+                                                                    <div class="btn-group" role="group">
+                                                                        <button type="button"
+                                                                            class="btn btn-primary dropdown-toggle mx-1"
+                                                                            data-bs-toggle="dropdown"
+                                                                            aria-expanded="false"><%= language.more %> More</button>
+                                                                        <div class="dropdown-menu">
+                                                                            
+                                                                            <% if (purchases.due_amount == 0) { %>
+                                                                                
+                                                                            <% } else { %>
+                                                                                    <!-- <a class="dropdown-item"
+                                                                                        href="javascript:void()" id="purchases_payment_id"
+                                                                                        data-toggle="modal"
+                                                                                        data-target="#PaymentModal"
+                                                                                        data-invoice="<%= purchases.invoice %>"
+                                                                                        data-suppliers="<%= purchases.suppliers %>"
+                                                                                        data-payable="<%= purchases.payable %>"
+                                                                                        data-paid_amount="<%= purchases.paid_amount %>"
+                                                                                        data-id="<%= purchases._id %>"><i
+                                                                                        class="la la-money-bill-wave"></i>
+                                                                                        <%= language.give_payment %> 
+                                                                                    </a> -->
+
+                                                                                <% if(purchases.return_data=="True" ){ %>
+                                                                                    <a class="dropdown-item d-none"
+                                                                                    href="/all_purchases/view/return_purchase/<%= purchases._id %>"
+                                                                                    href="javascript:void()"><i
+                                                                                    class="la la-undo"></i> <%= language.return_purchase %> 
+                                                                                </a>
+                                                                                    
+                                                                                <% }else {%>
+                                                                                    <a class="dropdown-item"
+                                                                                    href="/all_purchases/view/return_purchase/<%= purchases._id %>"
+                                                                                    href="javascript:void()"><i
+                                                                                    class="la la-undo"></i> <%= language.return_purchase %> </a>
+                                                                                <% } %>
+                                                                            <%  } %>       
+
+                                                                            <a class="dropdown-item" href="/all_purchases/invoice/<%= purchases._id %>" href="javascript:void()">
+                                                                                <i class="la la-download"></i> <%= language.save_print %> 
+                                                                            </a>
+
+                                                                        </div>
+                                                                        
+                                                                         <td>
+                                                                            <a href="/all_purchases/barcode/<%= purchases._id %>" id="barcode" data-id="<%= purchases._id %>"
+                                                                                class="btn btn-warning btn-sm">
+                                                                                <i class="feather icon-printer"></i>
+                                                                            </a>
+                                                                        </td>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            
+                                                        <% } else { %>
+                                                                
+                                                            <tr>
+                                                                <td class="text-nowrap">
+                                                                    <% if(purchases.return_data=="True" ){ %>
+                                                                        <small data-toggle="tooltip" data-placement="top" title="Returned">
+                                                                            <svg class="mt-3" width="30" height="30" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                <rect width="15" height="15" rx="15.5" fill="red"></rect>
+                                                                            </svg>
+                                                                        </small>
+                                                                        <%= purchases.invoice %>
+                                                                    <% }else {%>
+                                                                        
+                                                                        <%= purchases.invoice %>
+                                                                    <% } %>
+                                                                </td>
+
+                                                                <td class="text-nowrap">
+                                                                    <%= purchases.date %>
+                                                                </td>
+
+                                                                <td class="text-nowrap">
+                                                                    <%= purchases.suppliers %>
+                                                                </td>
+                                                                
+                                                                <td class="text-nowrap">
+                                                                    <%= purchases.warehouse_name %>
+                                                                </td>
+
+
+                                                                <td class="text-nowrap">
+                                                                    <%= purchases.room %>
+                                                                </td>
+                                                                
+                                                                <td class="text-nowrap">
+                                                                    <%= purchases.total_product_quantity.toLocaleString() %>
+                                                                </td>
+
+                                                                <td class="text-nowrap">
+                                                                    <%= purchases.level.toLocaleString() %>
+                                                                </td>
+
+
+                                                                <td class="text-nowrap">
+                                                                    <%= purchases.isle.toLocaleString() %>
+                                                                </td>
+
+
+                                                                <td class="text-nowrap">
+                                                                    <%= purchases.type.toLocaleString() %>
+                                                                </td>
+
+                                                                <td class="text-nowrap">
+                                                                    <%= purchases.floorlevel.toLocaleString() %>
+                                                                </td>
+
+                                                                <!-- <td class="text-nowrap">
+                                                            
+                                                                    <% if(purchases.finalize == "True"){ %>
+                                                                        Finalized
+                                                            
+                                                                    <% } else { %>
+                                                                        Pre-Final
+                                                        
+                                                                    <% } %>
+                                                                </td> -->
+
+                                                                <td class="text-nowrap">
+                                                                    <a href="/all_purchases/preview/<%= purchases._id %>">
+                                                                        <button type="button"
+                                                                            class="btn btn-success m-1">view </button>
+                                                                    </a>
+                                                                </td>
+                                                                
+                                              
+
+                                                                <!-- <td class="text-nowrap">
+                                                                    <a href="/all_purchases/view/<%= purchases._id %>">
+                                                                        <button type="button"
+                                                                            class="btn btn-success"><%= language.edit %> </button>
+                                                                    </a>
+                                                                </td> -->
+                                                                
+                                                                <!-- <td class="text-nowrap">
+                                                                    <div class="btn-group" role="group">
+                                                                        <button type="button"
+                                                                            class="btn btn-primary dropdown-toggle mx-1"
+                                                                            data-bs-toggle="dropdown"
+                                                                            aria-expanded="false"><%= language.more %> </button>
+                                                                        <div class="dropdown-menu"> -->
+
+                                                                            
+                                                                            <% if (purchases.due_amount == 0) { %>
+                                                                                
+                                                                                <% } else { %>
+                                                                                    <!-- <a class="dropdown-item"
+                                                                                        href="javascript:void()" id="purchases_payment_id"
+                                                                                        data-toggle="modal"
+                                                                                        data-target="#PaymentModal"
+                                                                                        data-invoice="<%= purchases.invoice %>"
+                                                                                        data-suppliers="<%= purchases.suppliers %>"
+                                                                                        data-payable="<%= purchases.payable %>"
+                                                                                        data-paid_amount="<%= purchases.paid_amount %>"
+                                                                                        data-id="<%= purchases._id %>"><i
+                                                                                            class="la la-money-bill-wave"></i>
+                                                                                            <%= language.give_payment %> 
+                                                                                    </a> -->
+        
+                                                                                    <% if(purchases.return_data=="True" ){ %>
+                                                                                        <!-- <a class="dropdown-item d-none"
+                                                                                        href="/all_purchases/view/return_purchase/<%= purchases._id %>"
+                                                                                        href="javascript:void()"><i
+                                                                                        class="la la-undo"></i> <%= language.return_purchase %> 
+                                                                                    </a> -->
+                                                                                        
+                                                                                    <% }else {%>
+                                                                                        <!-- <a class="dropdown-item"
+                                                                                        href="/all_purchases/view/return_purchase/<%= purchases._id %>"
+                                                                                        href="javascript:void()"><i
+                                                                                        class="la la-undo"></i> <%= language.return_purchase %> 
+                                                                                    </a> -->
+                                                                                    <% } %>
+                                                                                    
+                                                                                <% } %>
+
+                                                                            <!-- <a class="dropdown-item" href="/all_purchases/invoice/<%= purchases._id %>" href="javascript:void()">
+                                                                                <i class="la la-download"></i> <%= language.save_print %> 
+                                                                            </a> -->
+
+                                                                        <!-- </div> -->
+                                                                        
+                                                                        <td>
+                                                                            <a href="/all_purchases/barcode/<%= purchases._id %>" id="barcode" data-id="<%= purchases._id %>"
+                                                                                class="btn btn-warning btn-sm">
+                                                                                <i class="feather icon-printer"></i>
+                                                                            </a>
+                                                                        </td>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                                
+                                                        <% } %>
+
+                                                    <% }) %>
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Payment Modal -->
+
+                    <form id="payment_form" action="/all_purchases/give_payment/<%= purchases._id %>" method="post">
+                        <div class="modal fade " id="PaymentModal" tabindex="-1" role="dialog"
+                            aria-labelledby="PaymentModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-primary ">
+                                        <h5 class="modal-title text-white" id="PaymentModalLabel">
+                                            <%= language.payment_details %> 
+                                        </h5>
+
+                                    </div>
+                                    <div class="modal-body">
+                                        
+                                        <div class="row-11">
+                                            <label for="recipient-invoice" class="col-form-label"><%= language.invoice %>  sdss
+                                            </label>
+                                            <input type="text" class="form-control" id="invoice" name="invoice" readonly>
+                                        </div>
+
+                                        <div class="row-11">
+                                            <label for="recipient-supplier" class="col-form-label"><%= language.supplier %> 
+                                            </label>
+                                            <input type="text" class="form-control" id="suppliers" name="suppliers" readonly>
+                                        </div>
+
+                                        <div class="row-11">
+                                            <label for="recipient-payable" class="col-form-label"><%= language.payable_amount %> (<%= master_shop[0].currency %>)
+                                            </label>
+                                            <input type="number" class="form-control" id="payable" name="payable" readonly>
+                                        </div>
+
+                                        <div class="row-11">
+                                            <label for="recipient-paid_amount" class="col-form-label"><%= language.paying_amount %> (<%= master_shop[0].currency %>)
+                                            </label>
+                                            <input type="number" class="form-control" id="due_amount" name="due_amount" min="0" required>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary mt-4 w-100"><%= language.submit %> </button>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="d-flex">
+                                            <button type="button" class="btn btn-danger"
+                                                data-dismiss="modal"><%= language.close %> </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Payment modal end -->
+
+                    <!--**********************************
+            Footer start
+        ***********************************-->
+                    <%- include('./partials/footer'); -%>
+
+                        <!--**********************************
+            Footer end
+        ***********************************-->
+
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!-- start Toastr -->
+    <%- include('./partials/toastr'); -%>
+        <!-- End Toastr -->
+
+        <!--**********************************
+        Scripts
+    ***********************************-->
+       
+
+        <%- include('./partials/script'); -%>
+
+            <!--**********************************
+        Scripts end
+    ***********************************-->
+</body>
+
+</html>

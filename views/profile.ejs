@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+</head>
+
+<body>
+    <!--*******************
+        Preloader start
+    ********************-->
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <!--*******************
+        Preloader end
+    ********************-->
+
+    <!--**********************************
+        Main wrapper start
+    ***********************************-->
+    <div id="main-wrapper">
+
+        <!--**********************************
+            Nav header start
+        ***********************************-->
+        <%- include('./partials/header_logo'); -%>
+
+            <!--**********************************
+            Nav header end
+        ***********************************-->
+
+            <!--**********************************
+            Header start
+        ***********************************-->
+            <%- include('./partials/header',{titel: "Profile"}); -%>
+            
+
+                <!--**********************************
+            Header end ti-comment-alt
+        ***********************************-->
+
+                <!--**********************************
+            Sidebar start
+        ***********************************-->
+                <%- include('./partials/sidebar'); -%>
+
+                    <!--**********************************
+            Sidebar end
+        ***********************************-->
+
+                    <div class="content-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-xl-4">
+                                    <div class="card">
+                                        <div class="text-center py-3">
+                                            <div>
+                                                
+                                                <span>
+                                                    <% if (profile.image == null) { %>
+                                                        <img src="/images/images.jpg" class="rounded-circle" width="75" height="75" alt="image">
+                                                        
+                                                        <% } else { %>
+                                                            
+                                                        <img src="/upload/<%= profile.image %>" class="rounded-circle" width="115" height="115" alt="image">
+                                                    <% } %>
+                                                </span>
+                                                
+                                            </div>
+                                            
+                                        </div>
+                                        <ul class="list-group">
+                                            <li
+                                                class="list-group-item d-flex justify-content-between align-items-center">
+                                                <%= language.first_name %>  :-<span class="fw-bold">
+                                                    <%= profile.firstname %>
+                                                </span>
+                                            </li>
+
+                                            <li
+                                                class="list-group-item d-flex justify-content-between align-items-center">
+                                                <%= language.last_name %> :- <span class="fw-bold">
+                                                    <%= profile.lastname %>
+                                                </span>
+                                            </li>
+
+                                            <li
+                                                class="list-group-item d-flex justify-content-between align-items-center">
+                                                <%= language.email %>  :- <span class="fw-bold">
+                                                    <%= profile.email %>
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-8">
+                                     <div class="card py-3 px-3">
+                                    <div class="settings-form">
+                                        <h4 class="text-primary mb-4"><%= language.account_setting %> </h4>
+                                        <form action="/profile/view/<%= profile._id %>" method="post" enctype="multipart/form-data">
+                                            <div class="row">
+                                                <div class="mb-3 col-md-6">
+                                                    <label class="form-label"><%= language.first_name %></label>
+                                                    <input type="text" placeholder="First Name" class="form-control"
+                                                        name="firstname" value="<%= profile.firstname %>">
+                                                </div>
+                                                <div class="mb-3 col-md-6">
+                                                    <label class="form-label"><%= language.last_name %></label>
+                                                    <input type="text" placeholder="Last Name" class="form-control"
+                                                        name="lastname" value="<%= profile.lastname %>">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="mb-3 col-md-6">
+                                                    <label class="form-label"><%= language.email %> </label>
+                                                    <input type="email" placeholder="email" class="form-control"
+                                                        name="email" value="<%= profile.email %>">
+                                                </div>
+                                                <div class="mb-3 col-md-6">
+                                                    <label class="form-label"><%= language.choose_photo %> </label>
+                                                    <input type="file" placeholder="photo" class="form-control"
+                                                        name="image">
+                                                </div>
+                                            </div>
+
+                                            <button class="btn btn-primary" type="submit"><%= language.submit %> </button>
+                                        </form>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!--**********************************
+            Footer start
+        ***********************************-->
+                    <%- include('./partials/footer'); -%>
+
+                        <!--**********************************
+            Footer end
+        ***********************************-->
+
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!-- start Toastr -->
+    <%- include('./partials/toastr'); -%>
+    <!-- End Toastr -->
+    <!--**********************************
+        Scripts
+    ***********************************-->
+ 
+    <%- include('./partials/script'); -%>
+
+        <!--**********************************
+        Scripts end
+    ***********************************-->
+</body>
+
+</html>

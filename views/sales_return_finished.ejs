@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+
+</head>
+
+<body>
+    <!--*******************
+    Preloader start
+********************-->
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <!--*******************
+    Preloader end
+********************-->
+
+    <!--**********************************
+    Main wrapper start
+***********************************-->
+    <div id="main-wrapper">
+
+        <!--**********************************
+        Nav header start
+    ***********************************-->
+        <%- include('./partials/header_logo'); -%>
+
+            <!--**********************************
+        Nav header end
+    ***********************************-->
+
+            <!--**********************************
+        Header start
+    ***********************************-->
+            <%- include('./partials/header',{titel: "Returns of Finished Goods"}); -%>
+
+                <!--**********************************
+        Header end ti-comment-alt
+    ***********************************-->
+
+                <!--**********************************
+        Sidebar start
+    ***********************************-->
+                <%- include('./partials/sidebar'); -%>
+
+                    <!--**********************************
+        Sidebar end
+    ***********************************-->
+
+                    <div class="content-body">
+                        <div class="container-fluid">
+                            <!-- row -->
+
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title col-6"><%= language.all_sales_return %></h4>
+                                    </div>
+                                    <div class="card-body">
+                                        
+                                        <div class="d-none">
+                                            <input type="hidden" value="<%= master_shop[0].currency %>" id="hidden_currency">
+                                            <input type="hidden" value="<%= master_shop[0].currency_placement %>" id="hidden_currency_placement">
+                                        </div>
+
+                                        <div class="table-responsive">
+                                            <table id="example"
+                                                class="table table-responsive-sm text-center">
+                                                <thead>
+                                                    <tr>
+                                                        <th><%= language.invoice %> </th>
+                                                        <th><%= language.date %> </th>
+                                                        <th><%= language.customer %>  </th>
+                                                        <th><%= language.warehouse %> </th>
+                                                        <th>Print</th>
+                                                        <!-- <th><%= language.total_amount %> </th>
+                                                        <th><%= language.discount %> </th>
+                                                        <th><%= language.payable %> </th>
+                                                        <th><%= language.paid %> </th>
+                                                        <th><%= language.due %> </th> -->
+                                                        <!-- <th><%= language.edit %> </th> -->
+                                                        <!-- <th><%= language.action %> </th> -->
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% user.forEach((user)=> { %>
+
+                                                        <% if(master_shop[0].currency_placement == 1) { %>  
+
+                                                            <tr>
+    
+                                                                <td class="text-nowrap">
+                                                                    <%= user.invoice %>
+                                                                </td>
+    
+                                                                <td class="text-nowrap">
+                                                                    <%= user.date %>
+                                                                </td>
+    
+                                                                <td class="text-nowrap">
+                                                                    <%= user.customer %>
+                                                                </td>
+    
+                                                                <td class="text-nowrap">
+                                                                    <%= user.warehouse_name %>
+                                                                </td>
+
+
+                                                                <td>
+                                                                    <a href="/picking_list/pdf_puchases_fin/<%= purchases._id %>" id="barcode" data-id="<%= purchases._id %>"
+                                                                        class="btn btn-success btn-sm" target="_blank">
+                                                                        <i class="feather icon-printer"></i>
+                                                                    </a>
+                                                                </td>
+    
+                                                            
+    
+                                                                <!-- <td class="text-nowrap">
+                                                                    <a href="/sales_return_finished/view/<%= user._id %>">
+                                                                        <button type="button"
+                                                                            class="btn btn-success m-1"><%= language.edit %> </button>
+                                                                    </a>
+                                                                </td> -->
+    
+                                                                <td class="text-nowrap">
+                                                                    <!-- <div class="btn-group" role="group">
+                                                                        <button type="button"
+                                                                            class="btn btn-primary dropdown-toggle m-1"
+                                                                            data-bs-toggle="dropdown"
+                                                                            aria-expanded="false"><%= language.more %> </button>
+                                                                        <div class="dropdown-menu"> -->
+                                                                            <% if (user.due_amount == 0) { %>
+                                                                                
+                                                                            <% } else { %>
+    
+                                                                                <!-- <a class="dropdown-item"
+                                                                                    href="javascript:void()" id="sales_return_id"
+                                                                                    data-toggle="modal"
+                                                                                    data-target="#PaymentModal"
+                                                                                    data-invoice="<%= user.invoice %>"
+                                                                                    data-customer="<%= user.customer %>"
+                                                                                    data-payable="<%= user.payable_to_customer %>"
+                                                                                    data-paid_amount="<%= user.paid_amount %>"
+                                                                                    data-id="<%= user._id %>"><i
+                                                                                        class="la la-money-bill-wave"></i>
+                                                                                        <%= language.give_payment %> 
+                                                                                </a> -->
+                                                                            <% } %>
+    
+                                                                            <!-- <a class="dropdown-item" href="/sales_return/invoice/<%= user._id %>" href="javascript:void()">
+                                                                                <i class="la la-download"></i> <%= language.save_print %> 
+                                                                            </a>
+    
+                                                                        </div>
+                                                                    </div> -->
+                                                                </td>
+                                                            </tr>
+
+                                                        <% } else { %>
+
+                                                            <tr>
+    
+                                                                <td class="text-nowrap">
+                                                                    <%= user.invoice %>
+                                                                </td>
+    
+                                                                <td class="text-nowrap">
+                                                                    <%= user.date %>
+                                                                </td>
+    
+                                                                <td class="text-nowrap">
+                                                                    <%= user.customer %>
+                                                                </td>
+    
+                                                                <td class="text-nowrap">
+                                                                    <%= user.warehouse_name %>
+                                                                </td>
+    
+                                                                <td>
+                                                                    <a href="/picking_list/pdf_sales_return_fin/<%= user._id %>" id="barcode" data-id="<%= user._id %>"
+                                                                        class="btn btn-success btn-sm" target="_blank">
+                                                                        <i class="feather icon-printer"></i>
+                                                                    </a>
+                                                                </td>
+    
+                                                                <!-- <td class="text-nowrap">
+                                                                    <a href="/sales_return_finished/view/<%= user._id %>">
+                                                                        <button type="button"
+                                                                            class="btn btn-success m-1"><%= language.edit %> </button>
+                                                                    </a>
+                                                                </td> -->
+    
+                                                                <!-- <td class="text-nowrap"> -->
+                                                                    <!-- <div class="btn-group" role="group">
+                                                                        <button type="button"
+                                                                            class="btn btn-primary dropdown-toggle m-1"
+                                                                            data-bs-toggle="dropdown"
+                                                                            aria-expanded="false"><%= language.more %> </button>
+                                                                        <div class="dropdown-menu"> -->
+                                                                            <% if (user.due_amount == 0) { %>
+                                                                                
+                                                                            <% } else { %>
+    
+                                                                                <!-- <a class="dropdown-item"
+                                                                                    href="javascript:void()" id="sales_return_id"
+                                                                                    data-toggle="modal"
+                                                                                    data-target="#PaymentModal"
+                                                                                    data-invoice="<%= user.invoice %>"
+                                                                                    data-customer="<%= user.customer %>"
+                                                                                    data-payable="<%= user.payable_to_customer %>"
+                                                                                    data-paid_amount="<%= user.paid_amount %>"
+                                                                                    data-id="<%= user._id %>"><i
+                                                                                        class="la la-money-bill-wave"></i>
+                                                                                        <%= language.give_payment %> 
+                                                                                </a> -->
+                                                                            <% } %>
+    
+                                                                            <!-- <a class="dropdown-item" href="/sales_return/invoice/<%= user._id %>" href="javascript:void()">
+                                                                                <i class="la la-download"></i><%= language.save_print %>
+                                                                            </a>
+    
+                                                                        </div>
+                                                                    </div> -->
+                                                                <!-- </td> -->
+                                                            </tr>
+
+                                                        <% } %>
+
+
+                                                    <% }) %>
+                                                </tbody>
+
+
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Payment Modal -->
+
+                    <form id="payment_form" action="/sales_return_finished/give_payment/<%= user._id %>" method="post">
+                        <div class="modal fade " id="PaymentModal" tabindex="-1" role="dialog"
+                            aria-labelledby="PaymentModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-primary ">
+                                        <h5 class="modal-title text-white" id="PaymentModalLabel">
+                                            <%= language.payment_details %> 
+                                        </h5>
+
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row-11">
+                                            <label for="recipient-invoice" class="col-form-label"><%= language.invoice %> 
+                                            </label>
+                                            <input type="text" class="form-control" id="invoice" name="invoice" readonly>
+                                        </div>
+
+                                        <div class="row-11">
+                                            <label for="recipient-supplier" class="col-form-label"><%= language.customer %>  </label>
+                                            <input type="text" class="form-control" id="customer" name="customer" readonly>
+                                        </div>
+
+                                        <div class="row-11">
+                                            <label for="recipient-receivable" class="col-form-label"><%= language.payable_amount %> (<%= master_shop[0].currency %>)</label>
+                                            <input type="number" class="form-control" id="payable_to_customer" step="0.01" name="payable_to_customer" readonly>
+                                        </div>
+
+                                        <div class="row-11">
+                                            <label for="recipient-paid_amount" class="col-form-label"><%= language.paying_amount %>  (<%= master_shop[0].currency %>)
+                                            </label>
+                                            <input type="number" class="form-control" id="paid_amount" step="0.01" name="paid_amount" min="0" required>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary mt-4 w-100"><%= language.submit %> </button>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="d-flex">
+                                            <button type="button" class="btn btn-danger"
+                                                data-dismiss="modal"><%= language.close %> </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Payment modal end -->
+
+
+                    <!--**********************************
+            Footer start
+        ***********************************-->
+                    <%- include('./partials/footer'); -%>
+
+                        <!--**********************************
+            Footer end
+        ***********************************-->
+
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!-- start Toastr -->
+    <%- include('./partials/toastr'); -%>
+        <!-- End Toastr -->
+
+        <!--**********************************
+        Scripts
+    ***********************************-->
+   
+        <%- include('./partials/script'); -%>
+
+            <!--**********************************
+        Scripts end
+    ***********************************-->
+</body>
+
+</html>

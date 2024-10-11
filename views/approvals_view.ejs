@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+
+</head>
+
+<body>
+    <!--*******************
+    Preloader start
+********************-->
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <!--*******************
+    Preloader end
+********************-->
+
+    <!--**********************************
+    Main wrapper start
+***********************************-->
+    <div id="main-wrapper">
+
+        <!--**********************************
+        Nav header start
+    ***********************************-->
+        <%- include('./partials/header_logo'); -%>
+
+            <!--**********************************
+        Nav header end
+    ***********************************-->
+
+            <!--**********************************
+        Header start
+    ***********************************-->
+            <%- include('./partials/header',{titel: "Approval of Documents (" + titleName.name + ")"}); -%>
+
+                <!--**********************************
+        Header end ti-comment-alt
+    ***********************************-->
+
+                <!--**********************************
+        Sidebar start
+    ***********************************-->
+                <%- include('./partials/sidebar'); -%>
+
+                    <!--**********************************
+        Sidebar end
+    ***********************************-->
+
+                    <div class="content-body">
+                        <div class="container-fluid">
+                            <!-- row -->
+
+                            <div class="col-lg-12">
+                                 
+                                <!-- <div class="card-title col-6 ">
+
+                                    <a href="/edit_approval/view" class="btn btn-rounded btn-info text-white"> back
+                                    
+                                    </a>
+
+                                </div> -->
+                                <div class="table-responsive">
+                                    <table id="example" class="table table-responsive-sm table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Document Number</th>
+                                                <th><%= language.date %> </th>
+                                                <th>Action </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% var x =0; %>
+                                            <% data.forEach((data_view)=> { %>
+                                              
+                                                <tr>
+                                                    <td><h5><%= data_view.invoice %></h5></td>
+                                                    <td><h5><%= data_view.date %></h5></td>
+                                                    <td><div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="RadioControl" id="RadioControl<%= x %>" onclick="SavingsData('<%= x %>','<%= titleName.code %>')" value="True" <%=data_view.isAllowEdit=="True"
+                                                        ? "checked" : "" %> >
+                                                        <label class="form-check-label" for="flexRadioDefault1">
+                                                          Enabled to Edit
+                                                        </label>
+                                                      </div>
+                                                      <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="RadioControl" id="RadioControl<%= x %>"  onclick="SavingsData('<%= x %>','<%= titleName.code %>')" value="False" <%=data_view.isAllowEdit=="False"
+                                                        ? "checked" : "" %> >
+                                                        <label class="form-check-label" for="flexRadioDefault2">
+                                                          Disabled to Edit
+                                                        </label>
+                                                      </div></td>
+
+                                                      <input type="hidden" id="idData<%= x %>" name="idData" value="<%= data_view._id %>">
+                                                      <input type="hidden" id="invoice<%= x %>" name="invoice" value="<%= data_view.invoice %>">
+                                                </tr>
+                                                <% x++; %>
+                                            <% }) %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+                    <!--**********************************
+            Footer start
+        ***********************************-->
+                    <%- include('./partials/footer'); -%>
+
+                        <!--**********************************
+            Footer end
+        ***********************************-->
+
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!-- start Toastr -->
+    <%- include('./partials/toastr'); -%>
+        <!-- End Toastr -->
+
+        <!--**********************************
+        Scripts
+    ***********************************-->
+       
+
+        <%- include('./partials/script'); -%>
+
+        <script>
+            function SavingsData(x, code){
+                var ID = document.getElementById("idData"+x).value
+                var Invoice = document.getElementById("invoice"+x).value
+                var RadioControl = document.getElementsByName("RadioControl")
+                var url1;
+                
+                
+                Swal.fire({
+                title: "Loading...",
+                html: "Please wait a moment",
+                allowOutsideClick: false, 
+                })
+                Swal.showLoading()
+
+                for (let i = 0; i < RadioControl.length; i++) {
+                    const element = RadioControl[i];
+                    if(element.checked == true){
+                        var TheVal = element.value;
+                        if(code == "out"){
+                            url1 = '/edit_approval/outgoing';
+                        }else if(code == "adj"){
+                            url1 = '/edit_approval/adjustment';
+                        }else if(code == "trf"){
+                            url1 = '/edit_approval/transfer';
+                        }
+                        $.ajax({
+                        url: url1, 
+                        method: 'POST',
+                        data: { id: ID,  invoice: Invoice, value: TheVal}, 
+                        success: function(response) {
+                            
+
+                            if(response.status == 200){
+                                
+                                if(response.data.BoolData == "True"){
+                                    Swal.fire(
+                                    '',
+                                    'The Document Number ('+response.data.InvoiceNum+') is Enabled to Edit',
+                                    'success'
+                                    )
+                                }else if(response.data.BoolData == "False"){
+                                    Swal.fire(
+                                    '',
+                                    'The Document Number ('+response.data.InvoiceNum+') is Disabled  to Edit',
+                                    'success'
+                                    )
+                                }
+                                
+                            }
+                           
+                        },
+                        error: function(xhr, status, error) {
+                           
+                        }
+                        });
+                        // ========
+                    }
+                }
+            }
+        </script>
+
+            <!--**********************************
+        Scripts end
+    ***********************************-->
+</body>
+
+</html>

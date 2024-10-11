@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+
+</head>
+
+<body onload="ComputeConversion();">
+    <!--*******************
+        Preloader start
+    ********************-->
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <!--*******************
+        Preloader end
+    ********************-->
+
+    <!--**********************************
+        Main wrapper start
+    ***********************************-->
+    <div id="main-wrapper">
+
+        <!--**********************************
+            Nav header start
+        ***********************************-->
+        <%- include('./partials/header_logo'); -%>
+
+            <!--**********************************
+            Nav header end
+        ***********************************-->
+
+            <!--**********************************
+            Header start
+        ***********************************-->
+            <%- include('./partials/header',{titel: "Outgoing for Finished Goods"}); -%>
+
+                <!--**********************************
+            Header end ti-comment-alt
+        ***********************************-->
+
+                <!--**********************************
+            Sidebar start
+        ***********************************-->
+                <%- include('./partials/sidebar'); -%>
+
+                    <!--**********************************
+            Sidebar end
+        ***********************************-->
+
+                    <!--**********************************
+            Content body start
+        ***********************************-->
+                    <div class="content-body">
+                        <div class="container-fluid">
+
+                            <!-- row -->
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h4 class="card-title"> View Sale Details</h4>
+                                            <button type="button" class="btn btn-rounded btn-outline-info"
+                                                onclick="history.back()"><i class="la la-undo"></i> <%= language.go_back %> </button>
+                                        </div>
+
+                                        <div class="card-body">
+                                            
+                                            <a href="/picking_list/pdf/<%= user._id %>" id="picklist" data-id="<%= user._id %>"
+                                                    class="btn btn-warning btn-sm" target="_blank">
+                                                    <i class="feather icon-printer"></i>
+                                                    <% if(user.finalize == "False"){ %>
+                                                        Print Picking List
+                                                    <% } else{ %>
+                                                        Print Delivery Receipt
+                                                    <% } %>
+                                            </a>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-validation">
+
+                                                <form class="needs-validation" action="/all_sales_finished/preview/<%= user._id %>"
+                                                    method="post" id="form">
+
+                                                    <div class="row mb-3">
+                                                        <div class="col-xl-3 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no">Document Number </label>
+                                                                <input type="text" name="invoice" class="form-control"
+                                                                    id="invoice" value="<%= user.invoice %>" readonly>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="col-xl-4 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"> Supplier / Client Ref Number <span class="text-red">*</span></label>
+                                                                <input type="text" name="SCRN" class="form-control"
+                                                                    id="SCRN" value="<%= user.SCRN  %>" readonly>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xl-3 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"><%= language.customer %> </label>
+                                                                <input type="text" name="customer" class="form-control" id="customer" value="<%= user.customer  %>" readonly>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xl-4 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"><%= language.date %> </label>
+                                                                <input type="date" name="date" class="form-control"
+                                                                    id="date" value="<%= user.date %>" required readonly>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="col-xl-3 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"><%= language.warehouse %> </label>
+                                                                <input type="text" name="warehouse_name" class="form-control" id="warehouse_name" value="<%= user.warehouse_name  %>" readonly>
+                                                            </div>
+                                                         
+                                                        </div>
+
+
+                                                        <!-- <div class="col-xl-3 col-sm-6">  
+                                                            <div class="form-group">
+                                                                <label for="invoice_no">Room <span class="text-red">*</span></label>
+                                                                <input type="text" name="room" class="form-control" id="room" value="<%= user.room  %>" readonly>
+                                                                
+                                                            </div>
+                                                        </div> -->
+                                                        
+                                                        
+                                                    </div>
+                                                    <div class="row mb-3">
+                                                        <div class="col-xl-4 col-sm-6">
+            
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"><%= language.mode_transpo %> Mode of transportation</label>
+                                                                <input type="text" name="mode_transpo" class="form-control" id="mode_transpo"  value="<%= user.mode_transpo %>" readonly>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="col-xl-4 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"><%= language.name_driver %> Driver's Name</label>
+                                                                <input type="text" name="name_driver" class="form-control" id="name_driver" value="<%= user.name_driver %>" readonly>
+                                                            </div>
+                                                        </div>
+                                                         
+                                                      
+                                                    </div>
+
+                                                   
+
+                                                    </div>
+                                                    
+        
+                                                            
+                                                    
+                                                    
+
+                                                    <div class="col-xl-12">
+                                                        <div class="table-responsive">
+                                                            <table class="table primary-table-bordered">
+                                                                <thead class="thead-primary">
+                                                                    <tr>
+                                                                        <th scope="col">Item Code </th>
+                                                                        <th scope="col">Item Description </th>
+                                                                        <th scope="col">Primary Barcode </th>
+                                                                        <th scope="col">Batch Code</th>
+                                                                        <th scope="col">Production date </th>
+                                                                        <th scope="col">Expiry date </th>
+                                                                        <th scope="col"><%= language.in_stock %> </th>
+                                                                        <th scope="col"><%= language.quantity %> <span class="text-red">*</span></th>
+                                                                        <th scope="col">Unit of Measure </th>
+                                                                        <th scope="col">Conversion</th>
+                                                                        <th scope="col">Room</th>
+                                                                        <th scope="col">Bin </th>
+                                                       
+                                                                        
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="tblPage_NewOut">
+                                                                    <% user.sale_product.forEach((user)=> { %>
+                                                                        
+                                                                        <tr> 
+                                                                        
+                                                                            <td class="align-top">
+                                                                                <input type="text" name="prod_code" id="prod_code" class="form-control prod_code" style="width: 125px;" value="<%= user.product_code %>" readonly>
+                                                                            </td>
+
+
+                                                                            <td class="align-top">
+                                                                                <input type="text" name="product_name" id="product_name" class="form-control product_name" style="width: 380px;" value="<%= user.product_name %>" readonly>
+                                                                            </td>
+                                                                            
+                                                                            <td class="align-top">
+                                                                                <input type="text" name="primary_code" id="primary_code" class="form-control primary_code" style="width: 150px;" value="<%= user.primary_code %>" readonly>
+                                                                            </td>
+                                                                            
+                                                                            <!-- <td class="align-top"> -->
+                                                                                <input type="hidden" name="secondary_code" id="secondary_code" class="form-control secondary_code" style="width: 150px;"  value="<%= user.secondary_code %>" readonly>
+                                                                            <!-- </td> -->
+                                                                            
+                                                                            <td class="align-top">
+                                                                                <input type="text" name="batch_code" id="batch_code" class="form-control batch_code" style="width: 150px;" value="<%= user.batch_code %>" readonly>
+                                                                            </td>
+
+
+                                                                            <td>
+                                                                                <div class="input-group"> 
+                                                                                    <input type="date" name="product_date" class="form-control" style="width: 150px;" id="product_date" value="<%= user.production_date %>" readonly> 
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td>
+                                                                                <div class="input-group"> 
+                                                                                    <input type="date" name="expiry_date" class="form-control" style="width: 150px;" id="expiry_date" value="<%= user.expiry_date %>" readonly> 
+                                                                                </div>
+                                                                            </td>
+
+
+                                                                            <td class="align-top">
+                                                                                <input type="text" name="stock" id="stock" class="form-control stock" style="width: 100px;" value="<%= user.stock %>" readonly>
+                                                                            </td>
+
+
+                                                                            <td class="align-top">
+                                                                                <input type="text" name="adjust_qty"
+                                                                                id="adjust_qty" class="form-control edit_product_name" style="width: 100px;" value="<%= user.quantity %>" readonly>
+                                                                            </td>
+
+
+                                                                            <td class="align-top">
+                                                                                <input type="text" name="unitodmeasure" id="unitodmeasure" class="form-control unitodmeasure" style="width: 150px;" value="<%= user.unit %>" readonly>
+                                                                            </td>
+
+
+                                                                            <td class="align-top">
+                                                                                <input type="text" name="test" id="test" class="form-control unitodmeasure" style="width: 150px;" value="" readonly>
+                                                                            </td>
+
+                                                                            <!-- <td class="align-top"> -->
+                                                                                <input type="hidden" name="secondary_unit" id="secondary_unit" class="form-control secondary_unit" style="width: 150px;" value="<%= user.secondary_unit %>" readonly>
+                                                                            <!-- </td> -->
+
+                                                                            <td class="align-top">
+                                                                                <input type="text" name="level" id="level" class="form-control level" style="width: 150px;" value="<%= user.room_name %>" readonly>
+                                                                            </td>
+
+                                                                            <td class="align-top">
+                                                                                <input type="text" name="level" id="level" class="form-control level" style="width: 150px;" value="<%= user.bay %>" readonly>
+                                                                            </td>
+
+                                                                            <input type="hidden" name="invoice_data" id="invoice_data" class="form-control secondary_unit" style="width: 150px;" value="<%= user.invoice %>" readonly>
+                                                                            <input type="hidden" name="prod_cat" id="prod_cat" class="form-control prod_cat" style="width: 150px;" value="<%= user.prod_cat %>" readonly>
+                                                                            <input type="hidden" name="maxperunit" id="maxperunit" class="form-control maxperunit" style="width: 150px;" value="<%= user.maxperunit %>" readonly>
+                                                                            <input type="hidden" name="primary_unit" id="primary_unit" class="form-control primary_unit" style="width: 150px;" value="<%= user.unit %>" readonly>
+                                                                            <input type="hidden" name="secondary_unit" id="secondary_unit" class="form-control secondary_unit" style="width: 150px;" value="<%= user.secondary_unit %>" readonly>
+
+                                                                            
+                                                                            
+
+                                                                        
+                                                                        </tr>
+
+                                                                    <% }) %>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                               
+                                                    <div class="row">
+                                                        <div class="col-md-8 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="note"><%= language.note %> </label>
+                                                                <input type="text" class="form-control"
+                                                                    placeholder="note" id="note" name="note"
+                                                                    value="<%= user.note %>" readonly>
+                                                            </div>
+                                                        </div>
+
+                                                       
+                                                    </div>
+
+                                                    
+                                                 </form>
+                                                 <% if(user.finalize == "False"){ %>
+                                                 <div class="row">
+                                                    <button class="btn btn-primary" type="submit"
+                                                        id="submit" onclick="confirmAlert()">Finalize </button>
+                                                </div>
+                                                <% } %>
+                                               </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    <!--**********************************
+            Content body end
+        ***********************************-->
+
+                    <!--**********************************
+            Footer start
+        ***********************************-->
+                    <%- include('./partials/footer'); -%>
+
+                        <!--**********************************
+            Footer end
+        ***********************************-->
+
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!-- start Toastr -->
+    <%- include('./partials/toastr'); -%>
+        <!-- End Toastr -->
+
+        <!--**********************************
+        Scripts
+    ***********************************-->
+        <%- include('./partials/script'); -%>
+
+        <script>
+
+
+            function confirmAlert(){
+            Swal.fire({
+                icon: 'warning',
+                title: 'Are you sure want to finalize?',
+                text: 'Warning: After finalizing the data, it becomes locked and unmodifiable. ',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: 'Save',
+                denyButtonText: `Don't save`,
+            }).then((result) => {
+           
+                if (result.isConfirmed) {
+                    document.getElementById("form").submit();
+                } else if (result.isDenied) {
+                    Swal.fire('Changes are not saved', '', 'info')
+                }
+            })
+
+            }
+
+
+            function ComputeConversion(){
+                var stock = document.getElementsByName("stock");
+                var prod_cat = document.getElementsByName("prod_cat");
+                var maxperunit = document.getElementsByName("maxperunit");
+                var unitodmeasure = document.getElementsByName("unitodmeasure");
+                var adjust_qty = document.getElementsByName("adjust_qty");
+                var primary_unit = document.getElementsByName("primary_unit");
+                var secondary_unit = document.getElementsByName("secondary_unit");
+                var test = document.getElementsByName("test");
+
+                for(var i=0; i < stock.length; i++ ){
+                    valStocks = stock[i].value;
+                    valprod_cat = prod_cat[i].value;
+                    valmaxperunit = maxperunit[i].value;
+                    valunitodmeasure = unitodmeasure[i].value;
+                    valadjust_qty = adjust_qty[i].value;
+                    valprimary_unit = primary_unit[i].value;
+                    valsecondary_unit = secondary_unit[i].value;
+                    
+
+                    var TotalQtyStocks = 0;
+                    var TotalQtyQty = 0;
+                    var UOM;
+                    var Conversion;
+                    TotalQtyStocks = valStocks;
+                    TotalQtyQty = valadjust_qty;
+                    UOM = valprimary_unit;
+                    Conversion = valadjust_qty*valmaxperunit + " " +  valsecondary_unit;
+                    if(valprod_cat == "S"){
+                        TotalQtyStocks = valStocks*valmaxperunit;
+                        TotalQtyQty = valadjust_qty*valmaxperunit;
+                        UOM = secondary_unit[i].value;
+                        Conversion = valadjust_qty + " " +  valprimary_unit;
+                    }
+                    stock[i].value = TotalQtyStocks;
+                    adjust_qty[i].value = TotalQtyQty;
+                    unitodmeasure[i].value = UOM;
+                    test[i].value = Conversion;
+                    
+                    console.log(maxperunit[i].value)
+                    
+
+
+                }
+                
+            }
+
+
+           
+            
+        </script>
+   
+
+            <!--**********************************
+        Scripts end
+    ***********************************-->
+</body>
+
+</html>

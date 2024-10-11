@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+</head>
+
+<body class="h-100 mt-5">
+    <div class="authincation h-100">
+        <div class="container h-100">
+            <div class="row justify-content-center h-100 align-items-center">
+                <div class="col-md-6">
+					
+					<div class="authincation-content">
+                        <div class="row no-gutters">
+                            <div class="col-xl-12">
+                                <div class="auth-form">
+									<div class="text-center mb-3">
+										<img src="/upload/<%= master_shop[0].image %>" class="logo-abbr mx-2 rounded" width="76.5px" height="76.5px">
+									</div>
+                                    <h4 class="text-center mb-4">Sign up your account</h4>
+                                    <form action="/sing_up_staff" method="post" id="form">
+
+                                        <div class="form-group">
+                                            <label class="mb-1"><strong>Name</strong></label>
+                                            <input type="text" class="form-control" placeholder="Name" name="name" required>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label class="mb-1"><strong>Email</strong></label>
+                                            <input type="email" class="form-control" placeholder="Email" name="email" required>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label class="mb-1"><strong>Password</strong></label>
+                                            <input type="password" class="form-control" placeholder="Password" name="password" id="password" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="mb-1"><strong>Confirm Password</strong></label>
+                                            <input type="password" class="form-control" placeholder="Password" name="cpassword" id="cpassword" required>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label class="mb-1"><strong>Mobile</strong></label>
+                                            <input type="number" class="form-control" placeholder="Mobile" name="mobile" required>
+                                        </div>
+                                        
+
+                                        
+
+                                    </form>
+
+                                    <div class="text-center mt-4">
+                                        <button type="submit" class="btn btn-primary btn-block" onclick="CheckingConfirmData();">Sign me up</button>
+                                    </div>
+                                    
+                                    <div class="new-account mt-3">
+                                        <p class="">Already have an account? <a class="text-decoration-underline" href="/login">Log in</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- start Toastr -->
+    <%- include('./partials/toastr'); -%>
+
+
+    <script>
+        function CheckingConfirmData(){
+            var password = document.getElementById("password").value;
+            var cpassword = document.getElementById("cpassword").value;
+            var strTemp = '';
+            if(password != cpassword){
+                strTemp += "Password is not match. <br>";
+            }
+
+            if(strTemp.length > 0){
+                Swal.fire(
+                'Required ',
+                "<h5>" + strTemp + "</h5>",
+                'warning'
+                )
+                return;
+             }
+            document.getElementById("form").submit();
+        }
+    </script>
+        <!-- End Toastr -->
+
+<!--**********************************
+	Scripts
+***********************************-->
+<!-- Required vendors -->
+
+<%- include('./partials/script'); -%>
+
+</body>
+
+</html>

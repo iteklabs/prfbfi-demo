@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+
+</head>
+
+<body>
+    <!--*******************
+    Preloader start
+********************-->
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>  
+    <!--*******************
+    Preloader end
+********************-->
+
+    <!--**********************************
+    Main wrapper start
+***********************************-->
+    <div id="main-wrapper">
+
+        <!--**********************************
+        Nav header start
+    ***********************************-->
+        <%- include('./partials/header_logo'); -%>
+
+            <!--**********************************
+        Nav header end
+    ***********************************-->
+
+            <!--**********************************
+        Header start
+    ***********************************-->
+            <%- include('./partials/header',{titel: language.warehouse}); -%>
+
+                <!--**********************************
+        Header end ti-comment-alt
+    ***********************************-->
+
+                <!--**********************************
+        Sidebar start
+    ***********************************-->
+                <%- include('./partials/sidebar'); -%>
+
+                    <!--**********************************
+        Sidebar end
+    ***********************************-->
+
+                    <div class="content-body">
+                        <div class="container-fluid">
+                            <!-- row -->
+
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title col-6"><%= language.all_warehouse %> </h4>
+                                        <div class="card-title col-6 text-end">
+                                            <button type="button" class="btn btn-rounded btn-info"
+                                                data-toggle="modal" data-target="#exampleModal">
+                                                    <%= language.add_warehouse %> 
+                                                <span class="btn-icon-start text-info"><i
+                                                        class="fa fa-plus color-info"></i>
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table id="example" class="table table-responsive-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th><%= language.no %> </th>
+                                                        <th><%= language.name %> </th>
+                                                        <th><%= language.address %> </th>
+                                                        <th>Room </th>
+                                                        <th><%= language.status %> </th>
+                                                        <th><%= language.edit %> </th>
+                                                    </tr>
+                                                </thead>    
+                                                <tbody>
+                                                    <% var i=1 %>
+                                                        <% user.forEach((user)=> { %>
+
+                                                            <tr>
+                                                                <td>
+                                                                    <%= i %>
+                                                                </td>
+
+                                                                <td>
+                                                                    <%= user.name %>
+                                                                </td>
+
+                                                                <td>
+                                                                    <%= user.address %>
+                                                                </td>
+                                                                
+                                                                
+                                                                <td>
+                                                                    <%= user.room %>
+                                                                </td>
+
+                                                                <td>
+                                                                    <% if(user.status == "Enabled"){ %>
+                                                                        <span class="badge badge-lg badge-secondary"><%= user.status %></span>
+                                                                    <% }else{ %>
+                                                                        <span class="badge badge-lg badge-danger"><%= user.status %></span>
+                                                                    <% } %>
+                                                                </td>
+
+                                                                <td>
+                                                                    <a type="button" class="btn btn-sm btn-primary cuModalBtn" data-toggle="modal" id="warehouses_id"
+                                                                        data-target="#EditModal"
+                                                                        data-name="<%= user.name %>"
+                                                                        data-address="<%= user.address %>"
+                                                                        data-id="<%= user._id %>"
+                                                                        data-room="<%= user.room %>"
+                                                                        >
+                                                                        
+                                                                        <%= language.edit %> 
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                            <% i++ %>
+                                                        <% }) %>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- modal start -->
+                    <!-- Button trigger modal -->
+
+                    <!-- Modal -->
+
+                    <form action="/warehouse/view" method="post">
+                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-primary ">
+                                        <h5 class="modal-title text-white" id="exampleModalLabel">
+                                            <%= language.add_new_warehouse %>
+                                        </h5>
+
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <div class="form-group">
+                                            <label for="recipient-name" class="col-form-label"><%= language.name %>  <span class="text-red">*</span>
+                                            </label>
+                                            <input type="text" class="form-control" id="recipient-name"
+                                                placeholder="Warehouses Name" name="name" required>
+
+                                            <label for="recipient-name" class="col-form-label"><%= language.address %>  <span class="text-red">*</span>
+                                            </label>
+                                            <input type="text" class="form-control" id="recipient-name"
+                                                placeholder="Warehouses Address" name="address" required>
+
+                                            <label for="recipient-name" class="col-form-label">Room<span class="text-red">*</span>
+                                            </label>
+                                            <input type="text" class="form-control" id="recipient-name"
+                                                placeholder="Room Name" name="Room_name" required>
+
+                                        </div>
+                                        
+                                        
+
+                                        <div class="col-xl-3 col-sm-6">
+                                            <div class="form-group">
+                                                <label for="invoice_no">Warehouse Category  <span
+                                                        class="text-red">*</span></label>
+                                                <select class="form-control" name="rawfinished"
+                                                    id="rawfinished" required>
+                                                    <% rawfinished_data.forEach((wae)=> { %>
+                                                        <option value="<%= wae %>">
+                                                            <%= wae %>
+                                                        </option>
+                                                        <% }) %>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary w-100"><%= language.submit %> </button>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="d-flex">
+                                            <button type="button" class="btn btn-danger"
+                                                data-dismiss="modal"><%= language.close %> </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- modal end -->
+
+                    <!-- Edit Modal -->
+
+
+                    <form id="edit_form" action="/warehouse/view/<%= user._id %>" method="post">
+                        <div class="modal fade" id="EditModal" tabindex="-1" role="dialog"
+                            aria-labelledby="EditModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-primary ">
+                                        <h5 class="modal-title text-white" id="EditModalLabel">
+                                            <%= language.edit_warehouses_details %> 
+                                        </h5>
+
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <div class="form-group">
+                                            <label for="recipient-name" class="col-form-label"><%= language.name %> 
+                                            </label>
+                                            <input type="text" class="form-control" id="edit-name"
+                                                value="<%= user.name %>" name="name" readonly>
+
+                                            <label for="recipient-products" class="col-form-label"><%= language.address %> 
+                                            </label>
+                                            <input type="text" class="form-control" id="edit-address"
+                                                value="<%= user.address %>" name="address" required>
+
+
+                                            <label for="recipient-name" class="col-form-label">Room<span class="text-red">*</span>
+                                            </label>
+                                            <input type="text" class="form-control" id="edit-room"
+                                                placeholder="Room Name" value="<%= user.room %>" name="Room_name" required>
+
+                                            <label class="form-label"><%= language.status %> <span class="text-red">*</span></label>
+                                            <select class="form-control" name="status" id="category">
+                                                
+                                                <option value="Enabled" <%= user.status ==  'Enabled' ? 'selected' : "" %>>Enabled</option>                                             
+                                                <option value="Disabled" <%= user.status ==  'Disabled' ? 'selected' : "" %>>Disabled</option>                                             
+                                            </select>
+
+
+                                            <div class="col-xl-3 col-sm-6">
+                                                <div class="form-group">
+                                                    <label for="invoice_no">Warehouse Category<span
+                                                            class="text-red">*</span></label>
+                                                    <select class="form-control" name="rawfinished"
+                                                        id="rawfinished" required>
+                                                        <% rawfinished_data.forEach((wae)=> { %>
+                                                            <option <%=user.main_category==wae
+                                                            ? "selected" : "" %>>
+                                                                <%= wae %>
+                                                            </option>
+                                                            <% }) %>
+                                                    </select>
+                                                </div>
+
+
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100"><%= language.submit %> </button>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="d-flex">
+                                            <button type="button" class="btn btn-danger"
+                                                data-dismiss="modal"><%= language.close %> </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Edit modal end -->
+
+                    <!--**********************************
+            Footer start
+        ***********************************-->
+                    <%- include('./partials/footer'); -%>
+
+                        <!--**********************************
+            Footer end
+        ***********************************-->
+
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!-- start Toastr -->
+    <%- include('./partials/toastr'); -%>
+    <!-- End Toastr -->
+
+    <!--**********************************
+        Scripts
+    ***********************************-->
+   
+    <%- include('./partials/script'); -%>
+
+
+    <script>
+        $(document).on("click", "#warehouses_id", function () {
+        let dataId = $(this).attr("data-id");
+        let dataRoom = $(this).attr("data-room");
+        let dataName = $(this).attr("data-name");
+        let dataAddress = $(this).attr("data-address");
+
+
+        $("#edit_form").attr('action', '/warehouse/view/' + dataId);
+        $('#edit-name').attr('value', dataName);
+        $('#edit-room').attr('value', dataRoom);
+        $('#edit-address').attr('value', dataAddress);
+        $('#edit-email').attr('value', dataEmail);
+        $('#edit-mobile').attr('value', dataMobile);
+        $('#edit-poistion').attr('value', dataPosition);
+        $("#edit-status").val(dataStatus).attr("selected","selected");
+        $("#edit-warehouse").val(datawarehouse).attr("selected", "selected");
+        $("#edit-warehouse_cat").val(warehousecategory).attr("selected", "selected");
+    });
+    </script>
+
+       
+        <!--**********************************
+        Scripts end
+    ***********************************-->
+</body>
+
+</html>

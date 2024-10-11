@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+
+</head>
+
+<body>
+    <!--*******************
+    Preloader start
+********************-->
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <!--*******************
+    Preloader end
+********************-->
+
+    <!--**********************************
+    Main wrapper start
+***********************************-->
+    <div id="main-wrapper">
+
+        <!--**********************************
+        Nav header start
+    ***********************************-->
+        <%- include('./partials/header_logo'); -%>
+
+            <!--**********************************
+        Nav header end
+    ***********************************-->
+
+            <!--**********************************
+        Header start
+    ***********************************-->
+            <%- include('./partials/header',{titel: language.staff}); -%>
+
+                <!--**********************************
+        Header end ti-comment-alt
+    ***********************************-->
+
+                <!--**********************************
+        Sidebar start
+    ***********************************-->
+                <%- include('./partials/sidebar'); -%>
+
+                    <!--**********************************
+        Sidebar end
+    ***********************************-->
+
+                    <div class="content-body">
+                        <div class="container-fluid">
+                            <!-- row -->
+
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title col-6"><%= language.all_staff %> </h4>
+                                        <div class="card-title col-6 text-end">
+                                            <button type="button" class="btn btn-rounded btn-info"
+                                                data-toggle="modal" data-target="#exampleModal">
+                                                <%= language.add_staff %> 
+                                                <span class="btn-icon-start text-info"><i
+                                                        class="fa fa-plus color-info"></i>
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table id="example" class="table table-responsive-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="staff_thead_no"><%= language.no %> </th>
+                                                        <th class="staff_thead_name"><%= language.name %> </th>
+                                                        <th class="staff_thead_email"><%= language.email %> </th>
+                                                        <th class="staff_thead_mobile"><%= language.mobile %> </th>
+                                                        <th class="staff_thead_warehouse"><%= language.warehouse %> </th>
+                                                        <th class="staff_thead_position">Position</th>
+                                                        <th class="staff_thead_status"><%= language.status %> </th>
+                                                        <th class="staff_thead_edit"><%= language.edit %> </th>
+                                                        <th class="staff_thead_login"><%= language.login %></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% var i=1 %>
+                                                        <% user.forEach((user)=> { %>
+
+                                                            <tr>
+                                                                <td class="staff_tbody_no">
+                                                                    <%= i %>
+                                                                </td>
+                                                                <td class="staff_tbody_name">
+                                                                    <%= user.name %>
+                                                                </td>
+                                                                <td class="staff_tbody_email">
+                                                                    <%= user.email %>
+                                                                </td>
+                                                                <td class="staff_tbody_mobile">
+                                                                    <%= user.mobile %>
+                                                                </td>
+                                                                
+                                                                 <td class="staff_tbody_mobile">
+                                                                    <%= user.warehouse %>
+                                                                </td>
+                                                                
+                                                                 <td class="staff_tbody_mobile">
+                                                                    <%= user.position %>
+                                                                </td>
+                                                                <td class="staff_tbody_status">
+                                                                    <% if(user.status == "Enabled"){ %>
+                                                                        <span class="badge badge-lg badge-outline-info"><%= user.status %></span>
+                                                                    <% }else{ %>
+                                                                    <span class="badge badge-lg badge-outline-danger"><%= user.status %></span>
+                                                                    <% } %>
+                                                                </td>
+                                                                <td class="staff_tbody_edit">
+                                                                    <button type="button" class="badge badge-lg badge-success">
+                                                                        
+                                                                        <a data-toggle="modal" id="staff_id_new"
+                                                                            data-target="#EditModal"
+                                                                            data-name="<%= user.name %>"
+                                                                            data-username="<%= user.username %>"
+                                                                            data-email="<%= user.email %>"
+                                                                            data-mobile="<%= user.mobile %>"
+                                                                            data-status="<%= user.status %>"
+                                                                            data-position = "<%= user.position %>"
+                                                                            data-warehouse = "<%= user.warehouse %>"
+                                                                            data-warehouse_cat = "<%= user.warehouse_category %>"
+                                                                            data-id="<%= user._id %>"><i class="la la-pencil"></i>
+                                                                            <%= language.edit %></a>
+
+                                                                    </button>
+                                                                </td>
+                                                                <td>
+                                                                    <button type="button" class="badge badge-lg badge-primary">
+                                                                        <a href="/staff/<%= user._id %>" class="text-white"> <%= language.login %> </a>    
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                            <% i++ %>
+                                                        <% }) %>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal -->
+
+                    <form action="/staff/view" method="post">
+                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-primary ">
+                                        <h5 class="modal-title text-white" id="exampleModalLabel">
+                                            <%= language.add_new_staff %> 
+                                        </h5>
+
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="mb-3 col-md-6">
+                                                <label for="recipient-name" class="col-form-label"><%= language.name %> <span class="text-red">*</span>
+                                                </label>
+                                                <input type="text" class="form-control" id="recipient-name"
+                                                    placeholder="Staff Name" name="name" required>
+                                            </div>
+
+                                            <div class="mb-3 col-md-6">
+                                                <div class="form-group">
+                                                    <label for="recipient-name" class="col-form-label"><%= language.mobile %><span class="text-red">*</span>
+                                                    </label>
+                                                    <input type="number" class="form-control" id="recipient-name"
+                                                        placeholder="Mobile" name="mobile" required>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="mb-3 col-md-6">
+                                                <label for="recipient-name" class="col-form-label"><%= language.email %> <span class="text-red">*</span>
+                                                </label>
+                                                <input type="email" class="form-control" id="recipient-name"
+                                                    placeholder="E-Mail" name="email" required>
+                                            </div>
+
+                                            <div class="mb-3 col-md-6">
+                                                <label for="recipient-name" class="col-form-label"><%= language.password %> <span class="text-red">*</span>
+                                                </label>
+                                                <input type="password" class="form-control" id="recipient-name"
+                                                    placeholder="Password" name="password" required>
+                                            </div>
+                                        </div>
+
+                                                              
+                                      <div class="row">                          
+                                        <div class="mb-3 col-md-6">
+                                            <label for="warrehouse">Warehouse <span class="text-red">*</span> </label>
+                                            <select class="form-control" name="warehouse" id="warehouse" required>
+                                                <option value selected disabled>Select One</option>
+                                                <% warehouse.forEach((data)=> { %>
+                                                    <option value="<%= data.name %>"><%= data.name %></option>
+                                                <% }) %>
+                                            </select>
+                                        </div>
+                                        
+                                        
+                                              <div class="mb-3 col-md-6">
+                                                <label for="recipient-name" class="col-form-label">Position <span class="text-red">*</span>
+                                                </label>
+                                                <input type="text" class="form-control" id="recipient-name"
+                                                    placeholder="Position" name="position" required>
+                                            </div>
+                                       </div>  
+                                       
+                                       
+
+                                       <div class="row">                          
+                                        <div class="mb-3 col-md-6">
+                                            <label for="warrehouse">Warehouse Category<span class="text-red">*</span> </label>
+                                            <select class="form-control" name="warehouse_cat" id="warehouse_cat" required>
+                                                <option value="Raw Materials">Raw Materials</option>
+                                                <option value="Finished Goods">Finished Goods</option>
+                                            </select>
+                                        </div>
+                                        
+                                        
+                                       </div>  
+                                                                
+
+                                                             
+
+                                                        
+
+                                        <button type="submit" class="btn btn-primary w-100"><%= language.submit %></button>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="d-flex">
+                                            <button type="button" class="btn btn-danger"
+                                                data-dismiss="modal"><%= language.close %></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- modal end -->
+
+                    <!-- Edit Modal -->
+
+
+                    <form id="edit_form" action="/staff/view/<%= user._id %>" method="post">
+                        <div class="modal fade" id="EditModal" tabindex="-1" role="dialog"
+                            aria-labelledby="EditModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-primary ">
+                                        <h5 class="modal-title text-white" id="EditModalLabel">
+                                            <%= language.edit_staff_details %>
+                                        </h5>
+
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="mb-3 col-md-6">
+                                                <label for="recipient-name" class="col-form-label"><%= language.name %> <span class="text-red">*</span>
+                                                </label>
+                                                <input type="text" class="form-control" id="edit-name"
+                                                    value="<%= user.name %>" name="name" required readonly>
+                                            </div>
+
+                                            <div class="mb-3 col-md-6">
+                                                <label for="recipient-email" class="col-form-label"><%= language.email %><span class="text-red">*</span>
+                                                </label>
+                                                <input type="email" class="form-control" id="edit-email"
+                                                    value="<%= user.email %>" name="email" required readonly>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="recipient-mobile" class="col-form-label"><%= language.mobile %> <span class="text-red">*</span>
+                                            </label>
+                                            <input type="number" class="form-control" id="edit-mobile"
+                                                value="<%= user.mobile %>" name="mobile" required>
+
+                                            <label class="form-label mt-4"><%= language.status %><span class="text-red">*</span></label>
+                                            <select class="form-control" name="status" id="edit-status">
+
+                                                <option value="Enabled" <%=user.status=='Enabled' ? 'selected' : "" %>> Enabled</option>
+
+                                                <option value="Disabled" <%=user.status=='Disabled' ? 'selected' : "" %>> Disabled</option>
+                                                
+                                            </select>
+
+                                        </div>
+                                        
+                                        
+                                         <div class="row">                          
+                                        <div class="mb-3 col-md-6">
+                                            <label for="warrehouse">Warehouse <span class="text-red">*</span> </label>
+                                            <select class="form-control" name="warehouse" id="edit-warehouse" required>
+                                                <option value selected disabled>Select One</option>
+                                                <% warehouse.forEach((data)=> { %>
+                                                    <option value="<%= data.name %>"  <%= user.warehouse == data.name ? "selected" : "" %>  ><%= data.name %></option>
+                                                <% }) %>
+                                            </select>
+                                        </div>
+                                        
+                                        
+                                              <div class="mb-3 col-md-6">
+                                                <label for="recipient-name" class="col-form-label">Position <span class="text-red">*</span>
+                                                </label>
+                                                <input type="text" class="form-control" id="edit-poistion"
+                                                     value="<%= user.position %>" name="position" required>
+                                            </div>
+                                       </div>   
+                                       <div class="row">                          
+                                        <div class="mb-3 col-md-6">
+                                            <label for="warrehouse">Warehouse Category<span class="text-red">*</span> </label>
+                                            <select class="form-control" name="warehouse_cat" id="edit-warehouse_cat" required>
+                                                <% warehouse_cat.forEach((data)=> { %>
+                                                    <option value="<%= data %>"  <%= user.warehouse_category == data ? "selected" : "" %>  ><%= data %></option>
+                                                <% }) %>
+                                            </select>
+                                        </div>
+                                        
+                                        
+                                       </div>  
+                                        <button type="submit" class="btn btn-primary w-100"><%= language.submit %> </button>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="d-flex">
+                                            <button type="button" class="btn btn-danger"
+                                                data-dismiss="modal"><%= language.close %></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Edit modal end -->
+
+                    <!--**********************************
+            Footer start
+        ***********************************-->
+                    <%- include('./partials/footer'); -%>
+
+                        <!--**********************************
+            Footer end
+        ***********************************-->
+
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!-- start Toastr -->
+    <%- include('./partials/toastr'); -%>
+    <!-- End Toastr -->
+
+    <!--**********************************
+        Scripts
+    ***********************************-->
+  
+    <%- include('./partials/script'); -%>
+    <script>
+        $(document).on("click", "#staff_id_new", function () {
+        let dataId = $(this).attr("data-id");
+        let dataName = $(this).attr("data-name");
+        let dataUsername = $(this).attr("data-username");
+        let dataEmail = $(this).attr("data-email");
+        let dataMobile = $(this).attr("data-mobile");
+        let dataStatus = $(this).attr("data-status");
+        let dataPosition = $(this).attr("data-position")
+        let datawarehouse = $(this).attr("data-warehouse");
+        let warehousecategory = $(this).attr("data-warehouse_cat");
+
+        $("#edit_form").attr('action', '/staff/view/' + dataId);
+        $('#edit-name').attr('value', dataName);
+        $('#edit-username').attr('value', dataUsername);
+        $('#edit-email').attr('value', dataEmail);
+        $('#edit-mobile').attr('value', dataMobile);
+        $('#edit-poistion').attr('value', dataPosition);
+        $("#edit-status").val(dataStatus).attr("selected","selected");
+        $("#edit-warehouse").val(datawarehouse).attr("selected", "selected");
+        $("#edit-warehouse_cat").val(warehousecategory).attr("selected", "selected");
+    });
+    </script>
+
+        <!--**********************************
+        Scripts end
+    ***********************************-->
+</body>
+
+</html>

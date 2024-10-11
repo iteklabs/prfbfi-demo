@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+
+</head>
+
+<body>
+    <!--*******************
+    Preloader start
+********************-->
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <!--*******************
+    Preloader end
+********************-->
+
+    <!--**********************************
+    Main wrapper start
+***********************************-->
+    <div id="main-wrapper">
+
+        <!--**********************************
+        Nav header start
+    ***********************************-->
+        <%- include('./partials/header_logo'); -%>
+
+            <!--**********************************
+        Nav header end
+    ***********************************-->
+
+            <!--**********************************
+        Header start
+    ***********************************-->
+            <%- include('./partials/header',{titel: "Adjustment for Finished Goods"}); -%>
+
+                <!--**********************************
+        Header end ti-comment-alt
+    ***********************************-->
+
+                <!--**********************************
+        Sidebar start
+    ***********************************-->
+                <%- include('./partials/sidebar'); -%>
+
+                    <!--**********************************
+        Sidebar end
+    ***********************************-->
+
+                    <div class="content-body">
+                        <div class="container-fluid">
+                            <!-- row -->
+
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title col-6"><%= language.adjustments %> </h4>
+                                        <div class="card-title col-6 text-end">
+                                            <a href="/adjustment_finished/view/add_adjustment" class="btn btn-rounded btn-info text-white"> 
+                                                <%= language.add_adjustments %> 
+                                                <span class="btn-icon-start text-info">
+                                                    <i class="fa fa-plus color-info"></i>
+                                                </span>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table id="example" class="table table-responsive-sm text-center">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Document Number</th>
+                                                        <th><%= language.date %> </th>
+                                                        <th><%= language.warehouse %> </th>
+                                                        <th>Room </th>
+                                                        <th>Status </th>
+                                                        <th>Print </th>
+                                                        <!-- <th><%= language.edit %> </th> -->
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    <% var i=1 %>
+                                                    <% adjustment.forEach((data)=> { %>
+                                                            <tr>
+                                                                <td>
+                                                                    <%= data.invoice %>
+                                                                </td>
+
+                                                                <td>
+                                                                    <%= data.date %>
+                                                                </td>
+
+                                                                <td>
+                                                                    <%= data.warehouse_name %>
+                                                                </td>
+
+                                                                <td>
+                                                                    <%= data.room %>
+                                                                </td>
+
+
+                                                                <td>
+                                                                    <% if(data.finalize == "True"){ %>
+                                                                        Finalized
+                                                                    <% } else { %>
+                                                                        Pre-Finalize
+                                                                    <% } %>
+                                                                </td>
+
+
+                                                                <td class="text-nowrap">
+                                                                    <% if(data.finalize == "True"){ %>
+                    
+                                                                        <!-- <a href="/picking_list/PDF_adjustment/<%= data._id %>" id="barcode" data-id="<%= data._id %>"
+                                                                            class="btn btn-warning btn-sm">
+                                                                            <i class="feather icon-printer"></i>
+                                                                        </a> -->
+
+                                                                        <a href="/adjustment_finished/preview/<%= data._id %>">
+                                                                            <button type="button"
+                                                                                class="btn btn-success btn-xl m-1 mx-3">view </button>
+                                                                        </a>
+                                                                       
+                                                                    <% } else { %>
+
+                                                                        <a href="/adjustment_finished/preview/<%= data._id %>">
+                                                                            <button type="button"
+                                                                                class="btn btn-success btn-xl m-1 mx-3">view </button>
+                                                                        </a>
+                                                                
+                                                                
+                                                                    <% } %>
+                                                                </td>
+                    
+
+                                                                <!-- <td>
+                                                                    <a href="/adjustment_finished/view/<%= data._id %>">
+                                                                        <button type="button"
+                                                                            class="btn btn-success"><%= language.edit %> </button>
+                                                                    </a>
+                                                                    
+                                                                </td> -->
+
+                                                            </tr>
+                                                            <% i++ %>
+                                                    <% }) %>   
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!--**********************************
+            Footer start
+        ***********************************-->
+                    <%- include('./partials/footer'); -%>
+
+                        <!--**********************************
+            Footer end
+        ***********************************-->
+
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!-- start Toastr -->
+    <%- include('./partials/toastr'); -%>
+    <!-- End Toastr -->
+
+    <!--**********************************
+        Scripts
+    ***********************************-->
+
+    <%- include('./partials/script'); -%>
+
+        <!--**********************************
+        Scripts end
+    ***********************************-->
+</body>
+
+</html>

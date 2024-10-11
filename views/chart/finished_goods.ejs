@@ -1,0 +1,351 @@
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Finished Goods</h4>
+        </div>
+    </div>
+    <div class="row">
+
+
+
+        <div class="col-lg-3">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Incoming</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <canvas id="myLineChartFG" width="400" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Outgoing</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <canvas id="myLineChart1FG" width="400" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+         <div class="col-lg-3">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Adjustment</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <canvas id="myLineChart2FG" width="400" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Transfer</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <canvas id="myLineChart3FG" width="400" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+
+
+    var ctxFG = document.getElementById('myLineChartFG').getContext('2d');
+    var ctx1FG = document.getElementById('myLineChart1FG').getContext('2d');
+    var ctx2FG = document.getElementById('myLineChart2FG').getContext('2d');
+    var ctx3FG = document.getElementById('myLineChart3FG').getContext('2d');
+    
+
+
+    //Finished Goods
+
+    function fetchDataFG() {
+        // Make an AJAX request
+        $.ajax({
+            url: './fg_line', // Replace 'your_data_endpoint_url_here' with your actual data endpoint URL
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                // On success, update chart with fetched data
+                // console.log(response)
+                updateChartFG(response);
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
+    function fetchDataOutFG() {
+        // Make an AJAX request
+        $.ajax({
+            url: './fg_out_line', // Replace 'your_data_endpoint_url_here' with your actual data endpoint URL
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                // On success, update chart with fetched data
+                // console.log(response)
+                updateChartOutFG(response);
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
+    function fetchDataADJFG() {
+        // Make an AJAX request
+        $.ajax({
+            url: './fg_adj_line', // Replace 'your_data_endpoint_url_here' with your actual data endpoint URL
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                // On success, update chart with fetched data
+                // console.log(response)
+                updateChartADJFG(response);
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
+    function fetchDataTFGJFG() {
+        // Make an AJAX request
+        $.ajax({
+            url: './fg_trf_line', // Replace 'your_data_endpoint_url_here' with your actual data endpoint URL
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                // On success, update chart with fetched data
+                // console.log(response)
+                updateChartTRFFG(response);
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
+
+
+    function updateChartFG(data) {
+        var labels = [];
+        var quantities = [];
+
+        // Extract labels and quantities from fetched data
+        data.forEach(function(item) {
+            
+            var dob = new Date(item.date);
+            var dobArr = dob.toDateString().split(' ');
+            var dobFormat = dobArr[2] + ' ' + dobArr[1] + ' ' + dobArr[3];
+            // alert(dobFormat); 
+            labels.push(dobFormat);
+            quantities.push(item.totalQuantity);
+        });
+
+        // Update chart data with fetched data
+        myLineChartFG.data.labels = labels;
+        myLineChartFG.data.datasets[0].data = quantities;
+
+        // Update the chart
+        myLineChartFG.update();
+    }
+    function updateChartOutFG(data) {
+        var labels = [];
+        var quantities = [];
+
+        // Extract labels and quantities from fetched data
+        data.forEach(function(item) {
+            
+            var dob = new Date(item.date);
+            var dobArr = dob.toDateString().split(' ');
+            var dobFormat = dobArr[2] + ' ' + dobArr[1] + ' ' + dobArr[3];
+            // alert(dobFormat); 
+            labels.push(dobFormat);
+            quantities.push(item.totalQuantity);
+        });
+
+        // Update chart data with fetched data
+        myLineChart1FG.data.labels = labels;
+        myLineChart1FG.data.datasets[0].data = quantities;
+
+        // Update the chart
+        myLineChart1FG.update();
+    }
+    function updateChartADJFG(data) {
+        var labels = [];
+        var quantities = [];
+
+        // Extract labels and quantities from fetched data
+        data.forEach(function(item) {
+            
+            var dob = new Date(item.date);
+            var dobArr = dob.toDateString().split(' ');
+            var dobFormat = dobArr[2] + ' ' + dobArr[1] + ' ' + dobArr[3];
+            // alert(dobFormat); 
+            labels.push(dobFormat);
+            quantities.push(item.totalQuantity);
+        });
+
+        // Update chart data with fetched data
+        myLineChart2FG.data.labels = labels;
+        myLineChart2FG.data.datasets[0].data = quantities;
+
+        // Update the chart
+        myLineChart2FG.update();
+    }
+    function updateChartTRFFG(data) {
+        var labels = [];
+        var quantities = [];
+
+        // Extract labels and quantities from fetched data
+        data.forEach(function(item) {
+            
+            var dob = new Date(item.date);
+            var dobArr = dob.toDateString().split(' ');
+            var dobFormat = dobArr[2] + ' ' + dobArr[1] + ' ' + dobArr[3];
+            // alert(dobFormat); 
+            labels.push(dobFormat);
+            quantities.push(item.totalQuantity);
+        });
+
+        // Update chart data with fetched data
+        myLineChart3FG.data.labels = labels;
+        myLineChart3FG.data.datasets[0].data = quantities;
+
+        // Update the chart
+        myLineChart3FG.update();
+    }
+
+    
+    var options1 = {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        },
+        title: {
+            display: true,
+            text: 'Chart.js Line Chart'
+        }
+    };
+
+    var myLineChartFG = new Chart(ctxFG, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Total Quantity',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: [],
+                fill: false,
+                pointStyle: 'rectRot',
+                pointRadius: 5,
+                pointBorderColor: 'rgb(0, 0, 0)',
+                borderWidth: 1,
+            }]
+        },
+        options: options1
+    });
+    var myLineChart1FG = new Chart(ctx1FG, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Total Quantity',
+                backgroundColor: 'rgb(173, 216, 230)',
+                borderColor: 'rgb(173, 216, 230)',
+                data: [],
+                fill: false,
+                pointStyle: 'rectRot',
+                pointRadius: 5,
+                pointBorderColor: 'rgb(0, 0, 0)',
+                borderWidth: 1,
+            }]
+        },
+        options: options1
+    });
+    var myLineChart2FG = new Chart(ctx2FG, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Total Quantity - ',
+                backgroundColor: 'rgb(144, 238, 144)',
+                borderColor: 'rgb(144, 238, 144)',
+                data: [],
+                fill: false,
+                pointStyle: 'rectRot',
+                pointRadius: 5,
+                pointBorderColor: 'rgb(0, 0, 0)',
+                borderWidth: 1,
+            }]
+        },
+        options: options1
+    });
+    var myLineChart3FG = new Chart(ctx3FG, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Total Quantity - ',
+                backgroundColor: 'rgb(211, 211, 211)',
+                borderColor: 'rgb(211, 211, 211)',
+                data: [],
+                fill: false,
+                pointStyle: 'rectRot',
+                pointRadius: 5,
+                pointBorderColor: 'rgb(0, 0, 0)',
+                borderWidth: 1,
+            }]
+        },
+        options: options1
+    });
+
+    fetchDataFG();
+    fetchDataOutFG();
+    fetchDataADJFG();
+    fetchDataTFGJFG();
+
+
+
+
+    async function fetchDataAndUpdateChart1(fetchFunction, chart) {
+        const newData = await fetchFunction(); // Fetch data using the provided fetchFunction
+        // chart.data = newData;
+        // chart.update(); // Update the chart with the new data
+        await fetchFunction(); 
+    }
+
+
+    function startDataRefresh() {
+        const pollingInterval = 5000;
+        
+
+        setInterval(() => fetchDataAndUpdateChart1(fetchDataFG, ctxFG), pollingInterval);
+        setInterval(() => fetchDataAndUpdateChart1(fetchDataOutFG, ctx1FG), pollingInterval);
+        setInterval(() => fetchDataAndUpdateChart1(fetchDataADJFG, ctx2FG), pollingInterval);
+        setInterval(() => fetchDataAndUpdateChart1(fetchDataTFGJFG, ctx3FG), pollingInterval);
+    }
+
+    startDataRefresh();
+</script>

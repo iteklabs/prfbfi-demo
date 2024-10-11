@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+
+</head>
+
+<body onload="showTextbox()">
+    <!--*******************
+        Preloader start
+    ********************-->
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <!--*******************
+        Preloader end
+    ********************-->
+
+    <!--**********************************
+        Main wrapper start
+    ***********************************-->
+    <div id="main-wrapper">
+
+        <!--**********************************
+            Nav header start
+        ***********************************-->
+        <%- include('./partials/header_logo'); -%>
+
+            <!--**********************************
+            Nav header end
+        ***********************************-->
+
+            <!--**********************************
+            Header start
+        ***********************************-->
+            <%- include('./partials/header',{titel: "Tansfer for Finish Goods"}); -%>
+
+                <!--**********************************
+            Header end ti-comment-alt
+        ***********************************-->
+
+                <!--**********************************
+            Sidebar start
+        ***********************************-->
+                <%- include('./partials/sidebar'); -%>
+
+                    <!--**********************************
+            Sidebar end
+        ***********************************-->
+
+                    <!--**********************************
+            Content body start
+        ***********************************-->
+                    <div class="content-body">
+                        <div class="container-fluid">
+
+                            <!-- row -->
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h4 class="card-title"><%= language.edit_transfers %> </h4>
+                                            <button type="button" class="btn btn-rounded btn-outline-info"
+                                                onclick="history.back()"><i class="la la-undo"></i> <%= language.go_back %></button>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-validation">
+
+                                                <form class="needs-validation" action="/transfer_finished/view/<%= transfer._id %>"
+                                                    method="post" id="form">
+
+                                                    <div class="row mb-3">
+
+
+                                                        <div class="col-xl-3 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"> Document Number <span
+                                                                        class="text-red"> *</span></label>
+                                                                <input type="text" name="invoice" class="form-control" value="<%= transfer.invoice %>"
+                                                                    id="invoice" readonly>
+                                                            </div>
+                                                        </div>
+
+
+
+                                                        <div class="col-xl-4 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"><%= language.date %> <span
+                                                                        class="text-red">*</span></label>
+                                                                <input type="date" name="date" class="form-control"
+                                                                    id="date" value="<%= transfer.date %>" required>
+                                                            </div>
+                                                        </div>
+
+                                                        
+                                                        <div class="col-xl-4 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"><%= language.from_warehouse %> <span
+                                                                        class="text-red">*</span></label>
+                                                                <input type="text" name="from_warehouse" class="form-control"
+                                                                    id="transfer_from_warehouse" value="<%= transfer.from_warehouse %>" readonly>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        
+                                                        <div class="col-xl-3 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no">From Room<span
+                                                                        class="text-red">*</span></label>
+                                                                  <input type="text" name="FromRoom_name" class="form-control"
+                                                                    id="FromRoom_name" value="<%= transfer.from_room %>" readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-4 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"><%= language.to_warehouse %> <span
+                                                                        class="text-red">*</span></label>
+
+                                                                <input type="text" name="to_warehouse" class="form-control"
+                                                                    id="to_warehouse" value="<%= transfer.to_warehouse %>" readonly>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        
+                                                        <div class="col-xl-3 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no">To Room<span
+                                                                        class="text-red">*</span></label>
+                                                                  <input type="text" name="ToRoom_name" class="form-control"
+                                                                    id="ToRoom_name" value="<%= transfer.to_room %>" readonly>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                    
+                                                    
+                                                    <div class="row mb-3">
+                                                        <div class="col-xl-4 col-sm-6">
+                                                            <select class="form-control" id="choice-dropdown" onchange="showTextbox()">
+                                                                <!-- <option value="">Select an option</option> -->
+                                                                <!-- <option value="Product">Product Code</option> -->
+                                                                <option value="Primary">Please scan the barcode...</option>
+                                                                <!-- <option value="Secondary">Secondary Code</option> -->
+                                                            </select>
+                                                        </div>    
+                                                            
+                                              
+                                                             <div class="col-xl-12" id="primary-textbox" style="display: none;">
+                                                                <div class="form-group">
+                                                                    <label for="invoice_no">Barcode  <span
+                                                                            class="text-red">*</span></label>
+                                                                    <input type="text" name="product_code" class="form-control" id="product_code">
+                                                                </div>
+                                                             </div>
+                                                             
+                                                             
+                                                              <div class="col-xl-12" id="secondary-textbox" style="display: none;">
+                                                                <div class="form-group">
+                                                                    <label for="invoice_no2">Secondary Barcode  <span
+                                                                            class="text-red">*</span></label>
+                                                                    <input type="text" name="product_code2" class="form-control" id="product_code2">
+                                                                </div>
+                                                              </div>
+
+
+                                                              <div class="col-xl-12" id="product-textbox" style="display: none;">
+                                                                <div class="form-group">
+                                                                    <label for="invoice_no">Product Barcode  <span
+                                                                            class="text-red">*</span></label>
+                                                                    <input type="text" name="product_code4" class="form-control" id="product_code4">
+                                                                </div>
+                                                             </div>
+                                                        
+                                                    </div>
+
+                                                    <div class="col-xl-12">
+                                                        <div class="table-responsive">
+                                                            <table class="table primary-table-bordered">
+                                                                <thead class="thead-primary">
+                                                                    <tr>
+                                                                        <th scope="col" colspan="1">Item Code </th>
+                                                                        <th scope="col" colspan="1">Item Description </th>
+                                                                       
+                                                                        <th colspan="2"><center>FROM</center></th>
+                                                                        <th colspan="6"><center>To</center></th>
+                                                                        
+                                                                    </tr>
+                                                                   <tr>
+                                                                       <th></th>
+                                                                       <th></th>
+                                                                        <th><%= language.in_stock %> </th>
+                                                                        <th>Bin </th>
+                                                                        <th><%= language.quantity %>  </th>
+                                                                        <th>Unit of Measure </th>
+                                                                        <th>Batch Code </th>
+                                                                        <th>Expiry date </th>
+                                                                        <th>Bin </th>
+                                                                        <th>Action </th>
+                                                                   
+                                                                   </tr>
+                                                                </thead>
+                                                                <tbody id="tblPage_new">
+                                                                    <% var x = 1; %>
+                                                                    <% transfer.product.forEach((transfer)=> { %>
+                                                                    <tr>
+
+
+                                                                        <td class="align-top">
+                                                                            <input type="text"  name="product_code3" id="product_code3" value="<%= transfer.product_code %>" class="form-control product_code3" style="width: 125px;">
+                                                                        </td>
+
+                                                                        
+                                                                        <td class="align-top">
+                                                                            <input type="text" name="prod_name"
+                                                                                id="prod_name<%= x %>" value="<%= transfer.product_name %>"
+                                                                                class="form-control prod_name" style="width: 355px;" readonly>
+                                                                        </td>
+                                                                        
+                                                                        
+                                                                        <% stock.forEach((stocks) => { %>
+                                                                            <% if(transfer.product_name == stocks.name  &&  transfer.from_bay == stocks.bay) { %>
+                                                                                <td class="align-top">
+                                                                                    <input type="text" name="from_prod_qty"
+                                                                                        id="from_prod_qty" value="<%= stocks.product_stock %>"
+                                                                                        class="form-control from_prod_qty" style="width: 150px;" readonly>
+                                                                                </td>
+                                                                                
+                                                                                
+                                                                                <td class="align-top">
+                                                                                    <input type="text" name="from_prod_level"
+                                                                                        id="from_prod_level" value="<%= stocks.bay %>"
+                                                                                        class="form-control from_prod_level" style="width: 150px;" readonly>
+                                                                                </td>
+
+                                                                            <% }%>
+                                                                        
+                                                                        
+                                                                        
+                                                                        <% })%>
+                                                                        
+                                                                        
+                                                                        <td class="align-top">
+                                                                            <input type="text" name="to_prod_qty" id="to_prod_qty<%= x %>" value="<%= transfer.to_quantity %>" onkeyup="ValidationForMaxQTY('<%= x %>')"  class="form-control to_prod_qty">
+                                                                        </td>
+
+                                                                        <input type="hidden" name="secondary_unit" id="secondary_unit<%= x %>" value="<%= transfer.secondary_unit %>"  class="form-control secondary_unit" >
+
+                                                                        <td class="align-top">
+                                                                            <input type="text" name="unit" id="unit<%= x %>" value="<%= transfer.unit %>"  class="form-control unit" style="width: 150px;">
+                                                                        </td>
+
+                                                                        <td class="align-top">
+                                                                            <input type="text" name="batch_code" id="batch_code<%= x %>" value="<%= transfer.batch_code %>"   class="form-control batch_code" style="width: 150px;">
+                                                                        </td>
+
+
+                                                                        <td>
+                                                                            <div class="input-group"> 
+                                                                                <input type="date" name="expiry_date" class="form-control" style="width: 150px;" id="expiry_date" value="<%= ed_fullDate %>"> 
+                                                                            </div>
+                                                                        </td>
+                                                                        
+                                                                        <td class="align-top">
+                                                                            
+                                                                            <select class="form-control" name="to_prod_level" id="to_prod_level<%= x %>" style="width: 80px;">
+                                                                                <% dataSelected.levels.forEach((level)=> { %>
+                                                                                    <option value="<%= level %>" <%=transfer.to_bay==level
+                                                                                    ? "selected" : "" %>>
+                                                                                        <%= dataSelected.identify+level %>
+                                                                                    </option>
+                                                                                <% }) %>
+                                                                            </select>
+                                                                        </td>
+
+
+
+                                                                        <input type="hidden" name="MaxStocks_data" id="MaxStocks_data<%= x %>" value="<%= transfer.maxProducts %>" class="form-control MaxStocks_data">
+                                                                        <input type="hidden" name="MaxStocks_data2" id="MaxStocks_data2<%= x %>" value="<%= transfer.maxProducts %>" class="form-control MaxStocks_data">
+                                                                        
+                                                                        
+                                                                        <input type="hidden" name="primary_code" id="primary_code" value="<%= transfer.primary_code %>" class="form-control primary_code">
+                                                                        <input type="hidden" name="secondary_code" id="secondary_code" value="<%= transfer.secondary_code %>" class="form-control secondary_code">
+
+                                                                        <input type="hidden"  class="form-control" id="storage" name="storage" value="<%= transfer.storage %>" readonly>
+                                                                        <input type="hidden"  class="form-control" id="rak" name="rak" value="<%= transfer.rack %>" readonly>
+
+                                                                        <input type="hidden"  class="form-control" id="from_storage" name="from_storage" value="<%= transfer.from_storage %>" readonly>
+                                                                        <input type="hidden"  class="form-control" id="from_rak" name="from_rak" value="<%= transfer.from_rack %>" readonly>
+                                                                        
+                                                                    </tr>
+                                                                    <% x++; %>
+                                                                    <% }) %>
+
+                                                                    <input type="hidden" name="last_val" id="last_val" value="<%= x %>" class="form-control last_val">
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <div class="form-group">
+                                                                <label for="note"><%= language.note %></label>
+                                                                <input type="text" class="form-control"
+                                                                    placeholder="note" value="<%= transfer.note %>" id="note" name="note">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <button class="btn btn-primary" type="submit"
+                                                            id="submit"><%= language.submit %></button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--**********************************
+            Content body end
+        ***********************************-->
+
+                    <!--**********************************
+            Footer start
+        ***********************************-->
+                    <%- include('./partials/footer'); -%>
+
+                        <!--**********************************
+            Footer end
+        ***********************************-->
+
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!-- start Toastr -->
+    <%- include('./partials/toastr'); -%>
+        <!-- End Toastr -->
+
+        <!--**********************************
+        Scripts
+    ***********************************-->
+
+        <%- include('./partials/script'); -%>
+        
+        <script>
+
+$(function(){
+        var dtToday = new Date();
+        
+        var month = dtToday.getMonth() + 1;
+        var day = dtToday.getDate();
+        var year = dtToday.getFullYear();
+        if(month < 10)
+            month = '0' + month.toString();
+        if(day < 10)
+            day = '0' + day.toString();
+        
+        var maxDate = year + '-' + month + '-' + day;
+        $('#date').attr('max', maxDate);
+    });
+
+    
+            function showTextbox() {
+              var dropdown = document.getElementById("choice-dropdown");
+              var selectedChoice = dropdown.value;
+
+
+              var productTextbox = document.getElementById("product-textbox");
+              var primaryTextbox = document.getElementById("primary-textbox");
+              var secondaryTextbox = document.getElementById("secondary-textbox");
+        
+              if (selectedChoice === "Product") {
+                productTextbox.style.display = "block";
+                secondaryTextbox.style.display = "none";
+                primaryTextbox.style.display = "none";
+              } else if (selectedChoice === "Primary") {
+                primaryTextbox.style.display = "block";
+                secondaryTextbox.style.display = "none";
+                productTextbox.style.display = "none";
+                document.getElementById("product_code").focus()
+              } else if(selectedChoice === "Secondary"){
+                primaryTextbox.style.display = "none";
+                secondaryTextbox.style.display = "block"
+                productTextbox.style.display = "none";
+              } else {
+                primaryTextbox.style.display = "none";
+                secondaryTextbox.style.display = "none";
+                productTextbox.style.display = "none";
+              }
+            }
+            
+
+            function ValidationForMaxQTY(i){
+                var prod_qty = document.getElementById("to_prod_qty"+i).value;
+                var stocks_qty = document.getElementById("MaxStocks_data"+i).value;
+                if(parseInt(prod_qty) >  parseInt(stocks_qty)){
+                    Swal.fire(
+                    'Sorry',
+                    'Sorry the maximum quantity has been reached.',
+                    'warning'
+                    )
+                    document.getElementById("to_prod_qty"+i).value = "";
+                }
+            }
+
+            function checkingWarehouse(i){
+                var Level = document.getElementById("to_prod_level"+i).value;
+                var Isle = document.getElementById("to_prod_isle"+i).value;
+                var Pallet = document.getElementById("to_prod_pallet"+i).value;
+                var warehouse = document.getElementById("to_warehouse").value;
+                var rooms = document.getElementById("ToRoom_name").value;
+                var Quanity = document.getElementById("to_prod_qty"+i);
+                var tempMaxStocks = document.getElementById("MaxStocks_data2"+i).value;
+                var productName = document.getElementById("prod_name"+i).value;
+                $.ajax({
+                    url: '/transfer/CheckingWarehouse', 
+                    method: 'POST',
+                    data: {   level: Level , isle: Isle, pallet: Pallet, warehouses: warehouse, room: rooms  }, 
+                    success: function(response) {
+
+                        if(response.length > 0){
+                            $.each(response, function(index, data) {
+                            
+                                // alert(productName + '==' +  data.name + '&&' + Pallet + '==' + data.pallet)
+                                if(productName == data.name && Pallet == data.pallet){
+
+                                    var valQty = Quanity.value
+                                    if(isNaN(valQty)){
+                                        valQty = 0
+                                    }
+                                    // const stocksData = parseInt(data.product_stock) - parseInt(Quanity.value);
+                                    var stocksData = parseInt(data.product_stock) - parseInt(data.maxProducts);
+                                    document.getElementById("MaxStocks_data"+i).value = Math.abs(parseInt(stocksData));
+                                    const newVal = document.getElementById("MaxStocks_data"+i).value;
+                                    if(parseInt(Quanity.value) > parseInt(newVal)){
+                                        if(newVal == 0){
+                                            Swal.fire(
+                                            'Sorry',
+                                            'Sorry the maximum quantity has been reached in this pallet.',
+                                            'error'
+                                            )
+                                            Quanity.value = newVal;
+                                        }else{
+                                            Swal.fire(
+                                            'Information',
+                                            'This pallet have ' + data.product_stock + ' quantity  you will allow only ' +  newVal,
+                                            'question'
+                                            )
+
+                                            Quanity.value = newVal;
+                                        }
+                                    }
+
+
+                                }else{
+                                    Swal.fire(
+                                    'Sorry',
+                                    'Sorry the pallet already occupied.',
+                                    'warning'
+                                    )
+                                    Quanity.value = "";
+                                    document.getElementById("to_prod_pallet"+i).value = "";
+                                    document.getElementById("MaxStocks_data"+i).value = parseInt(tempMaxStocks);
+                                }
+                                
+                            })
+
+                        }else{
+                            
+                            document.getElementById("MaxStocks_data"+i).value = parseInt(tempMaxStocks);
+                            // alert(tempMaxStocks)
+                        }
+                        
+                    }
+                })
+
+            }
+
+
+            function removeSelfRow(event) {
+       
+                var row = $(event.target).closest('tr');
+                
+                row.remove();
+            }
+
+            $(document).on('click', 'button#remove', function(event) {
+                removeSelfRow(event);
+            });
+
+
+            function BayBin2(){
+            const FromstorageData = document.querySelectorAll("[id^='from_storage']");
+            const FromrakData = document.querySelectorAll("[id^='from_rak']");
+            var warehouse = document.getElementById("transfer_from_warehouse").value;
+            var room = document.getElementById("FromRoom_name").value;
+            // alert(warehouse + " <> " + room)
+            console.log(FromstorageData)
+            let outputArray = [];
+            if(warehouse == "DRY STORAGE"){
+                switch(room){
+                    case "Rack A":
+                    storage = ["D"];
+                    rak = ["A"];
+                    break;
+                    case "Rack B":
+                    storage = ["D"];
+                    rak = ["B"];
+                    break;
+                    case "Shelves":
+                    storage = ["D"];
+                    rak = ["S"];
+                    break;
+                    case "Receiving Area":
+                    storage = ["D"];
+                    rak = ["R"];
+                    break;
+                }
+                
+                for (let i = 0; i < FromstorageData.length; i++) {
+                    FromstorageData[i].value = storage[0];
+                }
+
+                for (let i = 0; i < FromrakData.length; i++) {
+                    FromrakData[i].value = rak[0];
+                }
+            
+                
+            }else if(warehouse == "COLD STORAGE"){
+                switch(room){
+                    case "Rack A":
+                    storage = ["C"];
+                    rak = ["A"];
+                    break;
+                    case "Rack B":
+                    storage = ["C"];
+                    rak = ["B"];
+                    break;
+                    case "Rack C":
+                    storage = ["C"];
+                    rak = ["C"];
+                    break;
+                    case "Rack D":
+                    storage = ["C"];
+                    rak = ["D"];
+                    break;
+                    case "Rack E":
+                    storage = ["C"];
+                    rak = ["E"];
+                    break;
+
+                    case "Rack F":
+                    storage = ["C"];
+                    rak = ["F"];
+                    break;
+                }
+                
+                for (let i = 0; i < FromstorageData.length; i++) {
+                    FromstorageData[i].value = storage[0];
+                }
+
+                for (let i = 0; i < FromrakData.length; i++) {
+                    FromrakData[i].value = rak[0];
+                }
+            }
+        }
+
+
+
+        function BayBin(){
+        const selectlevel= document.querySelectorAll(`select[level="levelOslie"]`);
+        var warehouse = document.getElementById("to_warehouse").value;
+        var room = document.getElementById("ToRoom_name").value;
+        var levels = [];
+        let outputArray = [];
+        if(warehouse == "DRY GOODS"){
+            switch(room){
+                case "Rack 1":
+                levels = [1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12,13,14,15,16];
+                break;
+                case "Rack 2":
+                levels = [17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32];
+                break;
+            }
+            
+            for (let i = 0; i < selectlevel.length; i++) {
+                var optionsHtml = '';
+                levels.forEach(function (num) {
+                     optionsHtml += '<option value="' + num + '">' + num + '</option>';
+                });
+                 selectlevel[i].innerHTML = optionsHtml;
+            }        
+            
+        }else if(warehouse == "FROZEN GOODS"){
+            switch(room){
+                case "Rack 1":
+                levels = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+                break;
+                case "Rack 2":
+                levels = [10, 11, 12, 13, 14, 15, 16, 17, 18];
+                break;
+            }
+            
+            for (let i = 0; i < selectlevel.length; i++) {
+                var optionsHtml = '';
+                levels.forEach(function (num) {
+                     optionsHtml += '<option value="' + num + '">' + num + '</option>';
+                });
+                 selectlevel[i].innerHTML = optionsHtml;
+            }        
+            
+    }
+}
+
+
+            //Primary
+            $(document).ready(function() {
+                var x = $('#last_val').val;
+                $('#product_code').on('keydown', function(e) {
+                if (e.which === 13) {
+                    e.preventDefault();
+                    return false;
+                    }
+                });
+                
+            $('#product_code').on('input', function() {
+                var primarycode = $(this).val();
+                var FromWarehouse_data = $('#transfer_from_warehouse').val();
+                var FromRooms_data = $('#FromRoom_name').val();
+                var isProductExists = false;
+                $('#tblPage_new tr').each(function() {
+                var existingProductCode = $(this).find('td:nth-child(2)').text();
+                if (existingProductCode === primarycode) {
+                    isProductExists = true;
+                    return false;
+                }
+                });
+                
+                if (!isProductExists) {
+                
+                $.ajax({
+                    url: '/transfer_finished/barcode_scanner', 
+                    method: 'POST',
+                    data: { primary_code: primarycode, FromWareHouse: FromWarehouse_data,  FromRoom: FromRooms_data }, // Pass the product code as a parameter
+                    success: function(response) {
+                  
+                    $.each(response, function(index, data) {
+                        if(data.instock > 0){
+                        var row = $('<tr>');
+                         const levelData = data.level === null ? 0 : data.level;
+                        const isleData =  data.isle === null ? 0 : data.isle;
+                        const palletData =  data.pallet === null ? 0 : data.pallet;  
+                        
+                        row.append($('<td>').html('<input type="text" class="form-control" style="width: 125px;" name="product_code3" id="product_code3'+ x +'" value="' + data.product_code + '" readonly>'));
+                        row.append($('<td>').html('<input type="text" class="form-control" style="width: 355px;" name="prod_name" id="prod_name'+ x +'" value="' + data.name + '" readonly>'));
+                        row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" name="from_prod_qty" value="' + data.instock + '" readonly>'));
+                        row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" name="from_prod_level" value="' + levelData + '" readonly>'));
+                        row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" name="to_prod_qty" id="to_prod_qty'+ x +'" onkeyup="ValidationForMaxQTY('+ x +')"  >'));
+                        row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" name="unit" value="' + data.unit + '" readonly>'));
+                        row.append($('<td>').html('<input type="text" class="form-control" style="width: 125px;" name="batch_code" value="">'));
+                        row.append($('<td>').html('<input type="date" class="form-control" style="width: 150px;" name="expiry_date" value="">'));
+                        row.append($('<td>').html('<select class="form-control" name="to_prod_level" level="levelOslie" id="to_prod_level' + x + '" style="width: 150px;"></select>'));
+                        row.append($('<td>').html('<button type="button" class="btn btn-square btn-outline-danger" id="remove">Remove</button>'));
+                        $('#tblPage_new').append(row);
+                        
+                        $('<input>').attr({
+                            type: 'hidden',
+                            id: 'primary_code',
+                            name: 'primary_code',
+                            value: data.primary_code
+                        }).appendTo('form');
+                        
+                        $('<input>').attr({
+                            type: 'hidden',
+                            id: 'secondary_code',
+                            name: 'secondary_code',
+                            value: data.secondary_code
+                        }).appendTo('form');
+                        
+                        
+                        $('<input>').attr({
+                            type: 'hidden',
+                            id: 'secondary_unit',
+                            name: 'secondary_unit',
+                            value: data.secondary_unit
+                        }).appendTo('form');
+
+
+                        $('<input>').attr({
+                            type: 'hidden',
+                            id: 'MaxStocks_data'+x,
+                            name: 'MaxStocks_data',
+                            value: data.maxProducts
+                        }).appendTo('form');
+
+
+                        $('<input>').attr({
+                            type: 'hidden',
+                            id: 'MaxStocks_data2'+x,
+                            name: 'MaxStocks_data2',
+                            value: data.maxProducts
+                        }).appendTo('form');
+
+
+                        $('<input>').attr({
+                            type: 'hidden',
+                            id: 'storage',
+                            name: 'storage',
+                            value: data.storage
+                        }).appendTo('form');
+
+                        $('<input>').attr({
+                            type: 'hidden',
+                            id: 'rak',
+                            name: 'rak',
+                            value: data.rack
+                        }).appendTo('form');
+
+                        $('<input>').attr({
+                            type: 'hidden',
+                            id: 'from_storage',
+                            name: 'from_storage',
+                            value: ""
+                        }).appendTo('form');
+
+                        $('<input>').attr({
+                            type: 'hidden',
+                            id: 'from_rak',
+                            name: 'from_rak',
+                            value: ""
+                        }).appendTo('form');
+
+                        BayBin();
+                        BayBin2();
+                        x++;
+                    }
+                    
+                    });
+                    
+                    // Clear the product code input field
+                    $("#product_code").val('');
+                    },
+                    error: function(xhr, status, error) {
+                    // Handle the error appropriately
+                    }
+                });
+                }
+            });
+            });
+
+
+            //secondary
+            $(document).ready(function() {
+                $('#product_code2').on('keydown', function(e) {
+                if (e.which === 13) {
+                    e.preventDefault();
+                    return false;
+                    }
+                });
+                
+            $('#product_code2').on('input', function() {
+                var secondarycode = $(this).val();
+                var FromWarehouse_data = $('#transfer_from_warehouse').val();
+                var FromRooms_data = $('#FromRoom_name').val();
+                var isProductExists = false;
+
+                $('#tblPage_new tr').each(function() {
+                var existingProductCode = $(this).find('td:nth-child(2)').text();
+                if (existingProductCode === secondarycode) {
+                    isProductExists = true;
+                    return false;
+                }
+                });
+                
+                if (!isProductExists) {
+                
+                $.ajax({
+                    url: '/transfer/barcode_scanner2', 
+                    method: 'POST',
+                    data: { secondary_code: secondarycode, FromWareHouse: FromWarehouse_data,  FromRoom: FromRooms_data }, // Pass the product code as a parameter
+                    success: function(response) {
+                    var x = $('#last_val').val;
+                    $.each(response, function(index, data) {
+                        if(data.instock > 0){
+                        var row = $('<tr>');
+                        const levelData = data.level === null ? 0 : data.level;
+                        const isleData =  data.isle === null ? 0 : data.isle;
+                        const palletData =  data.pallet === null ? 0 : data.pallet;  
+                        
+                        row.append($('<td>').html('<input type="text" class="form-control" style="width: 125px;" name="product_code3" id="product_code3'+ x +'" value="' + data.product_code + '" readonly>'));
+                        row.append($('<td>').html('<input type="text" class="form-control" style="width: 355px;" name="prod_name" id="prod_name'+ x +'" value="' + data.name + '" readonly>'));
+                        row.append($('<td>').html('<input type="text" class="form-control" name="from_prod_qty" value="' + data.instock + '" readonly>'));
+                        row.append($('<td>').html('<input type="text" class="form-control" name="from_prod_level" value="' + levelData + '" readonly>'));
+                        row.append($('<td>').html('<input type="text" class="form-control" name="from_prod_isle" value="' + isleData + '" readonly>'));
+                        row.append($('<td>').html('<input type="text" class="form-control" name="from_prod_pallet" value="' + palletData + '" readonly>'));
+                        row.append($('<td>').html('<input type="text" class="form-control" name="to_prod_qty" id="to_prod_qty'+ x +'" onkeyup="ValidationForMaxQTY('+ x +')"  >'));
+                        row.append($('<td>').html('<input type="text" class="form-control" name="unit" value="' + data.unit + '" readonly>'));
+                        row.append($('<td>').html('<input type="text" class="form-control" style="width: 125px;" name="batch_code" value="">'));
+                        var levelDropdown = $('<select class="form-control"  style="width: 85px;" name="to_prod_level" id="to_prod_level'+ x +'" >');
+                        var levels = [1, 2, 3, 4]; 
+                        $.each(levels, function(levelIndex, levelValue) {
+                        var option = $('<option>').text(levelValue);
+                        levelDropdown.append(option);
+                        });
+                        row.append($('<td>').append(levelDropdown));
+                        
+                        var IsleDropdown = $('<select class="form-control" style="width: 85px;" name="to_prod_isle"  id="to_prod_isle'+ x +'" >');
+                        var Isle = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]; 
+                        $.each(Isle, function(IsleIndex, IsleValue) {
+                        var option = $('<option>').text(IsleValue);
+                        IsleDropdown.append(option);
+                        });
+                        row.append($('<td>').append(IsleDropdown));
+                        row.append($('<td>').html('<input type="text" class="form-control" name="to_prod_pallet"  id="to_prod_pallet'+ x +'" onchange="checkingWarehouse(' + x + ')" required >'));
+                        $('#tblPage_new').append(row);
+                        
+                        $('<input>').attr({
+                            type: 'hidden',
+                            id: 'primary_code',
+                            name: 'primary_code',
+                            value: data.primary_code
+                        }).appendTo('form');
+                        
+                        $('<input>').attr({
+                            type: 'hidden',
+                            id: 'secondary_code',
+                            name: 'secondary_code',
+                            value: data.secondary_code
+                        }).appendTo('form');
+                        
+                        
+                        $('<input>').attr({
+                            type: 'hidden',
+                            id: 'secondary_unit',
+                            name: 'secondary_unit',
+                            value: data.secondary_unit
+                        }).appendTo('form');
+
+
+                        $('<input>').attr({
+                            type: 'hidden',
+                            id: 'MaxStocks_data'+x,
+                            name: 'MaxStocks_data',
+                            value: data.maxProducts
+                        }).appendTo('form');
+
+
+                        $('<input>').attr({
+                            type: 'hidden',
+                            id: 'MaxStocks_data2'+x,
+                            name: 'MaxStocks_data2',
+                            value: data.maxProducts
+                        }).appendTo('form');
+
+                        x++;
+                    }
+                    
+                    });
+                    
+                    // Clear the product code input field
+                    $("#product_code2").val('');
+                    },
+                    error: function(xhr, status, error) {
+                    // Handle the error appropriately
+                    }
+                });
+                }
+            });
+            });
+
+            //product
+
+            $(document).ready(function() {
+                $('#product_code4').on('keydown', function(e) {
+                if (e.which === 13) {
+                    e.preventDefault();
+                    return false;
+                    }
+                });
+                
+            $('#product_code4').on('input', function() {
+                var productcode = $(this).val();
+                var FromWarehouse_data = $('#transfer_from_warehouse').val();
+                var FromRooms_data = $('#FromRoom_name').val();
+                var isProductExists = false;
+
+                $('#tblPage_new tr').each(function() {
+                var existingProductCode = $(this).find('td:nth-child(2)').text();
+                if (existingProductCode === productcode) {
+                    isProductExists = true;
+                    return false;
+                }
+                });
+                
+                if (!isProductExists) {
+                
+                $.ajax({
+                    url: '/transfer/barcode_scanner3', 
+                    method: 'POST',
+                    data: { product_code: productcode, FromWareHouse: FromWarehouse_data,  FromRoom: FromRooms_data }, // Pass the product code as a parameter
+                    success: function(response) {
+                        var x = $('#last_val').val;
+                    $.each(response, function(index, data) {
+                        if(data.instock > 0){
+                        var row = $('<tr>');
+                        const levelData = data.level === null ? 0 : data.level;
+                        const isleData =  data.isle === null ? 0 : data.isle;
+                        const palletData =  data.pallet === null ? 0 : data.pallet;  
+                        
+                        row.append($('<td>').html('<input type="text" class="form-control" style="width: 125px;" name="product_code3" id="product_code3'+ x +'" value="' + data.product_code + '" readonly>'));
+                        row.append($('<td>').html('<input type="text" class="form-control" style="width: 355px;" name="prod_name" id="prod_name'+ x +'" value="' + data.name + '" readonly>'));
+                        row.append($('<td>').html('<input type="text" class="form-control" name="from_prod_qty" value="' + data.instock + '" readonly>'));
+                        row.append($('<td>').html('<input type="text" class="form-control" name="from_prod_level" value="' + levelData + '" readonly>'));
+                        row.append($('<td>').html('<input type="text" class="form-control" name="from_prod_isle" value="' + isleData + '" readonly>'));
+                        row.append($('<td>').html('<input type="text" class="form-control" name="from_prod_pallet" value="' + palletData + '" readonly>'));
+                        row.append($('<td>').html('<input type="text" class="form-control" name="to_prod_qty" id="to_prod_qty'+ x +'" onkeyup="ValidationForMaxQTY('+ x +')"  >'));
+                        row.append($('<td>').html('<input type="text" class="form-control" name="unit" value="' + data.unit + '" readonly>'));
+                        row.append($('<td>').html('<input type="text" class="form-control" style="width: 125px;" name="batch_code" value="">'));
+                        var levelDropdown = $('<select class="form-control"  style="width: 85px;" name="to_prod_level" id="to_prod_level'+ x +'" >');
+                        var levels = [1, 2, 3, 4]; 
+                        $.each(levels, function(levelIndex, levelValue) {
+                        var option = $('<option>').text(levelValue);
+                        levelDropdown.append(option);
+                        });
+                        row.append($('<td>').append(levelDropdown));
+                        
+                        var IsleDropdown = $('<select class="form-control" style="width: 85px;" name="to_prod_isle"  id="to_prod_isle'+ x +'" >');
+                        var Isle = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]; 
+                        $.each(Isle, function(IsleIndex, IsleValue) {
+                        var option = $('<option>').text(IsleValue);
+                        IsleDropdown.append(option);
+                        });
+                        row.append($('<td>').append(IsleDropdown));
+                        row.append($('<td>').html('<input type="text" class="form-control" name="to_prod_pallet"  id="to_prod_pallet'+ x +'" onchange="checkingWarehouse(' + x + ')" required >'));
+                        $('#tblPage_new').append(row);
+                        
+                        $('<input>').attr({
+                            type: 'hidden',
+                            id: 'primary_code',
+                            name: 'primary_code',
+                            value: data.primary_code
+                        }).appendTo('form');
+                        
+                        $('<input>').attr({
+                            type: 'hidden',
+                            id: 'secondary_code',
+                            name: 'secondary_code',
+                            value: data.secondary_code
+                        }).appendTo('form');
+                        
+                        
+                        $('<input>').attr({
+                            type: 'hidden',
+                            id: 'secondary_unit',
+                            name: 'secondary_unit',
+                            value: data.secondary_unit
+                        }).appendTo('form');
+
+
+                        $('<input>').attr({
+                            type: 'hidden',
+                            id: 'MaxStocks_data'+x,
+                            name: 'MaxStocks_data',
+                            value: data.maxProducts
+                        }).appendTo('form');
+
+
+                        $('<input>').attr({
+                            type: 'hidden',
+                            id: 'MaxStocks_data2'+x,
+                            name: 'MaxStocks_data2',
+                            value: data.maxProducts
+                        }).appendTo('form');
+
+                        x++;
+                    }
+                    
+                    });
+                    
+                    // Clear the product code input field
+                    $("#product_code4").val('');
+                    },
+                    error: function(xhr, status, error) {
+                    // Handle the error appropriately
+                    }
+                });
+                }
+            });
+            });
+            
+        </script>
+
+            <!--**********************************
+        Scripts end
+    ***********************************-->
+</body>
+
+</html>

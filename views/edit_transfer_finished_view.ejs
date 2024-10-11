@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+
+</head>
+
+<body onload="ComputeConversion();">
+    <!--*******************
+        Preloader start
+    ********************-->
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <!--*******************
+        Preloader end
+    ********************-->
+
+
+    <!--**********************************
+        Main wrapper start
+    ***********************************-->
+    <div id="main-wrapper">
+
+        <!--**********************************
+            Nav header start
+        ***********************************-->
+        <%- include('./partials/header_logo'); -%>
+
+            <!--**********************************
+            Nav header end
+        ***********************************-->
+
+            <!--**********************************
+            Header start
+        ***********************************-->
+            <%- include('./partials/header',{titel: "Transfer for Finished Goods"}); -%>
+
+                <!--**********************************
+            Header end ti-comment-alt
+        ***********************************-->
+
+                <!--**********************************
+            Sidebar start
+        ***********************************-->
+                <%- include('./partials/sidebar'); -%>
+
+                    <!--**********************************
+            Sidebar end
+        ***********************************-->
+
+                    <!--**********************************
+            Content body start
+        ***********************************-->
+                    <div class="content-body">
+                        <div class="container-fluid">
+
+                            <!-- row -->
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h4 class="card-title">View Transfers</h4>
+                                            <button type="button" class="btn btn-rounded btn-outline-info"
+                                                onclick="history.back()"><i class="la la-undo"></i> <%= language.go_back %></button>
+                                        </div>
+
+                                        <div class="card-body">
+                                            
+                                            <a href="/picking_list/PDF_transfer/<%= transfer._id %>" id="picklist" data-id="<%= transfer._id %>"
+                                                    class="btn btn-warning btn-sm" target="_blank">
+                                                    <i class="feather icon-printer"></i>
+
+                                                    <% if(transfer.finalize == "False"){ %>
+                                                        Print Picking List
+                                                    <% } else{ %>
+                                                        Print Stocks Transfer List
+                                                    <% } %>
+                                            </a>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-validation">
+
+                                                <form class="needs-validation" action="/transfer_finished/preview/<%= transfer._id %>"
+                                                    method="post" id="form">
+
+                                                    <div class="row mb-3">
+
+
+                                                        <div class="col-xl-3 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"> Document Number <span
+                                                                        class="text-red"> *</span></label>
+                                                                <input type="text" name="invoice" class="form-control" value="<%= transfer.invoice %>"
+                                                                    id="invoice" readonly>
+                                                            </div>
+                                                        </div>
+
+
+
+                                                        <div class="col-xl-4 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"><%= language.date %> <span
+                                                                        class="text-red">*</span></label>
+                                                                <input type="date" name="date" class="form-control"
+                                                                    id="date" value="<%= transfer.date %>" readonly>
+                                                            </div>
+                                                        </div>
+
+                                                        
+                                                        <div class="col-xl-4 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"><%= language.from_warehouse %> <span
+                                                                        class="text-red">*</span></label>
+                                                                <input type="text" name="from_warehouse" class="form-control"
+                                                                    id="transfer_from_warehouse" value="<%= transfer.from_warehouse %>" readonly>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        
+                                                        <!-- <div class="col-xl-3 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no">From Room<span
+                                                                        class="text-red">*</span></label>
+                                                                  <input type="text" name="FromRoom_name" class="form-control"
+                                                                    id="FromRoom_name" value="<%= transfer.from_room %>" readonly>
+                                                            </div>
+                                                        </div> -->
+                                                        <div class="col-xl-4 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"><%= language.to_warehouse %> <span
+                                                                        class="text-red">*</span></label>
+
+                                                                <input type="text" name="to_warehouse" class="form-control"
+                                                                    id="to_warehouse" value="<%= transfer.to_warehouse %>" readonly>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        
+                                                        <!-- <div class="col-xl-3 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no">To Room<span
+                                                                        class="text-red">*</span></label>
+                                                                  <input type="text" name="ToRoom_name" class="form-control"
+                                                                    id="ToRoom_name" value="<%= transfer.to_room %>" readonly>
+                                                            </div>
+                                                        </div> -->
+                                                        
+                                                    </div>
+                                                    
+                                           
+
+                                                    <div class="col-xl-12">
+                                                        <div class="table-responsive">
+                                                            <table class="table primary-table-bordered">
+                                                                <thead class="thead-primary">
+                                                                    <tr>
+                                                                        <th scope="col" colspan="1">Item Code </th>
+                                                                        <th scope="col" colspan="1">Item Description </th>
+                                                                       
+                                                                        <th colspan="3"><center>FROM</center></th>
+                                                                        <th colspan="8"><center>To</center></th>
+                                                                        
+                                                                    </tr>
+                                                                   <tr>
+                                                                       <th></th>
+                                                                       <th></th>
+                                                                        <th><%= language.in_stock %> </th>
+                                                                        <th>Room </th>
+                                                                        <th>Location </th>
+                                                                        <th><%= language.quantity %>  </th>
+                                                                        <th>Unit of Measure </th>
+                                                                        <th>Conversion</th>
+                                                                        <th>Batch Code </th>
+                                                                        <th>Production date </th>
+                                                                        <th>Expiry date </th>
+                                                                        <th>Room </th>
+                                                                        <th>Location </th>
+                                                                        <!-- <th>Action </th> -->
+                                                                   
+                                                                   </tr>
+                                                                </thead>
+                                                                <tbody id="tblPage_new">
+                                                                    <% var x = 1; %>
+                                                                    <% transfer.product.forEach((transfer1)=> { %>
+                                                                    <tr>
+
+
+                                                                        <td class="align-top">
+                                                                            <input type="text"  name="product_code3" id="product_code3" value="<%= transfer1.product_code %>" class="form-control product_code3" style="width: 125px;">
+                                                                        </td>
+
+                                                                        
+                                                                        <td class="align-top">
+                                                                            <input type="text" name="prod_name"
+                                                                                id="prod_name<%= x %>" value="<%= transfer1.product_name %>"
+                                                                                class="form-control prod_name" style="width: 355px;" readonly>
+                                                                        </td>
+                                                                        
+                                                                        
+                                                                        <% stock.forEach((stocks) => { %>
+                                                              <!-- <h3><%= " && "  + stocks.warehoue_name  + " == " + transfer1.from_warehouse %></h3> -->
+                                                                                <% if(transfer1.product_name == stocks.name  &&  transfer1.from_bay == stocks.bay &&  transfer1.expiry_date == stocks.expiry_date && stocks.room == transfer1.from_room_name && transfer1.production_date == stocks.production_date  && stocks._id == transfer1.id_transaction) { %>
+                                                                                    <!-- <h3><%= transfer1.product_name + "==" + stocks.name  + "&&" +  transfer1.from_bay + "==" + stocks.bay + "&&" +  transfer1.expiry_date + "==" + stocks.expiry_date + "&&" + stocks.room + "==" + transfer1.from_room_name + "&&" + stocks.warehoue_name + "==" + transfer.from_warehouse %></h3> -->
+                                                                                    <td class="align-top">
+                                                                                        <input type="text" name="from_prod_qty"
+                                                                                            id="from_prod_qty" value="<%= stocks.product_stock %>"
+                                                                                            class="form-control from_prod_qty" style="width: 150px;" readonly>
+                                                                                    </td>
+
+                                                                                    <td class="align-top">
+                                                                                        <input type="text" name="from_Room_assigned"
+                                                                                            id="from_Room_assigned" value="<%= stocks.room %>"
+                                                                                            class="form-control from_Room_assigned" style="width: 150px;" readonly>
+                                                                                    </td>
+
+
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    <td class="align-top">
+                                                                                        <input type="text" name="from_prod_level"
+                                                                                            id="from_prod_level" value="<%= stocks.bay %>"
+                                                                                            class="form-control from_prod_level" style="width: 150px;" readonly>
+                                                                                    </td>
+
+                                                                                <% }%>
+                                                                    
+                                                                        
+                                                                        <% })%>
+                                                                        
+                                                                        
+                                                                        <td class="align-top">
+                                                                            <input type="text" name="to_prod_qty" id="to_prod_qty<%= x %>" value="<%= transfer1.to_quantity %>" onkeyup="ValidationForMaxQTY('<%= x %>')"  class="form-control to_prod_qty" readonly>
+                                                                        </td>
+
+                                                                        <input type="hidden" name="secondary_unit" id="secondary_unit<%= x %>" value="<%= transfer1.secondary_unit %>"  class="form-control secondary_unit" >
+
+                                                                        <td class="align-top">
+                                                                            <input type="text" name="unit" id="unit<%= x %>" value="<%= transfer1.unit %>"  class="form-control unit" style="width: 150px;" readonly>
+                                                                        </td>
+
+                                                                        <td class="align-top">
+                                                                            <input type="text" name="test" id="test" value=""  class="form-control unit" style="width: 150px;" readonly>
+                                                                        </td>
+
+                                                                        <td class="align-top">
+                                                                            <input type="text" name="batch_code" id="batch_code<%= x %>" value="<%= transfer1.batch_code %>"   class="form-control batch_code" style="width: 150px;" readonly>
+                                                                        </td>
+
+                                                                        <td>
+                                                                            <div class="input-group"> 
+                                                                                <input type="date" name="production_date" class="form-control" style="width: 150px;" id="production_date" value="<%= transfer1.production_date %>" readonly> 
+                                                                            </div>
+                                                                        </td>
+
+
+                                                                        <td>
+                                                                            <div class="input-group"> 
+                                                                                <input type="date" name="expiry_date" class="form-control" style="width: 150px;" id="expiry_date" value="<%= transfer1.expiry_date %>" readonly> 
+                                                                            </div>
+                                                                        </td>
+
+                                                                        <td>
+                                                                            <div class="input-group"> 
+                                                                                <input type="text" name="to_room_assigned" class="form-control" style="width: 150px;" id="to_room_assigned" value="<%= transfer1.to_room_name %>" readonly> 
+                                                                            </div>
+                                                                        </td>
+
+
+                                                                        <td>
+                                                                            <div class="input-group"> 
+                                                                                <input type="text" name="to_prod_level" class="form-control" style="width: 150px;" id="to_prod_level" value="<%= transfer1.to_bay %>" readonly> 
+                                                                            </div>
+                                                                        </td>
+                                                                        
+                                                                
+
+
+
+                                                                        <input type="hidden" name="MaxStocks_data" id="MaxStocks_data<%= x %>" value="<%= transfer1.maxProducts %>" class="form-control MaxStocks_data">
+                                                                        <input type="hidden" name="MaxStocks_data2" id="MaxStocks_data2<%= x %>" value="<%= transfer1.maxProducts %>" class="form-control MaxStocks_data">
+                                                                        
+                                                                        
+                                                                        <input type="hidden" name="primary_code" id="primary_code" value="<%= transfer1.primary_code %>" class="form-control primary_code">
+                                                                        <input type="hidden" name="secondary_code" id="secondary_code" value="<%= transfer1.secondary_code %>" class="form-control secondary_code">
+
+                                                                        <input type="hidden"  class="form-control" id="storage" name="storage" value="<%= transfer1.storage %>" readonly>
+                                                                        <input type="hidden"  class="form-control" id="rak" name="rak" value="<%= transfer1.rack %>" readonly>
+
+                                                                        <input type="hidden"  class="form-control" id="from_storage" name="from_storage" value="<%= transfer1.from_storage %>" readonly>
+                                                                        <input type="hidden"  class="form-control" id="from_rak" name="from_rak" value="<%= transfer1.from_rack %>" readonly>
+                                                                        <input type="hidden" name="prod_cat" id="prod_cat" value="<%= transfer1.prod_cat %>" class="form-control prod_cat">
+                                                                        <input type="hidden" name="maxperunit" id="maxperunit" value="<%= transfer1.maxPerUnit %>" class="form-control maxperunit">
+                                                                        
+                                                                        
+
+                                                                        <input type="hidden" name="primary_unit" id="primary_unit" value="<%= transfer1.unit %>" class="form-control primary_unit">
+
+                                                                        <input type="hidden" name="secondary_unit" id="secondary_unit" value="<%= transfer1.secondary_unit %>" class="form-control secondary_unit">
+                                                                    </tr>
+                                                                    <% x++; %>
+                                                                    <% }) %>
+
+                                                                    <input type="hidden" name="last_val" id="last_val" value="<%= x %>" class="form-control last_val">
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <div class="form-group">
+                                                                <label for="note"><%= language.note %></label>
+                                                                <input type="text" class="form-control"
+                                                                    placeholder="note" value="<%= transfer.note %>" id="note" name="note">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    
+                                                </form>
+                                            </div>
+                                            <% if(transfer.finalize == "False"){ %>
+                                                <div class="row">
+                                                   <button class="btn btn-primary" type="submit"
+                                                       id="submit" onclick="confirmAlert()">Finalize </button>
+                                               </div>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--**********************************
+            Content body end
+        ***********************************-->
+
+                    <!--**********************************
+            Footer start
+        ***********************************-->
+                    <%- include('./partials/footer'); -%>
+
+                        <!--**********************************
+            Footer end
+        ***********************************-->
+
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!-- start Toastr -->
+    <%- include('./partials/toastr'); -%>
+        <!-- End Toastr -->
+
+        <!--**********************************
+        Scripts
+    ***********************************-->
+
+        <%- include('./partials/script'); -%>
+        
+
+        <script>
+
+
+            function confirmAlert(){
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Are you sure want to finalize?',
+                    text: 'Warning: After finalizing the data, it becomes locked and unmodifiable. ',
+                    showDenyButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: 'Save',
+                    denyButtonText: `Don't save`,
+                }).then((result) => {
+            
+                    if (result.isConfirmed) {
+                        document.getElementById("form").submit();
+                    } else if (result.isDenied) {
+                        Swal.fire('Changes are not saved', '', 'info')
+                    }
+                })
+
+            }
+
+
+            function ComputeConversion(){
+                var stock = document.getElementsByName("from_prod_qty");
+                var prod_cat = document.getElementsByName("prod_cat");
+                var maxperunit = document.getElementsByName("maxperunit");
+                var unitodmeasure = document.getElementsByName("unit");
+                var adjust_qty = document.getElementsByName("to_prod_qty");
+                var primary_unit = document.getElementsByName("primary_unit");
+                var secondary_unit = document.getElementsByName("secondary_unit");
+                var test = document.getElementsByName("test");
+
+                for(var i=0; i < stock.length; i++ ){
+                    valStocks = stock[i].value;
+                    valprod_cat = prod_cat[i].value;
+                    valmaxperunit = maxperunit[i].value;
+                    valunitodmeasure = unitodmeasure[i].value;
+                    valadjust_qty = adjust_qty[i].value;
+                    valprimary_unit = primary_unit[i].value;
+                    valsecondary_unit = secondary_unit[i].value;
+                    
+
+                    var TotalQtyStocks = 0;
+                    var TotalQtyQty = 0;
+                    var UOM;
+                    var Conversion;
+                    TotalQtyStocks = valStocks;
+                    TotalQtyQty = valadjust_qty;
+                    UOM = valprimary_unit;
+                    Conversion = valadjust_qty*valmaxperunit + " " +  valsecondary_unit;
+                    if(valprod_cat == "S"){
+                        TotalQtyStocks = valStocks*valmaxperunit;
+                        TotalQtyQty = valadjust_qty*valmaxperunit;
+                        UOM = secondary_unit[i].value;
+                        Conversion = valadjust_qty + " " +  valprimary_unit;
+                    }
+                    stock[i].value = TotalQtyStocks;
+                    adjust_qty[i].value = TotalQtyQty;
+                    unitodmeasure[i].value = UOM;
+                    test[i].value = Conversion;
+                    
+                    // console.log(maxperunit[i].value)
+                    
+
+
+                }
+                
+            }
+            
+        </script>
+        
+
+            <!--**********************************
+        Scripts end
+    ***********************************-->
+</body>
+
+</html>

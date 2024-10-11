@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+
+</head>
+
+<body onload="dateview()">
+    <!--*******************
+    Preloader start
+********************-->
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <!--*******************
+    Preloader end
+********************-->
+
+    <!--**********************************
+    Main wrapper start
+***********************************-->
+    <div id="main-wrapper">
+
+        <!--**********************************
+        Nav header start
+    ***********************************-->
+        <%- include('./partials/header_logo'); -%>
+
+            <!--**********************************
+        Nav header end
+    ***********************************-->
+
+            <!--**********************************
+        Header start
+    ***********************************-->
+            <%- include('./partials/header',{titel: language.manage_product}); -%>
+
+                <!--**********************************
+        Header end ti-comment-alt
+    ***********************************-->
+
+                <!--**********************************
+        Sidebar start
+    ***********************************-->
+                <%- include('./partials/sidebar'); -%>
+
+                    <!--**********************************
+        Sidebar end
+    ***********************************-->
+
+                    <div class="content-body">
+                        <div class="container-fluid">
+                            <!-- row -->
+                            
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title col-6 "><%= language.all_products %></h4>
+                                    </div>
+
+                                    <!-- <div class="card-header">
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <select style="width: 150px;" class="form-control" id="product_category" >
+                                                    <option value="rm">Raw Materials</option>
+                                                    <option value="fg">Finished Goods</option>
+                                                </select>
+                                            </div>
+                                            
+                                            <div class="col-lg-4">
+                                                <select style="width: 150px;" class="form-control" id="product_identity">
+                                                    <option value="Brands">Brands</option>
+                                                    <option value="Category">Category</option>
+                                                </select>
+                                            </div>
+
+
+                                            <div class="col-lg-4">
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <select  style="width: 150px;" class="form-control" id="selected_data">
+                                                    
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="col-lg-6">
+                                                        <button style="width: 150px;" type="button" class="btn btn-rounded btn-info" id="Searchbut">
+                                                            Search
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                    </div> -->
+                                    
+
+                                    <div class="card-header">
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <select style="width: 150px;" class="form-control" id="product_category">
+                                                    <option value="rm">Raw Materials</option>
+                                                    <option value="fg">Finished Goods</option>
+                                                </select>
+                                            </div>
+                                            
+                                            <div class="col-lg-4">
+                                                <select style="width: 150px;" class="form-control" id="product_identity">
+                                                    <!-- <option value="all">All</option> -->
+                                                    <option value="Brands">Brands</option>
+                                                    <option value="Category">Category</option>
+                                                </select>
+                                            </div>
+                                    
+                                            <div class="col-lg-4">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <select style="width: 150px;" class="form-control" id="selected_data">
+                                                            <!-- Add options here if needed -->
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row mt-2"> <!-- Adding margin-top for separation -->
+                                                    <div class="col-lg-12">
+                                                        <button style="width: 150px;" type="button" class="btn btn-rounded btn-info" id="Searchbut">
+                                                            Search
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                        
+                                       
+                                        
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <!-- <div class="col-lg-4 offset-lg-7">
+                                            <select class='form-control' id='typeofbarcode'>
+                                                <option value='1'>Primary Code</option>
+                                                <option value='2'>Secondary Code</option>
+                                                <option value='3'>Product Code</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-lg-0 offset-lg-11">
+                                        
+                                      
+                                            <button type="button" id="printAll" class="btn btn-success">Print All</button>
+                                        </div> -->
+
+                                        <div class="row">
+                                            <div class="col-sm-4 offset-lg-7">
+                                                <select class='form-control' id='typeofbarcode'>
+                                                    <option value='1'>Primary Code</option>
+                                                    <option value='2'>Secondary Code</option>
+                                                    <option value='3'>Product Code</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-lg-1">
+                                                <button type="button" id="printAll" class="btn btn-success">Print All</button>
+                                            </div>
+                                        </div>
+
+                                        
+
+                                    </div>
+                                    
+                                    
+
+                                    <div class="card-body">
+                                        
+                                        <div class="table-responsive">
+                                            <table id="data_barcode">
+                                                <thead>
+                                                    <tr>
+
+                                                       
+                                                        <th>Item Description</th>
+                                                        <th>Primary Barcode</th>
+                                                        <th>Secondary Barcode</th>
+                                                        <th>Product Barcode</th>
+                                                        <th>Type of Barcode</th>
+                                                        <th>Number of Copies</th>
+                                                        <th> </th>
+                                                    </tr>
+                                                </thead>
+                                               
+                                            </table>
+                                        </div>
+
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                
+
+                    <!--**********************************
+            Footer start
+        ***********************************-->
+                    <%- include('./partials/footer'); -%>
+
+                        <!--**********************************
+            Footer end
+        ***********************************-->
+
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!-- start Toastr -->
+    <%- include('./partials/toastr'); -%>
+    <!-- End Toastr -->
+
+    <!--**********************************
+        Scripts
+    ***********************************-->
+   
+    <%- include('./partials/script'); -%>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/vfs_fonts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.3/JsBarcode.all.min.js"></script>
+    <script>
+
+
+        function dateview() {
+            var dataProdCat = $('#product_category').val();
+                var dataProdIdentity = $('#product_identity').val();
+                var select_data = $('#selected_data');
+
+                $.ajax({
+                    url: '/products/barcode_filter',
+                    type: 'POST',
+                    data: { dataProdCat, dataProdIdentity },
+                    success: function(response) {
+                        
+
+                        select_data.empty();
+                        var option = $('<option>').text("All").val("All").attr('dataShow', "All");
+                        select_data.append(option);
+                        $.each(response, function(index, data) {
+                            var datashow = data._id;
+                            option = $('<option>').text(datashow).val(datashow).attr('dataShow', datashow);
+                            select_data.append(option);
+                        })
+                    }
+                });
+        }
+    
+        $(document).ready(function () {
+
+            $('#Searchbut').click(function() {
+                var dataProdCat = $('#product_category').val();
+                var dataProdIdentity = $('#product_identity').val();
+                var select_data = $('#selected_data').val();
+
+
+                $.ajax({
+                    url: "/products/print_barcode_filter_search",
+                    type: "POST",
+                    dataType: "json",
+                    data: { "prod_cat": dataProdCat, "identity": dataProdIdentity, "valueData" : select_data },
+                    success: function(response) {
+                        console.log(response)
+
+                        var table = $("#data_barcode").DataTable().destroy();
+                        // var table = document.getElementById("data_barcode");
+                        // var tbody = table.getElementsByTagName("tbody")[0];
+                        // if (typeof table !== 'undefined') {
+                        //     // table.remove();
+                        //     // tbody.innerHTML = "";
+                        // }
+
+
+                        Swal.fire({
+                            title: "Loading...",
+                            html: "Please wait a moment",
+                            allowOutsideClick: false, 
+                        })
+
+                        Swal.showLoading()
+
+                        $("#data_barcode").DataTable({
+                            paging: true,
+                            select: true,
+                            "order": [[0, "desc"]],
+
+                            dom: 'Bfrtip',
+
+                            buttons: ['pageLength'],
+
+                            "data": response.data,
+
+
+                            "columns": [
+                                { "data": "name", "name": "name" },
+                                { 
+                                    // "data": "primary_code", "name": "primary_code"
+                                    data: "primary_code", "name": "primary_code", render: function (data, type, row) {
+                                        console.log(data)
+                                        return '<svg id="primary_code_' + data + '">'+data+'</svg>';
+                                    }
+                                },
+                                { 
+                                    // "data": "secondary_code", "name": "secondary_code"
+                                    data: "secondary_code", "name": "secondary_code", render: function (data, type, row) {
+                                    
+
+                                        if(row.secondary_code == "NA"){
+                                            
+                                            return '<svg id="secondary_code_' + row._id + '">NA</svg>';
+                                        }else{
+                                            return '<svg id="secondary_code_' + row._id + '">'+data+'</svg>';
+                                        }
+                                        
+                                    }
+                                },
+                                { 
+                                    // "data": "secondary_code", "name": "secondary_code"
+                                    data: "product_code", "name": "product_code", render: function (data, type, row) {
+                            
+
+                                        if(row.product_code == "NA"){
+                                            
+                                            return '<svg id="product_code_' + row._id + '">NA</svg>';
+                                        }else{
+                                            return '<svg id="product_code_' + row._id + '">'+data+'</svg>';
+                                        }
+                                        
+                                    }
+                                },
+                                {
+                                
+                                    data: "_id", "name": "_id", render: function (data, type, row) {
+                                    
+                                        return "<select class='form-control' id='typeofbarcode"+data+"'> <option value='1'>Primary Code</option> <option value='2'>Secondary Code</option> <option value='3'>Product Code</option></select>";
+                                    }
+                                },
+                                {
+                                
+                                    data: "_id", "name": "_id", render: function (data, type, row) {
+                                    
+                                        return "<input type='number' class='form-control' name='no_copies' id='no_copies"+data+"' value=''>";
+                                    }
+                                },
+                                {
+                                        data: "_id", "name": "_id", render: function (data, type, row) {
+                                            // return '<button type="button" class="btn btn-success" onclick="print_single("'+data+'")"> Print <> '+data+'</button>';
+                                            return '<button type="button" class="btn btn-success" onclick="print_single(\'' + data + '\')"> Print</button>';
+
+                                        }
+                                },
+                            ],
+
+                            
+                            "lengthMenu": [[20, 10, 15, 25, 50, 100, 200], [20, 10, 15, 25, 50, 100, 200]],
+                            "initComplete": function(settings, json) {
+                                Swal.close(); // Close Swal after DataTable initialization
+                            }
+                        });
+
+
+                //         $("#data_barcode").on('draw.dt', function () {
+                // // Iterate over each row to render JsBarcode
+                //             $('#data_barcode tbody tr').each(function () {
+                //                 var row = $(this).closest('tr');
+                //                 var data = $("#data_barcode").DataTable().row(row).data();
+                //                 var barcodeId = 'primary_code_' + data.primary_code;
+                //                 var secid = 'secondary_code_' + data._id;
+                //                 var product_codeid = 'product_code_' + data._id;
+                //                 // Render JsBarcode for each row
+                //                 JsBarcode("#" + barcodeId, data.primary_code);
+                //                 JsBarcode("#" + secid, data.secondary_code);
+                //                 JsBarcode("#" + product_codeid, data.product_code);
+                //             });
+                //         });
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Failed to load data: ' + error
+                        });
+                    }
+
+
+                    
+                });
+
+                
+
+        
+            
+
+
+            })
+
+
+
+            
+            Swal.fire({
+            title: "Loading...",
+            html: "Please wait a moment",
+            allowOutsideClick: false, 
+            })
+            Swal.showLoading()
+            $("#data_barcode").DataTable({
+                paging: true,
+                select: true,
+                "order": [[0, "desc"]],
+                dom: 'Bfrtip',
+                
+
+                buttons: [
+                    'pageLength',
+                ],
+
+                "ajax": {
+                    "url": "/products/barcode_data",
+                    "type": "POST",
+                    "datatype": "json",
+                    
+                },
+
+
+                "columns": [
+                    { "data": "name", "name": "name" },
+                    { 
+                        // "data": "primary_code", "name": "primary_code"
+                        data: "primary_code", "name": "primary_code", render: function (data, type, row) {
+                            return '<svg id="primary_code_' + data + '">'+data+'</svg>';
+                        }
+                    },
+                    { 
+                        // "data": "secondary_code", "name": "secondary_code"
+                        data: "secondary_code", "name": "secondary_code", render: function (data, type, row) {
+                        
+
+                            if(row.secondary_code == "NA"){
+                                
+                                return '<svg id="secondary_code_' + row._id + '">NA</svg>';
+                            }else{
+                                return '<svg id="secondary_code_' + row._id + '">'+data+'</svg>';
+                            }
+                            
+                        }
+                    },
+                    { 
+                        // "data": "secondary_code", "name": "secondary_code"
+                        data: "product_code", "name": "product_code", render: function (data, type, row) {
+                   
+
+                            if(row.product_code == "NA"){
+                                
+                                return '<svg id="product_code_' + row._id + '">NA</svg>';
+                            }else{
+                                return '<svg id="product_code_' + row._id + '">'+data+'</svg>';
+                            }
+                            
+                        }
+                    },
+                    {
+                    
+                        data: "_id", "name": "_id", render: function (data, type, row) {
+                        
+                            return "<select class='form-control' id='typeofbarcode"+data+"'> <option value='1'>Primary Code</option> <option value='2'>Secondary Code</option> <option value='3'>Product Code</option></select>";
+                        }
+                    },
+                    {
+                    
+                        data: "_id", "name": "_id", render: function (data, type, row) {
+                        
+                            return "<input type='number' class='form-control' name='no_copies' id='no_copies"+data+"' value=''>";
+                        }
+                    },
+                    {
+                            data: "_id", "name": "_id", render: function (data, type, row) {
+                                // return '<button type="button" class="btn btn-success" onclick="print_single("'+data+'")"> Print <> '+data+'</button>';
+                                return '<button type="button" class="btn btn-success" onclick="print_single(\'' + data + '\')"> Print</button>';
+
+                            }
+                    },
+                ],
+
+                "lengthMenu": [[20, 10, 15, 25, 50, 100, 200], [20, 10, 15, 25, 50, 100, 200]],
+                "initComplete": function(settings, json) {
+                    Swal.close(); // Close Swal after DataTable initialization
+                }
+            });
+          
+
+            $("#data_barcode").on('draw.dt', function () {
+                // Iterate over each row to render JsBarcode
+                $('#data_barcode tbody tr').each(function () {
+                    var row = $(this).closest('tr');
+                    var data = $("#data_barcode").DataTable().row(row).data();
+                    var barcodeId = 'primary_code_' + data.primary_code;
+                    var secid = 'secondary_code_' + data._id;
+                    var product_codeid = 'product_code_' + data._id;
+                    // Render JsBarcode for each row
+                    JsBarcode("#" + barcodeId, data.primary_code);
+                    JsBarcode("#" + secid, data.secondary_code);
+                    JsBarcode("#" + product_codeid, data.product_code);
+                });
+            });
+
+            $('#product_category').change(function() {
+                dateview();
+            })
+
+
+            $('#product_identity').change(function() {
+                dateview();
+            })
+            
+  
+            $('#printAll').click(function(){
+                var dataProdCat = $('#product_category').val();
+                var dataProdIdentity = $('#product_identity').val();
+                var select_data = $('#selected_data').val();
+                var typeofbarcode = $('#typeofbarcode').val();
+                $.ajax({
+                    url: "/products/print_barcode_filter",
+                    type: "POST",
+                    dataType: "json",
+                    data: { "prod_cat": dataProdCat, "identity": dataProdIdentity, "valueData" : select_data, "typeofbarcode" : typeofbarcode },
+                    success: function(response) {
+
+                        const pdfData = atob(response.pdfContent);
+                        const arrayBuffer = new ArrayBuffer(pdfData.length);
+                        const uint8Array = new Uint8Array(arrayBuffer);
+                        for (let i = 0; i < pdfData.length; i++) {
+                            uint8Array[i] = pdfData.charCodeAt(i);
+                        }
+                        const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
+
+                        // Create a Blob URL for the PDF
+                        const url = URL.createObjectURL(blob);
+
+                        // Open PDF in a new tab
+                        window.open(url, '_blank');
+                        
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle errors
+                    }
+                    
+                });
+
+            })
+        
+        });
+
+
+
+        function print_single(id){
+            var copiesInput  = document.getElementById("no_copies"+id).value;
+            var typeofbarcode = document.getElementById("typeofbarcode"+id).value;
+            var copies = parseInt(copiesInput.trim()) ?? 0;
+            if (isNaN(copies) || copies == 0) {
+                copies = 1; 
+            }
+            // alert(typeofbarcode)
+            $.ajax({
+                    url: "/products/print_barcode_single/"+id,
+                    type: "POST",
+                    dataType: "json",
+                    data: { "copies": copies, "typeofbarcode": typeofbarcode},
+                    success: function(response) {
+
+                        const pdfData = atob(response.pdfContent);
+                        const arrayBuffer = new ArrayBuffer(pdfData.length);
+                        const uint8Array = new Uint8Array(arrayBuffer);
+                        for (let i = 0; i < pdfData.length; i++) {
+                            uint8Array[i] = pdfData.charCodeAt(i);
+                        }
+                        const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
+
+                        // Create a Blob URL for the PDF
+                        const url = URL.createObjectURL(blob);
+
+                        // Open PDF in a new tab
+                        window.open(url, '_blank');
+                        
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle errors
+                    }
+                    
+                });
+
+            
+        }
+        </script>
+
+        <!--**********************************
+        Scripts end
+    ***********************************-->
+</body>
+
+</html>

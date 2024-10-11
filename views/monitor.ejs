@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Warehouse Map</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <script>
+        // Set up the scene
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Create racks
+        const rackGeometry = new THREE.BoxGeometry(1, 5, 0.5);
+        const rackMaterial = new THREE.MeshBasicMaterial({ color: 0x606060 });
+        const racks = [];
+
+        for (let i = 0; i < 5; i++) {
+            const rack = new THREE.Mesh(rackGeometry, rackMaterial);
+            rack.position.x = i * 2;
+            rack.position.z = -2;
+            scene.add(rack);
+            racks.push(rack);
+        }
+
+        // Create bins
+        const binGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+        const binMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const bins = [];
+
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 5; j++) {
+                const bin = new THREE.Mesh(binGeometry, binMaterial);
+                bin.position.x = j * 2;
+                bin.position.y = 2;
+                bin.position.z = -i * 2;
+                scene.add(bin);
+                bins.push(bin);
+            }
+        }
+
+        // Set camera position
+        camera.position.z = 10;
+
+        // Track mouse movements for camera control
+        let isDragging = false;
+        let previousMousePosition = {
+            x: 0,
+            y: 0
+        };
+
+        document.addEventListener('mousedown', (event) => {
+            isDragging = true;
+            previousMousePosition = {
+                x: event.clientX,
+                y: event.clientY
+            };
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        document.addEventListener('mousemove', (event) => {
+            if (isDragging) {
+                const deltaMove = {
+                    x: event.clientX - previousMousePosition.x,
+                    y: event.clientY - previousMousePosition.y
+                };
+
+                // Rotate camera based on mouse movement
+                camera.position.x += deltaMove.x * 0.01;
+                camera.position.y -= deltaMove.y * 0.01;
+
+                previousMousePosition = {
+                    x: event.clientX,
+                    y: event.clientY
+                };
+            }
+        });
+
+        // Function to isolate view
+        let isIsolatedView = false;
+        let originalCameraPosition = null;
+        let originalCameraRotation = null;
+        let isolatedObject = null;
+
+        function toggleIsolateView() {
+            if (!isIsolatedView) {
+                // Save original camera position and rotation
+                originalCameraPosition = camera.position.clone();
+                originalCameraRotation = camera.rotation.clone();
+
+                // Move camera to the selected bin and look at it
+                isolatedObject = bins[0]; // Change to any desired object
+                const targetPosition = isolatedObject.position.clone();
+                camera.position.copy(targetPosition.clone().add(new THREE.Vector3(0, 0, 5))); // Adjust distance as needed
+                camera.lookAt(targetPosition);
+
+                isIsolatedView = true;
+            } else {
+                // Restore original camera position and rotation
+                if (originalCameraPosition && originalCameraRotation) {
+                    camera.position.copy(originalCameraPosition);
+                    camera.rotation.copy(originalCameraRotation);
+                }
+
+                isIsolatedView = false;
+            }
+        }
+
+        // Event listener for toggling isolate view
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'i') { // Press 'i' key to toggle isolate view
+                toggleIsolateView();
+            }
+        });
+
+        // Render the scene
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+        animate();
+    </script>
+</body>
+</html>

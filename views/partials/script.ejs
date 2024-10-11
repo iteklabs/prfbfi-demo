@@ -1,0 +1,972 @@
+<!--**********************************
+        Scripts
+    ***********************************-->
+<!-- Required vendors -->
+<script src="/vendor/global/global.min.js"></script>
+<script src="/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+
+<script src="/vendor/select2/js/select2.full.min.js"></script>
+<script src="/js/plugins-init/select2-init.js"></script>
+
+<!-- for pdf -->
+
+<script src="/js/pdf/html2canvas.min.js"></script>
+
+<!-- Datatable -->
+<script src="/vendor/datatables/js/jquery.dataTables.min.js"></script>
+<script src="/js/plugins-init/datatables.init.js"></script>
+
+<script src="/js/custom.min.js"></script>
+<script src="/js/deznav-init.js"></script>
+<script src="/js/demo.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script src="/js/stocks_reports.js"></script>
+<!-- <script src="/js/all.js"></script> -->
+
+
+<script>
+
+
+
+
+
+$(".mode").on("click", function () {
+    $(".mode").toggleClass("dark");
+    $("body").toggleClass("dark-only");
+    var color = $(this).attr("data-theme-version");
+    $("body").attr('data-theme-version', $(this).attr('data-id'));
+    
+    setCookie('version', $(this).attr('data-id'));
+    var href = document.location.href;
+    var lastPathSegment = href.substr(href.lastIndexOf('/') + 1);
+    window.location.href = lastPathSegment;
+  });
+
+function getCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+
+ if(getCookie('version') == 'light')
+ {
+ $(".mode").attr('data-id', "dark");
+ $(".mode").removeClass("dark");
+ $("body").removeClass("dark-only");
+  $('.mode').html('<svg class="lighticon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g><g><path fill-rule="evenodd" clip-rule="evenodd" d="M18.1377 13.7902C19.2217 14.8742 16.3477 21.0542 10.6517 21.0542C6.39771 21.0542 2.94971 17.6062 2.94971 13.3532C2.94971 8.05317 8.17871 4.66317 9.67771 6.16217C10.5407 7.02517 9.56871 11.0862 11.1167 12.6352C12.6647 14.1842 17.0537 12.7062 18.1377 13.7902Z" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></g></g></svg>');
+
+ }
+ else 
+ {
+ $(".mode").attr('data-id', "light");
+ $(".mode").addClass("dark");
+ $("body").addClass("dark-only");
+$('.mode').html('<svg class="darkicon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 12C17 14.7614 14.7614 17 12 17C9.23858 17 7 14.7614 7 12C7 9.23858 9.23858 7 12 7C14.7614 7 17 9.23858 17 12Z"></path><path d="M18.3117 5.68834L18.4286 5.57143M5.57144 18.4286L5.68832 18.3117M12 3.07394V3M12 21V20.9261M3.07394 12H3M21 12H20.9261M5.68831 5.68834L5.5714 5.57143M18.4286 18.4286L18.3117 18.3117" stroke-linecap="round" stroke-linejoin="round"></path></svg>');
+ }
+
+$('.layout_style').on('click',function()
+{
+
+    var type = $(this).attr('data-val');
+    html.attr('dir', type);
+        html.attr('class', '');
+        html.addClass(type);
+        body.attr('direction', type);
+        setCookie('direction', type);
+});
+function jsonToArray(jsonData) {
+  var data = [];
+
+  jsonData.forEach((item) => {
+    var isle = item._id.isle;
+    var pallet = parseInt(item._id.pallet);
+    var count = item.count;
+	if (!data[isle]) {
+      data[isle] = {};
+    }
+    data[isle][pallet] = count;
+    data[isle]['pallet'] = pallet;
+    
+  });
+
+  return data;
+}
+
+
+
+// $(document).ready(function() {
+//   // Initialize the DataTable
+//   dataBody = $('#dataTable tbody');
+
+//   // Event handler for the filter button click
+//   $('#filterButton').click(function() {
+//     var warehouse_value = $('#warehouse').val();
+//     var level_value = parseInt($('#level').val());
+//     var room_value = $('#room').val();
+//     var isle_value = $('#isle').val();
+    
+
+//     // Make an AJAX request to the server
+//     $.ajax({
+//       url: '/warehousemap_Income/MapData',
+//       type: 'POST',
+//       data: { warehouseNew: warehouse_value, level: level_value, rooms: room_value },
+//       success: function(response) {
+//         // Clear the existing table data
+//         dataBody.empty();
+        
+//         const DataRes = jsonToArray(response);
+//         let dataIsle 
+//         let dataIsleHalf
+//         isle_value = "ALL"
+//         if(isle_value == "ALL"){
+//           dataIsle = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+//           dataIsleHalf = ["G", "H", "I", "J"];
+//         }else{
+//           dataIsle = [isle_value];
+//           dataIsleHalf = [isle_value];
+//         }
+        
+//         switch(warehouse_value) {
+//             case "Pasig":
+//                 if(room_value == "Ambient"){
+//                     if(level_value == "1"){
+                        
+//                         let j = 1;
+//                         let k = 54;
+                        
+//                         dataIsle.forEach(function(isleItem) {
+//                           var dataItems = '';
+//                           const IsleData = isleItem;
+                        
+//                           dataItems = '<tr><td rowspan="4"><strong>' + isleItem + '</strong></td></tr>';
+                        
+//                           let columnCount = (isleItem >= 'G' && isleItem <= 'J') ? 38 : 54;
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             dataItems += '<td>' + i + '</td>';
+//                           }
+                        
+//                           dataItems += '</tr><tr>';
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             if (DataRes[IsleData] && DataRes[IsleData][i]) {
+
+//                               if(DataRes[IsleData][i] >= 500){
+//                                 dataItems += '<td class="center vertical-text" bgcolor="Tomato"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }else if(DataRes[IsleData][i] >= 250){
+//                                 dataItems += '<td class="center vertical-text" bgcolor="yellow"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }else{
+//                                 dataItems += '<td class="center vertical-text" bgcolor="white"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }
+                             
+//                             } else {
+//                               dataItems += '<td>&nbsp;</td>';
+//                             }
+//                           }
+                        
+//                           dataItems += '</tr><tr style="height: 5px;">';
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             dataItems += '<td>&nbsp;</td>';
+//                           }
+                        
+//                           j += columnCount; // Update j based on the range
+                        
+//                           dataItems += "</tr>";
+                        
+//                           dataBody.append(dataItems);
+//                         });
+            
+//                     }
+            
+//                     if(level_value == "2"){
+//                         let j = 477;
+//                         let k = 531;
+                        
+//                         dataIsle.forEach(function(isleItem) {
+//                           var dataItems = '';
+//                           const IsleData = isleItem;
+                        
+//                           dataItems = '<tr><td rowspan="4"><strong>' + isleItem + '</strong></td></tr>';
+                        
+//                           let columnCount = (isleItem >= 'G' && isleItem <= 'J') ? 38 : 54;
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             dataItems += '<td>' + i + '</td>';
+//                           }
+                        
+//                           dataItems += '</tr><tr>';
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             if (DataRes[IsleData] && DataRes[IsleData][i]) {
+//                               // dataItems += '<td class="center vertical-text"><b>' + DataRes[IsleData][i] + '</b></td>';
+//                               if(DataRes[IsleData][i] >= 500){
+//                                 dataItems += '<td class="center vertical-text" bgcolor="Tomato"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }else if(DataRes[IsleData][i] >= 250){
+//                                 dataItems += '<td class="center vertical-text" bgcolor="yellow"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }else{
+//                                 dataItems += '<td class="center vertical-text" bgcolor="white"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }
+//                             } else {
+//                               dataItems += '<td>&nbsp;</td>';
+//                             }
+//                           }
+                        
+//                           dataItems += '</tr><tr style="height: 5px;">';
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             dataItems += '<td>&nbsp;</td>';
+//                           }
+                        
+//                           j += columnCount; // Update j based on the range
+                        
+//                           dataItems += "</tr>";
+                        
+//                           dataBody.append(dataItems);
+//                         });
+//                     }
+            
+//                     if(level_value == "3"){
+                        
+                        
+//                         let j = 953;
+//                         let k = 1007;
+                        
+//                         dataIsle.forEach(function(isleItem) {
+//                           var dataItems = '';
+//                           const IsleData = isleItem;
+                        
+//                           dataItems = '<tr><td rowspan="4"><strong>' + isleItem + '</strong></td></tr>';
+                        
+//                           let columnCount = (isleItem >= 'G' && isleItem <= 'J') ? 38 : 54;
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             dataItems += '<td>' + i + '</td>';
+//                           }
+                        
+//                           dataItems += '</tr><tr>';
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             if (DataRes[IsleData] && DataRes[IsleData][i]) {
+//                               // dataItems += '<td class="center vertical-text"><b>' + DataRes[IsleData][i] + '</b></td>';
+//                               if(DataRes[IsleData][i] >= 500){
+//                                 dataItems += '<td class="center vertical-text" bgcolor="Tomato"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }else if(DataRes[IsleData][i] >= 250){
+//                                 dataItems += '<td class="center vertical-text" bgcolor="yellow"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }else{
+//                                 dataItems += '<td class="center vertical-text" bgcolor="white"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }
+//                             } else {
+//                               dataItems += '<td>&nbsp;</td>';
+//                             }
+//                           }
+                        
+//                           dataItems += '</tr><tr style="height: 5px;">';
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             dataItems += '<td>&nbsp;</td>';
+//                           }
+                        
+//                           j += columnCount; // Update j based on the range
+                        
+//                           dataItems += "</tr>";
+                        
+//                           dataBody.append(dataItems);
+//                         });
+//                     }
+            
+//                     if(level_value == "4"){
+//                             let j = 1429;
+//                             let k = 1483;
+                            
+                            
+//                             dataIsle.forEach(function(isleItem) {
+//                               var dataItems = '';
+//                               const IsleData = isleItem;
+                            
+//                               dataItems = '<tr><td rowspan="4"><strong>' + isleItem + '</strong></td></tr>';
+                            
+//                               let columnCount = (isleItem >= 'G' && isleItem <= 'J') ? 38 : 54;
+                            
+//                               for (let i = j; i < j + columnCount; i++) {
+//                                 dataItems += '<td>' + i + '</td>';
+//                               }
+                            
+//                               dataItems += '</tr><tr>';
+                            
+//                               for (let i = j; i < j + columnCount; i++) {
+//                                 if (DataRes[IsleData] && DataRes[IsleData][i]) {
+//                                   // dataItems += '<td class="center vertical-text"><b>' + DataRes[IsleData][i] + '</b></td>';
+//                                   if(DataRes[IsleData][i] >= 500){
+//                                     dataItems += '<td class="center vertical-text" bgcolor="Tomato"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                                   }else if(DataRes[IsleData][i] >= 250){
+//                                     dataItems += '<td class="center vertical-text" bgcolor="yellow"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                                   }else{
+//                                     dataItems += '<td class="center vertical-text" bgcolor="white"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                                   }
+//                                 } else {
+//                                   dataItems += '<td>&nbsp;</td>';
+//                                 }
+//                               }
+                            
+//                               dataItems += '</tr><tr style="height: 5px;">';
+                            
+//                               for (let i = j; i < j + columnCount; i++) {
+//                                 dataItems += '<td>&nbsp;</td>';
+//                               }
+                            
+//                               j += columnCount; // Update j based on the range
+                            
+//                               dataItems += "</tr>";
+                            
+//                               dataBody.append(dataItems);
+//                             });
+//                         }
+//                 }else if(room_value == "Enclosed"){
+//                     if(level_value == "1"){
+                        
+//                         let j = 1;
+//                         let k = 13;
+//                         dataIsleHalf.forEach(function(isleItem) {
+//                           var dataItems = '';
+//                           const IsleData = isleItem;
+                        
+//                           dataItems = '<tr><td rowspan="4"><strong>' + isleItem + '</strong></td></tr>';
+                        
+//                           let columnCount = (isleItem >= 'H' && isleItem <= 'J') ? 14 : 13;
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             dataItems += '<td>' + i + '</td>';
+//                           }
+                        
+//                           dataItems += '</tr><tr>';
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             if (DataRes[IsleData] && DataRes[IsleData][i]) {
+//                               // dataItems += '<td class="center vertical-text"><b>' + DataRes[IsleData][i] + '</b></td>';
+//                               if(DataRes[IsleData][i] >= 500){
+//                                 dataItems += '<td class="center vertical-text" bgcolor="Tomato"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }else if(DataRes[IsleData][i] >= 250){
+//                                 dataItems += '<td class="center vertical-text" bgcolor="yellow"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }else{
+//                                 dataItems += '<td class="center vertical-text" bgcolor="white"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }
+//                             } else {
+//                               dataItems += '<td>&nbsp;</td>';
+//                             }
+//                           }
+                        
+//                           dataItems += '</tr><tr style="height: 5px;">';
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             dataItems += '<td>&nbsp;</td>';
+//                           }
+                        
+//                           j += columnCount; // Update j based on the range
+                        
+//                           dataItems += "</tr>";
+                        
+//                           dataBody.append(dataItems);
+//                         });
+            
+//                     }
+                    
+//                     if(level_value == "2"){
+                        
+//                         let j = 56;
+//                         let k = 68;
+//                         dataIsleHalf.forEach(function(isleItem) {
+//                           var dataItems = '';
+//                           const IsleData = isleItem;
+                        
+//                           dataItems = '<tr><td rowspan="4"><strong>' + isleItem + '</strong></td></tr>';
+                        
+//                           let columnCount = (isleItem >= 'H' && isleItem <= 'J') ? 14 : 13;
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             dataItems += '<td>' + i + '</td>';
+//                           }
+                        
+//                           dataItems += '</tr><tr>';
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             if (DataRes[IsleData] && DataRes[IsleData][i]) {
+//                               // dataItems += '<td class="center vertical-text"><b>' + DataRes[IsleData][i] + '</b></td>';
+//                               if(DataRes[IsleData][i] >= 500){
+//                                 dataItems += '<td class="center vertical-text" bgcolor="Tomato"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }else if(DataRes[IsleData][i] >= 250){
+//                                 dataItems += '<td class="center vertical-text" bgcolor="yellow"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }else{
+//                                 dataItems += '<td class="center vertical-text" bgcolor="white"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }
+//                             } else {
+//                               dataItems += '<td>&nbsp;</td>';
+//                             }
+//                           }
+                        
+//                           dataItems += '</tr><tr style="height: 5px;">';
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             dataItems += '<td>&nbsp;</td>';
+//                           }
+                        
+//                           j += columnCount; // Update j based on the range
+                        
+//                           dataItems += "</tr>";
+                        
+//                           dataBody.append(dataItems);
+//                         });
+            
+//                     }
+                    
+//                     if(level_value == "3"){
+                        
+//                         let j = 111;
+//                         let k = 123;
+//                         dataIsleHalf.forEach(function(isleItem) {
+//                           var dataItems = '';
+//                           const IsleData = isleItem;
+                        
+//                           dataItems = '<tr><td rowspan="4"><strong>' + isleItem + '</strong></td></tr>';
+                        
+//                           let columnCount = (isleItem >= 'H' && isleItem <= 'J') ? 14 : 13;
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             dataItems += '<td>' + i + '</td>';
+//                           }
+                        
+//                           dataItems += '</tr><tr>';
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             if (DataRes[IsleData] && DataRes[IsleData][i]) {
+//                               // dataItems += '<td class="center vertical-text"><b>' + DataRes[IsleData][i] + '</b></td>';
+//                               if(DataRes[IsleData][i] >= 500){
+//                                 dataItems += '<td class="center vertical-text" bgcolor="Tomato"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }else if(DataRes[IsleData][i] >= 250){
+//                                 dataItems += '<td class="center vertical-text" bgcolor="yellow"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }else{
+//                                 dataItems += '<td class="center vertical-text" bgcolor="white"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }
+//                             } else {
+//                               dataItems += '<td>&nbsp;</td>';
+//                             }
+//                           }
+                        
+//                           dataItems += '</tr><tr style="height: 5px;">';
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             dataItems += '<td>&nbsp;</td>';
+//                           }
+                        
+//                           j += columnCount; // Update j based on the range
+                        
+//                           dataItems += "</tr>";
+                        
+//                           dataBody.append(dataItems);
+//                         });
+            
+//                     }
+                    
+//                     if(level_value == "4"){
+                        
+//                         let j = 166;
+//                         let k = 178;
+//                         dataIsleHalf.forEach(function(isleItem) {
+//                           var dataItems = '';
+//                           const IsleData = isleItem;
+                        
+//                           dataItems = '<tr><td rowspan="4"><strong>' + isleItem + '</strong></td></tr>';
+                        
+//                           let columnCount = (isleItem >= 'H' && isleItem <= 'J') ? 14 : 13;
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             dataItems += '<td>' + i + '</td>';
+//                           }
+                        
+//                           dataItems += '</tr><tr>';
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             if (DataRes[IsleData] && DataRes[IsleData][i]) {
+//                               // dataItems += '<td class="center vertical-text"><b>' + DataRes[IsleData][i] + '</b></td>';
+//                               if(DataRes[IsleData][i] >= 500){
+//                                 dataItems += '<td class="center vertical-text" bgcolor="Tomato"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }else if(DataRes[IsleData][i] >= 250){
+//                                 dataItems += '<td class="center vertical-text" bgcolor="yellow"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }else{
+//                                 dataItems += '<td class="center vertical-text" bgcolor="white"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }
+//                             } else {
+//                               dataItems += '<td>&nbsp;</td>';
+//                             }
+//                           }
+                        
+//                           dataItems += '</tr><tr style="height: 5px;">';
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             dataItems += '<td>&nbsp;</td>';
+//                           }
+                        
+//                           j += columnCount; // Update j based on the range
+                        
+//                           dataItems += "</tr>";
+                        
+//                           dataBody.append(dataItems);
+//                         });
+            
+//                     }
+//                 }
+//             break
+            
+//             case "Iloilo":
+//                 if(room_value == "Ambient"){
+//                    if(level_value == "1"){
+                        
+//                         let j = 1;
+//                         let k = 54;
+                        
+//                         dataIsle.forEach(function(isleItem) {
+//                           var dataItems = '';
+//                           const IsleData = isleItem;
+                        
+//                           dataItems = '<tr><td rowspan="4"><strong>' + isleItem + '</strong></td></tr>';
+                        
+//                           let columnCount = (isleItem >= 'G' && isleItem <= 'J') ? 38 : 54;
+//                           columnCount = Math.min(columnCount, 145 - j + 1); // Limit columnCount to remaining pallets
+                        
+//                           if (j > 145) {
+//                             return; // Skip rendering the remaining letters if j exceeds 145
+//                           }
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             dataItems += '<td>' + i + '</td>';
+//                           }
+                        
+//                           dataItems += '</tr><tr>';
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             if (DataRes[IsleData] && DataRes[IsleData][i]) {
+//                               // dataItems += '<td class="center vertical-text"><b>' + DataRes[IsleData][i] + '</b></td>';
+//                               if(DataRes[IsleData][i] >= 500){
+//                                 dataItems += '<td class="center vertical-text" bgcolor="Tomato"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }else if(DataRes[IsleData][i] >= 250){
+//                                 dataItems += '<td class="center vertical-text" bgcolor="yellow"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }else{
+//                                 dataItems += '<td class="center vertical-text" bgcolor="white"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }
+//                             } else {
+//                               dataItems += '<td>&nbsp;</td>';
+//                             }
+//                           }
+                        
+//                           dataItems += '</tr><tr style="height: 5px;">';
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             dataItems += '<td>&nbsp;</td>';
+//                           }
+                        
+//                           j += columnCount; // Update j based on the range
+                        
+//                           dataItems += "</tr>";
+                        
+//                           dataBody.append(dataItems);
+//                         });
+
+            
+//                     } 
+//                 }
+//             break
+            
+//             case "Bacolod":
+                
+//                 if(room_value == "Ambient"){
+//                    if(level_value == "1"){
+                        
+//                         let j = 1;
+//                         let k = 54;
+                        
+//                         dataIsle.forEach(function(isleItem) {
+//                           var dataItems = '';
+//                           const IsleData = isleItem;
+                        
+//                           dataItems = '<tr><td rowspan="4"><strong>' + isleItem + '</strong></td></tr>';
+                        
+//                           let columnCount = (isleItem >= 'G' && isleItem <= 'J') ? 38 : 54;
+//                           columnCount = Math.min(columnCount, 60 - j + 1); // Limit columnCount to remaining pallets
+                        
+//                           if (j > 60) {
+//                             return; // Skip rendering the remaining letters if j exceeds 145
+//                           }
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             dataItems += '<td>' + i + '</td>';
+//                           }
+                        
+//                           dataItems += '</tr><tr>';
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             if (DataRes[IsleData] && DataRes[IsleData][i]) {
+//                               // dataItems += '<td class="center vertical-text"><b>' + DataRes[IsleData][i] + '</b></td>';
+//                               if(DataRes[IsleData][i] >= 500){
+//                                 dataItems += '<td class="center vertical-text" bgcolor="Tomato"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }else if(DataRes[IsleData][i] >= 250){
+//                                 dataItems += '<td class="center vertical-text" bgcolor="yellow"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }else{
+//                                 dataItems += '<td class="center vertical-text" bgcolor="white"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }
+//                             } else {
+//                               dataItems += '<td>&nbsp;</td>';
+//                             }
+//                           }
+                        
+//                           dataItems += '</tr><tr style="height: 5px;">';
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             dataItems += '<td>&nbsp;</td>';
+//                           }
+                        
+//                           j += columnCount; // Update j based on the range
+                        
+//                           dataItems += "</tr>";
+                        
+//                           dataBody.append(dataItems);
+//                         });
+
+            
+//                     } 
+//                 }
+//             break
+            
+//             case "Cebu":
+                
+//                 if(room_value == "Ambient"){
+//                    if(level_value == "1"){
+                        
+//                         let j = 1;
+//                         let k = 54;
+                        
+//                         dataIsle.forEach(function(isleItem) {
+//                           var dataItems = '';
+//                           const IsleData = isleItem;
+                        
+//                           dataItems = '<tr><td rowspan="4"><strong>' + isleItem + '</strong></td></tr>';
+                        
+//                           let columnCount = (isleItem >= 'G' && isleItem <= 'J') ? 38 : 54;
+//                           columnCount = Math.min(columnCount, 150 - j + 1); // Limit columnCount to remaining pallets
+                        
+//                           if (j > 150) {
+//                             return; // Skip rendering the remaining letters if j exceeds 145
+//                           }
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             dataItems += '<td>' + i + '</td>';
+//                           }
+                        
+//                           dataItems += '</tr><tr>';
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             if (DataRes[IsleData] && DataRes[IsleData][i]) {
+//                               // dataItems += '<td class="center vertical-text"><b>' + DataRes[IsleData][i] + '</b></td>';
+//                               if(DataRes[IsleData][i] >= 500){
+//                                 dataItems += '<td class="center vertical-text" bgcolor="Tomato"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }else if(DataRes[IsleData][i] >= 250){
+//                                 dataItems += '<td class="center vertical-text" bgcolor="yellow"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }else{
+//                                 dataItems += '<td class="center vertical-text" bgcolor="white"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }
+//                             } else {
+//                               dataItems += '<td>&nbsp;</td>';
+//                             }
+//                           }
+                        
+//                           dataItems += '</tr><tr style="height: 5px;">';
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             dataItems += '<td>&nbsp;</td>';
+//                           }
+                        
+//                           j += columnCount; // Update j based on the range
+                        
+//                           dataItems += "</tr>";
+                        
+//                           dataBody.append(dataItems);
+//                         });
+
+            
+//                     } 
+//                 }
+                
+                
+//             break
+            
+//             case "Tacloban":
+                
+//                 if(room_value == "Ambient"){
+//                    if(level_value == "1"){
+                        
+//                         let j = 1;
+//                         let k = 54;
+                        
+//                         dataIsle.forEach(function(isleItem) {
+//                           var dataItems = '';
+//                           const IsleData = isleItem;
+                        
+//                           dataItems = '<tr><td rowspan="4"><strong>' + isleItem + '</strong></td></tr>';
+                        
+//                           let columnCount = (isleItem >= 'G' && isleItem <= 'J') ? 38 : 54;
+//                           columnCount = Math.min(columnCount, 94 - j + 1); // Limit columnCount to remaining pallets
+                        
+//                           if (j > 94) {
+//                             return; // Skip rendering the remaining letters if j exceeds 145
+//                           }
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             dataItems += '<td>' + i + '</td>';
+//                           }
+                        
+//                           dataItems += '</tr><tr>';
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             if (DataRes[IsleData] && DataRes[IsleData][i]) {
+//                               // dataItems += '<td class="center vertical-text"><b>' + DataRes[IsleData][i] + '</b></td>';
+//                               if(DataRes[IsleData][i] >= 500){
+//                                 dataItems += '<td class="center vertical-text" bgcolor="Tomato"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }else if(DataRes[IsleData][i] >= 250){
+//                                 dataItems += '<td class="center vertical-text" bgcolor="yellow"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }else{
+//                                 dataItems += '<td class="center vertical-text" bgcolor="white"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }
+//                             } else {
+//                               dataItems += '<td>&nbsp;</td>';
+//                             }
+//                           }
+                        
+//                           dataItems += '</tr><tr style="height: 5px;">';
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             dataItems += '<td>&nbsp;</td>';
+//                           }
+                        
+//                           j += columnCount; // Update j based on the range
+                        
+//                           dataItems += "</tr>";
+                        
+//                           dataBody.append(dataItems);
+//                         });
+
+            
+//                     } 
+//                 }
+                
+                
+//             break
+            
+//             case "Davao":
+//                 if(room_value == "Ambient"){
+//                    if(level_value == "1"){
+                        
+//                         let j = 1;
+//                         let k = 54;
+                        
+//                         dataIsle.forEach(function(isleItem) {
+//                           var dataItems = '';
+//                           const IsleData = isleItem;
+                        
+//                           dataItems = '<tr><td rowspan="4"><strong>' + isleItem + '</strong></td></tr>';
+                        
+//                           let columnCount = (isleItem >= 'G' && isleItem <= 'J') ? 38 : 54;
+//                           columnCount = Math.min(columnCount, 150 - j + 1); // Limit columnCount to remaining pallets
+                        
+//                           if (j > 150) {
+//                             return; // Skip rendering the remaining letters if j exceeds 145
+//                           }
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             dataItems += '<td>' + i + '</td>';
+//                           }
+                        
+//                           dataItems += '</tr><tr>';
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             if (DataRes[IsleData] && DataRes[IsleData][i]) {
+//                               // dataItems += '<td class="center vertical-text"><b>' + DataRes[IsleData][i] + '</b></td>';
+//                               if(DataRes[IsleData][i] >= 500){
+//                                 dataItems += '<td class="center vertical-text" bgcolor="Tomato"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }else if(DataRes[IsleData][i] >= 250){
+//                                 dataItems += '<td class="center vertical-text" bgcolor="yellow"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }else{
+//                                 dataItems += '<td class="center vertical-text" bgcolor="white"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }
+//                             } else {
+//                               dataItems += '<td>&nbsp;</td>';
+//                             }
+//                           }
+                        
+//                           dataItems += '</tr><tr style="height: 5px;">';
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             dataItems += '<td>&nbsp;</td>';
+//                           }
+                        
+//                           j += columnCount; // Update j based on the range
+                        
+//                           dataItems += "</tr>";
+                        
+//                           dataBody.append(dataItems);
+//                         });
+
+            
+//                     } 
+//                 }
+                
+                
+//             break
+            
+//             case "CDO":
+//                 if(room_value == "Ambient"){
+//                    if(level_value == "1"){
+                        
+//                         let j = 1;
+//                         let k = 54;
+                        
+//                         dataIsle.forEach(function(isleItem) {
+//                           var dataItems = '';
+//                           const IsleData = isleItem;
+                        
+//                           dataItems = '<tr><td rowspan="4"><strong>' + isleItem + '</strong></td></tr>';
+                        
+//                           let columnCount = (isleItem >= 'G' && isleItem <= 'J') ? 38 : 54;
+//                           columnCount = Math.min(columnCount, 200 - j + 1); // Limit columnCount to remaining pallets
+                        
+//                           if (j > 200) {
+//                             return; // Skip rendering the remaining letters if j exceeds 145
+//                           }
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             dataItems += '<td>' + i + '</td>';
+//                           }
+                        
+//                           dataItems += '</tr><tr>';
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             if (DataRes[IsleData] && DataRes[IsleData][i]) {
+//                               // dataItems += '<td class="center vertical-text"><b>' + DataRes[IsleData][i] + '</b></td>';
+//                               if(DataRes[IsleData][i] >= 500){
+//                                 dataItems += '<td class="center vertical-text" bgcolor="Tomato"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }else if(DataRes[IsleData][i] >= 250){
+//                                 dataItems += '<td class="center vertical-text" bgcolor="yellow"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }else{
+//                                 dataItems += '<td class="center vertical-text" bgcolor="white"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }
+//                             } else {
+//                               dataItems += '<td>&nbsp;</td>';
+//                             }
+//                           }
+                        
+//                           dataItems += '</tr><tr style="height: 5px;">';
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             dataItems += '<td>&nbsp;</td>';
+//                           }
+                        
+//                           j += columnCount; // Update j based on the range
+                        
+//                           dataItems += "</tr>";
+                        
+//                           dataBody.append(dataItems);
+//                         });
+
+            
+//                     } 
+//                 }
+//             break
+
+//             case "Zamboanga":
+//                 if(room_value == "Ambient"){
+//                    if(level_value == "1"){
+                        
+//                         let j = 1;
+//                         let k = 54;
+                        
+//                         dataIsle.forEach(function(isleItem) {
+//                           var dataItems = '';
+//                           const IsleData = isleItem;
+                        
+//                           dataItems = '<tr><td rowspan="4"><strong>' + isleItem + '</strong></td></tr>';
+                        
+//                           let columnCount = (isleItem >= 'G' && isleItem <= 'J') ? 38 : 54;
+//                           columnCount = Math.min(columnCount, 50 - j + 1); // Limit columnCount to remaining pallets
+                        
+//                           if (j > 50) {
+//                             return; // Skip rendering the remaining letters if j exceeds 145
+//                           }
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             dataItems += '<td>' + i + '</td>';
+//                           }
+                        
+//                           dataItems += '</tr><tr>';
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             if (DataRes[IsleData] && DataRes[IsleData][i]) {
+//                               // dataItems += '<td class="center vertical-text"><b>' + DataRes[IsleData][i] + '</b></td>';
+//                               if(DataRes[IsleData][i] >= 500){
+//                                 dataItems += '<td class="center vertical-text" bgcolor="Tomato"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }else if(DataRes[IsleData][i] >= 250){
+//                                 dataItems += '<td class="center vertical-text" bgcolor="yellow"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }else{
+//                                 dataItems += '<td class="center vertical-text" bgcolor="white"><b style="color:black">' + DataRes[IsleData][i] + '</b></td>';
+//                               }
+//                             } else {
+//                               dataItems += '<td>&nbsp;</td>';
+//                             }
+//                           }
+                        
+//                           dataItems += '</tr><tr style="height: 5px;">';
+                        
+//                           for (let i = j; i < j + columnCount; i++) {
+//                             dataItems += '<td>&nbsp;</td>';
+//                           }
+                        
+//                           j += columnCount; // Update j based on the range
+                        
+//                           dataItems += "</tr>";
+                        
+//                           dataBody.append(dataItems);
+//                         });
+
+            
+//                     } 
+//                 }
+//             break
+//         }
+        
+        
+        
+//       },
+//       error: function(error) {
+//         console.log('Error:', error);
+//       }
+//     });
+//   });
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>

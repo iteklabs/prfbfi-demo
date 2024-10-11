@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+
+</head>
+
+<body>
+    <!--*******************
+    Preloader start
+********************-->
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <!--*******************
+    Preloader end
+********************-->
+
+    <!--**********************************
+    Main wrapper start
+***********************************-->
+    <div id="main-wrapper">
+
+        <!--**********************************
+        Nav header start
+    ***********************************-->
+        <%- include('./partials/header_logo'); -%>
+
+            <!--**********************************
+        Nav header end
+    ***********************************-->
+
+            <!--**********************************
+        Header start
+    ***********************************-->
+            <%- include('./partials/header',{titel: language.data_entry}); -%>
+
+                <!--**********************************
+        Header end ti-comment-alt
+    ***********************************-->
+
+                <!--**********************************
+        Sidebar start
+    ***********************************-->
+                <%- include('./partials/sidebar'); -%>
+
+                    <!--**********************************
+        Sidebar end
+    ***********************************-->
+
+                    <div class="content-body">
+                        <div class="container-fluid">
+                            <!-- row -->
+                            
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title col-6"><%= language.transfer_report %></h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table id="example" class="table table-responsive-sm text-center">
+                                                <thead>
+                                                    <tr>
+                                                        <th><%= language.no %> </th>
+                                                        <th><%= language.date %></th>
+                                                        <th><%= language.from_warehouse %> </th>
+                                                        <th><%= language.to_warehouse %> </th>
+                                                        <th><%= language.action %></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% var i=1 %>
+                                                    <% alldata.forEach((alldata)=> { %>
+                                                        <tr>
+                                                            <td>
+                                                                <%= i %>
+                                                            </td>
+                                                            
+                                                            <td> 
+                                                                <%= alldata.date%>
+                                                            </td>
+                                                            
+                                                            <td> 
+                                                                <%= alldata.from_warehouse %>
+                                                            </td>
+                                                            
+                                                            <td>
+                                                                <%= alldata.to_warehouse %>
+                                                            </td>
+                                                            
+                                                            <td> 
+                                                                <a href="/transfer/view/<%= alldata._id %>" class="btn btn-primary shadow sharp"><i class="flaticon-381-view"></i></a>
+                                                            </td>
+                                                        </tr>
+                                                        <% i++ %>
+                                                    <% }) %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--**********************************
+            Footer start
+        ***********************************-->
+                    <%- include('./partials/footer'); -%>
+
+                        <!--**********************************
+            Footer end
+        ***********************************-->
+
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!-- start Toastr -->
+    <%- include('./partials/toastr'); -%>
+    <!-- End Toastr -->
+
+    <!--**********************************
+        Scripts
+    ***********************************-->
+  
+    <%- include('./partials/script'); -%>
+        
+        <!--**********************************
+        Scripts end
+    ***********************************-->
+</body>
+
+</html>

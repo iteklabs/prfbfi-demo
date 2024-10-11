@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+
+</head>
+
+<body>
+    <!--*******************
+        Preloader start
+    ********************-->
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <!--*******************
+        Preloader end
+    ********************-->
+
+    <!--**********************************
+        Main wrapper start
+    ***********************************-->
+    <div id="main-wrapper">
+
+        <!--**********************************
+            Nav header start
+        ***********************************-->
+        <%- include('./partials/header_logo'); -%>
+
+            <!--**********************************
+            Nav header end
+        ***********************************-->
+
+            <!--**********************************
+            Header start
+        ***********************************-->
+            <%- include('./partials/header',{titel: language.master_settings}); -%>
+
+                <!--**********************************
+            Header end ti-comment-alt
+        ***********************************-->
+
+                <!--**********************************
+            Sidebar start
+        ***********************************-->
+                <%- include('./partials/sidebar'); -%>
+
+                    <!--**********************************
+            Sidebar end
+        ***********************************-->
+
+                    <!--**********************************
+            Content body start
+        ***********************************-->
+                    <div class="content-body">
+                        <div class="container-fluid">
+
+                            <!-- row -->
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h4 class="card-title"><%= language.master_settings %> </h4>
+                                            <button type="button" class="btn btn-rounded btn-outline-info"
+                                                onclick="history.back()"><i class="la la-undo"></i> <%= language.go_back %> </button>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <div class="form-validation">
+
+                                                <form class="needs-validation" action="/master_shop/view/edit_settings" enctype="multipart/form-data"
+                                                    method="post" id="form">
+
+                                                    <div class="row g-5 mb-4">
+
+                                                        <div class="col-12 text-center">
+                                                            <img src="/upload/<%= master_shop[0].image %>" class="logo-abbr mx-2 rounded" width="96.5px" height="96.5px">
+                                                        </div>
+
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label for="site_title" class="col-form-label"><%= language.site_title %>  </label>
+                                                                <input type="text" class="form-control" id="site_title" value="<%= master_shop[0].site_title %>" name="site_title" required>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label for="form-label" class="col-form-label"><%= language.logo %>  </label>
+                                                                <input type="file" placeholder="photo" class="form-control" name="image" value="<%= master_shop[0].image %>" id="master_shop_image">
+
+                                                                <input type="hidden" placeholder="photo" class="form-control" name="hidden" value="0" id="master_shop_hidden">
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="row g-5 mb-1">
+
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label for="currency" class="col-form-label"><%= language.currency %>  </label>
+                                                                <input type="text" class="form-control" id="currency" name="currency" value="<%= master_shop[0].currency %>" required>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-6">
+                                                            <div class="form-group">
+                                                                <label for="currency" class="col-form-label"><%= language.timezone %>  </label>
+                                                                <select class="form-control wide" name="timezone"
+                                                                    id="timezone" data-id="<%= master_shop[0].timezone %>">
+                                                                    <option value selected disabled>Choose Timezone</option>
+                                                   
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                    </div>
+
+                                                    <div class="col-6">
+                                                        <div class="form-check form-switch">
+                                                            <label class="form-check-label" for="currency_placement">
+                                                                <h5><%= language.currency_placement %>  </h5>
+                                                            </label>
+                                                            <input class="form-check-input" type="checkbox" id="currency_placement" name="currency_placement" value="1" <%= master_shop[0].currency_placement == 1 ?  'checked' : '' %> >
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="row mt-4">
+                                                        <button class="btn btn-primary" type="submit" id="submit"><%= language.submit %> </button>
+                                                    </div>
+
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>  
+                        </div>
+                    </div>
+                    <!--**********************************
+            Content body end
+        ***********************************-->
+
+                    <!--**********************************
+            Footer start
+        ***********************************-->
+                    <%- include('./partials/footer'); -%>
+
+                        <!--**********************************
+            Footer end
+        ***********************************-->
+
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!-- start Toastr -->
+    <%- include('./partials/toastr'); -%>
+        <!-- End Toastr -->
+
+        <!--**********************************
+        Scripts
+    ***********************************-->
+        <%- include('./partials/script'); -%>
+
+            <!--**********************************
+        Scripts end
+    ***********************************-->
+</body>
+
+</html>

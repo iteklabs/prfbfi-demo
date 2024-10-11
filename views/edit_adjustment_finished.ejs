@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+
+</head>
+
+<body onload="showTextbox()">
+    <!--*******************
+        Preloader start
+    ********************-->
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <!--*******************
+        Preloader end
+    ********************-->
+
+    <!--**********************************
+        Main wrapper start
+    ***********************************-->
+    <div id="main-wrapper">
+
+        <!--**********************************
+            Nav header start
+        ***********************************-->
+        <%- include('./partials/header_logo'); -%>
+
+            <!--**********************************
+            Nav header end
+        ***********************************-->
+
+            <!--**********************************
+            Header start
+        ***********************************-->
+            <%- include('./partials/header',{titel: "Adjustment for Finish Goods"}); -%>
+
+                <!--**********************************
+            Header end ti-comment-alt
+        ***********************************-->
+
+                <!--**********************************
+            Sidebar start
+        ***********************************-->
+                <%- include('./partials/sidebar'); -%>
+
+                    <!--**********************************
+            Sidebar end
+        ***********************************-->
+
+                    <!--**********************************
+            Content body start
+        ***********************************-->
+                    <div class="content-body">
+                        <div class="container-fluid">
+
+                            <!-- row -->
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h4 class="card-title"><%= language.edit_adjustment %> </h4>
+                                            <button type="button" class="btn btn-rounded btn-outline-info"
+                                                onclick="history.back()"><i class="la la-undo"></i> <%= language.go_back %> </button>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <div class="form-validation">
+
+                                                <form class="needs-validation" action="/adjustment_finished/view/<%= adjustment._id %>"
+                                                    method="post" id="form">
+
+                                                    <div class="row">
+
+
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"> Document Number <span
+                                                                    class="text-red"> *</span></label>
+                                                                <input type="text" name="invoice" class="form-control" value="<%= adjustment.invoice %>"
+                                                                id="invoice" readonly>
+                                                            </div>
+
+                                                        </div>
+                                                        <!-- <div class="col-4">
+                                                                <div class="form-group">
+                                                                    <label class="form-label">Job Order number</label>
+                                                                    <input type="text" class="form-control" name="JO_number" value="<%= adjustment.JO_number %>">
+                                                                </div>
+                                                        </div> -->
+
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label for="warehouse_name"><%= language.warehouse %>  </label>
+                                                                <input type="text" name="warehouse_name" class="form-control" id="adjustment_warehouse_name" value="<%= adjustment.warehouse_name %>" readonly>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="col-xl-3 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no">Room  <span
+                                                                        class="text-red">*</span></label>                                       
+                                                                
+                                                                <input type="text" name="Room_name" class="form-control" id="Room_name" value="<%= adjustment.room %>" readonly>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"><%= language.date %> </label>
+                                                                <input type="date" name="date" class="form-control"
+                                                                    id="date" value="<%= adjustment.date %>" required>
+                                                            </div>
+                                                        </div>
+
+                                               
+                                                         
+                                                    </div>
+
+
+                                                    <div class="row mb-3">
+                                                        <div class="col-xl-4 col-sm-6">
+                                                            <select class="form-control" id="choice-dropdown" onchange="showTextbox()">
+                                                                <!-- <option value="">Select an option</option> -->
+                                                                <option value="Primary">Please scan the barcode...</option>
+                                                                <!-- <option value="Secondary">Secondary</option> -->
+                                                            </select>
+                                                        </div>    
+                                                            
+                                              
+                                                             <div class="col-xl-12" id="primary-textbox" style="display: none;">
+                                                                <div class="form-group">
+                                                                    <label for="invoice_no">Barcode  <span
+                                                                            class="text-red">*</span></label>
+                                                                    <input type="text" name="product_code" class="form-control" id="product_code">
+                                                                </div>
+                                                             </div>
+                                                             
+                                                             
+                                                              <div class="col-xl-12" id="secondary-textbox" style="display: none;">
+                                                                <div class="form-group">
+                                                                    <label for="invoice_no2">Secondary Barcode  <span
+                                                                            class="text-red">*</span></label>
+                                                                    <input type="text" name="product_code2" class="form-control" id="product_code2">
+                                                                </div>
+                                                              </div>
+                                                        
+                                                    </div>
+
+                                                    <div class="col-12">
+                                                        <div class="table-responsive">
+                                                            <table class="table primary-table-bordered">
+                                                                <thead class="thead-primary">
+                                                                    <tr>
+                                                                        <tr>
+                                                                            <th scope="col">Item Code </th>
+                                                                            <th scope="col">Item Description</th>
+                                                                            <th scope="col"><%= language.adjust_qty %>  <span class="text-red">*</span></th>
+                                                                            <th scope="col">Batch Code</th>
+                                                                            <th scope="col">Expiry date </th>
+                                                                            <th><%= language.current_stock %> </th>
+                                                                            <th><%= language.type %> </th>
+                                                                            <th scope="col">Unit of Measure</th>
+                                                                            <th>Bin</th>
+                                                                            <th scope="col"><%= language.stock_after_adjust %> <span class="text-red">*</span> </th>
+                                                                            <th>Action</th>
+    
+                                                                        </tr>
+
+
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="tblPage_new">
+                                                                    <% var x = 1; %>
+                                                                    <% adjustment.product.forEach((adjustment)=> { %>
+                                                                       
+                                                                    <tr>
+
+
+                                                                        <td class="align-top">
+                                                                            <input type="text" name="prod_code"
+                                                                            id="prod_code" class="form-control prod_code" style="width: 200px;" value="<%= adjustment.product_code %>" readonly>
+                                                                        </td>
+
+
+                                                                        <td class="align-top">
+                                                                            <input type="text" name="prod_name"
+                                                                            id="prod_name" class="form-control edit_product_name" style="width: 400px;" value="<%= adjustment.product_name %>" readonly>
+                                                                        </td>
+
+                                                                        
+
+                                                                        
+
+                                                                      
+
+
+                                                                        <% stock.forEach((stocks) => { %>
+                                                                            <% if(adjustment.product_name == stocks.name && adjustment.bay == stocks.bay) { %>
+
+                                                                                
+
+                                                                                <td class="align-top">
+                                                                                    <input type="text" name="adjust_qty"
+                                                                                    id="adjust_qty<%= x %>" class="form-control edit_product_name" style="width: 150px;"  oninput="myFunctionCompute('<%= x %>')" onkeyup="ValidationForMaxQTY('<%= stocks.product_code %>', '<%= x %>')"  value="<%= adjustment.adjust_qty %>">
+                                                                                </td>
+
+                                                                                <td class="align-top">
+                                                                                    <input type="text" name="batch_code"
+                                                                                    id="batch_code" class="form-control batch_code" style="width: 150px;" value="<%= adjustment.batch_code %>">
+                                                                                </td>
+
+                                                                                <td class="align-top">
+                                                                                    <input type="date" name="expiry_date" class="form-control" style="width: 150px;" id="expiry_date" value="<%= ed_fullDate %>"> 
+                                                                                </td>
+
+                                                                                <td class="align-top">
+                                                                                    <input type="text" name="stock"
+                                                                                    id="stock<%= x %>" class="form-control edit_product_name" style="width: 150px;"  value="<%= stocks.product_stock %>" readonly>
+                                                                                </td>
+
+
+                                                                                <td class="align-top">
+                                                                                    <select class="form-control adjustment_product" style="width: 150px;"  name="types" id="types<%= x %>" >
+                                                                                        <option value="minus" <%=adjustment.types=="minus" ? "selected" : "" %> >Subtract</option>
+        
+                                                                                        <option value="add" <%=adjustment.types=="add" ? "selected" : "" %> >Add</option>
+                                                                                    </select>
+                                                                                </td>
+
+                                                                                <td class="align-top">
+                                                                                    <input type="text" name="unit"
+                                                                                    id="unit" class="form-control unit" style="width: 150px;"  value="<%= adjustment.unit %>" readonly>
+                                                                                </td>
+
+
+                                                                                <input type="hidden" name="Secondary_units"
+                                                                                    id="Secondary_units" class="form-control Secondary_units" value="<%= adjustment.secondary_unit %>" readonly>
+
+
+                                                                                <td class="align-top">
+                                                                                    <input type="text" name="level"
+                                                                                    id="level" class="form-control edit_product_name" style="width: 150px;"  value="<%= adjustment.bay %>" readonly>
+                                                                                </td>
+        
+        
+                
+                                                                                <td class="align-top">
+                                                                                    <input type="text" name="new_adjust_qty"
+                                                                                    id="new_adjust_qty<%= x %>" class="form-control edit_product_name" style="width: 150px;"  value=""  readonly>
+                                                                                </td>
+
+
+                                                                                <!-- <input type="hidden" name="last_increment" id="last_increment" value="<%= x %>" readonly> -->
+                                                                                <input type="hidden" name="MaxStocks_data"
+                                                                                id="MaxStocks_data<%= stocks.product_code + x %>" value="<%= stocks.maxProducts %>" readonly>
+                                                                                <input type="hidden" name="MaxStocks_data2"
+                                                                                id="MaxStocks_data2<%= stocks.product_code + x %>" value="<%= stocks.maxProducts %>" readonly>
+
+
+                                                                                <input type="hidden" name="storage"
+                                                                                id="storage" value="<%= stocks.storage %>" readonly>
+
+
+                                                                                <input type="hidden" name="rak"
+                                                                                id="rak" value="<%= stocks.rack %>" readonly>
+
+                                                                            <% } %>
+                                                                        <% }) %>
+                                                                        
+
+
+                                                               
+
+                                                                    </tr>
+                                                                    
+
+                                                                    
+
+                                                                    
+
+                                                                    <% x++ %>
+
+                                                                    <% }) %>
+
+                                                                    <input type="hidden" name="last_increment"
+                                                                    id="last_increment" value="<%= x %>" readonly>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+
+                                                   
+                                                    <div class="col-12 mb-5">
+                                                        <div class="form-group">
+                                                            <label for="note"><%= language.note %> </label>
+                                                            <input type="text" class="form-control"
+                                                                placeholder="note" id="note" value="<%= adjustment.note %>" name="note">
+                                                        </div>
+                                                    </div>
+
+                                                 
+
+                                                    <div class="row">
+                                                        <button class="btn btn-primary" type="submit"
+                                                            id="submit"><%= language.submit %> </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--**********************************
+            Content body end
+        ***********************************-->
+
+                    <!--**********************************
+            Footer start
+        ***********************************-->
+                    <%- include('./partials/footer'); -%>
+
+                        <!--**********************************
+            Footer end
+        ***********************************-->
+
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!-- start Toastr -->
+    <%- include('./partials/toastr'); -%>
+        <!-- End Toastr -->
+
+        <!--**********************************
+        Scripts
+    ***********************************-->
+        <%- include('./partials/script'); -%>
+
+        
+        <script>
+                $(function(){
+                    var dtToday = new Date();
+                    
+                    var month = dtToday.getMonth() + 1;
+                    var day = dtToday.getDate();
+                    var year = dtToday.getFullYear();
+                    if(month < 10)
+                        month = '0' + month.toString();
+                    if(day < 10)
+                        day = '0' + day.toString();
+                    
+                    var maxDate = year + '-' + month + '-' + day;
+                    $('#date').attr('max', maxDate);
+                });
+            function showTextbox() {
+              var dropdown = document.getElementById("choice-dropdown");
+              var selectedChoice = dropdown.value;
+        
+              var primaryTextbox = document.getElementById("primary-textbox");
+              var secondaryTextbox = document.getElementById("secondary-textbox");
+        
+              if (selectedChoice === "Primary") {
+                primaryTextbox.style.display = "block";
+                secondaryTextbox.style.display = "none";
+                document.getElementById("product_code").focus()
+              } else if (selectedChoice === "Secondary") {
+                primaryTextbox.style.display = "none";
+                secondaryTextbox.style.display = "block";
+              } else {
+                primaryTextbox.style.display = "none";
+                secondaryTextbox.style.display = "none";
+              }
+            }
+            
+    
+    
+    
+      
+    
+    
+            // Function to compute the new_adjust_qty based on the selected option and adjust_qty value
+            function myFunctionCompute(row) {
+            var adjustQtyInput = document.getElementById("adjust_qty" + row);
+            var newAdjustQtyInput = document.getElementById("new_adjust_qty" + row);
+            var selectedOption = document.getElementById("types" + row).value;
+            
+            var adjustQty = parseFloat(adjustQtyInput.value);
+            var stock = parseFloat(document.getElementById("stock" + row).value);
+
+                if (!isNaN(adjustQty) && !isNaN(stock)) {
+                    var result;
+    
+                    if (selectedOption === "add") {
+                    result = stock + adjustQty;
+                    } else if (selectedOption === "minus") {
+                    result = stock - adjustQty;
+                    }
+
+                    if (!isNaN(result)) {
+                    newAdjustQtyInput.value = result;
+                    } else {
+                    newAdjustQtyInput.value = "";
+                    }
+                } else {
+                    newAdjustQtyInput.value = "";
+                }
+            }
+    
+        function ValidationForMaxQTY(product_code, i){
+            var prod_qty = document.getElementById("adjust_qty"+i).value;
+            var stocks_qty = document.getElementById("MaxStocks_data"+product_code+i).value;
+            var curStocks = document.getElementById("stock"+i).value;
+            var new_adjust_qty = document.getElementById("new_adjust_qty"+i).value; 
+            var selectedOption = document.getElementById("types" + i).value;
+            var TotalStocksRemain = parseInt(stocks_qty) - parseInt(curStocks)
+
+
+            if (selectedOption === "add") {
+            if(parseInt(prod_qty) >  parseInt(TotalStocksRemain)){
+                Swal.fire(
+                'Sorry',
+                'Sorry the maximum quantity has been reached.',
+                'warning'
+                )
+                document.getElementById("adjust_qty"+i).value = "";
+                document.getElementById("new_adjust_qty"+i).value = "";
+            }
+            } else if (selectedOption === "minus") {
+                // alert(new_adjust_qty)
+                if( parseInt(curStocks) < parseInt(prod_qty)){
+                    Swal.fire(
+                    'Sorry',
+                    'Sorry the maximum quantity has been reached.',
+                    'warning'
+                    )
+                    document.getElementById("adjust_qty"+i).value = "";
+                    document.getElementById("new_adjust_qty"+i).value = "";
+                }
+            }
+            
+        }
+
+        function removeSelfRow(event) {
+       
+            var row = $(event.target).closest('tr');
+            
+            row.remove();
+        }
+
+        $(document).on('click', 'button#remove', function(event) {
+            removeSelfRow(event);
+        });
+    
+            $(document).ready(function() {
+                
+                var x= $("#last_increment").val();
+                $('#product_code').on('keydown', function(e) {
+                if (e.which === 13) {
+                  e.preventDefault();
+                  return false;
+                }
+              });
+              // AJAX request when the value in the text box changes
+              $('#product_code').on('input', function() {
+                var productCode = $(this).val(); // Get the entered product code
+                var Warehouses = $("#adjustment_warehouse_name").val(); // Get the entered product code
+                var Rooms = $("#Room_name").val(); // Get the entered product code
+                
+                // Check if the product code already exists in the table
+                var isProductExists = false;
+                $('#tblPage_new tr').each(function() {
+                  var existingProductCode = $(this).find('td:nth-child(2)').text();
+                  if (existingProductCode === productCode) {
+                    isProductExists = true;
+                    return false; // Exit the loop if the product is found
+                  }
+                });
+                
+                if (!isProductExists) {
+                  $.ajax({
+                    url: '/adjustment_finished/barcode_scanner', 
+                    method: 'POST',
+                    data: { primary_code: productCode, warehouse_data: Warehouses , room_data: Rooms }, 
+                    success: function(response) {
+                      // Populate the table with the received data
+                      
+                      $.each(response, function(index, data) {
+                        var row = $('<tr>');
+                       
+                        const levelData = data.level === null ? 0 : data.level;
+                        const isleData =  data.isle === null ? 0 : data.isle;
+                        const palletData =  data.pallet === null ? 0 : data.pallet; 
+                        row.append($('<td>').html('<input type="text" class="form-control" style="width: 200px;" name="prod_code" value="' + data.product_code + '" readonly>'));
+                        row.append($('<td>').html('<input type="text" class="form-control" style="width: 400px;" name="prod_name" value="' + data.name + '" readonly>'));
+                        row.append($('<td>').html('<input type="number" class="form-control adjust_qty" name="adjust_qty" id="adjust_qty' + x + '" oninput="myFunctionCompute('+ x +')" onkeyup="ValidationForMaxQTY('+ data.product_code +', ' + x + ')" value="">'));
+                        row.append($('<td>').html('<input type="text" class="form-control batch_code" style="width: 150px;" name="batch_code" id="batch_code' + x + '" value="">'));
+                        row.append($('<td>').html('<input type="date" class="form-control" style="width: 150px;" name="expiry_date" value="">'));
+                        row.append($('<td>').html('<input type="text" class="form-control stock" name="stock" id="stock' + x + '" value="' + data.product_stock + '" readonly>'));
+                        
+                        row.append($('<td>').html('<select class="form-control" style="width: 150px;" name="types" id="types' + x + '"> <option value="minus"> Subtract </option> <option value="add"> Add </option></select>'));
+                        row.append($('<td>').html('<input type="text" class="form-control unit" name="unit" id="unit' + x + '" value="' + data.unit + '" readonly>'));
+                        row.append($('<td>').html('<input type="text" class="form-control level" name="level" id="level'+data.product_code+ x +'" value="' + levelData + '" readonly>'));
+                        row.append($('<td>').html('<input type="number" class="form-control new_adjust_qty" name="new_adjust_qty" id="new_adjust_qty' + x + '" value="" readonly>'));
+                        row.append($('<td>').html('<button type="button" class="btn btn-square btn-outline-danger" id="remove">Remove</button>'));
+                        
+
+
+                        $('<input>').attr({
+                        type: 'hidden',
+                        id: 'Secondary_units',
+                        name: 'Secondary_units',
+                        value: data.secondary_unit
+                        }).appendTo('form');
+
+
+                        $('<input>').attr({
+                        type: 'hidden',
+                        id: 'MaxStocks_data'+data.product_code+x,
+                        name: 'MaxStocks_data',
+                        value: data.maxProducts
+                        }).appendTo('form');
+
+                        $('<input>').attr({
+                        type: 'hidden',
+                        id: 'MaxStocks_data2'+data.product_code+x,
+                        name: 'MaxStocks_data2',
+                        value: data.maxProducts
+                        }).appendTo('form');
+
+
+                        x++
+    
+                        $('#tblPage_new').append(row);
+                        
+                      });
+                      
+                      // Clear the product code input field
+                      $("#product_code").val('');
+                    },
+                    error: function(xhr, status, error) {
+                      // Handle the error appropriately
+                    }
+                  });
+                }
+              });
+            });
+        </script>
+
+            <!--**********************************
+        Scripts end
+    ***********************************-->
+</body>
+
+</html>

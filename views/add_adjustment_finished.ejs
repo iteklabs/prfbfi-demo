@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+
+
+    <style>
+        body {font-family: Arial, Helvetica, sans-serif;}
+        
+        /* The Modal (background) */
+        .modal {
+          display: none; /* Hidden by default */
+          position: fixed; /* Stay in place */
+          z-index: 9999999999999; /* Sit on top */
+          padding-top: 100px; /* Location of the box */
+          left: 0;
+          top: 0;
+          width: 100%; /* Full width */
+          height: 100%; /* Full height */
+          overflow: auto; /* Enable scroll if needed */
+          background-color: rgb(0,0,0); /* Fallback color */
+          background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+        }
+        
+        /* Modal Content */
+        .modal-content {
+          position: relative;
+          background-color: #fefefe;
+          margin: auto;
+          padding: 0;
+          border: 1px solid #888;
+          width: 50%;
+          box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+          -webkit-animation-name: animatetop;
+          -webkit-animation-duration: 0.4s;
+          animation-name: animatetop;
+          animation-duration: 0.4s
+        }
+        
+        /* Add Animation */
+        @-webkit-keyframes animatetop {
+          from {top:-300px; opacity:0} 
+          to {top:0; opacity:1}
+        }
+        
+        @keyframes animatetop {
+          from {top:-300px; opacity:0}
+          to {top:0; opacity:1}
+        }
+        
+        /* The Close Button */
+        .close {
+          color: white;
+          float: right;
+          font-size: 28px;
+          font-weight: bold;
+        }
+        
+        .close:hover,
+        .close:focus {
+          color: #000;
+          text-decoration: none;
+          cursor: pointer;
+        }
+        
+        .modal-header {
+          padding: 2px 16px;
+          background-color: rgba(34, 34, 51, 0.705);
+          color: white;
+        }
+        
+        .modal-body {padding: 2px 16px;}
+        
+        .modal-footer {
+          padding: 2px 16px;
+          background-color: rgba(34, 34, 51, 0.705);
+          color: white;
+          display: flex;
+          justify-content: center;
+          display: grid;
+            place-items: center;
+        }
+    </style>
+    <script>
+        function saveAndContinue() {
+            var strTemp = '';
+        var Invoice = document.getElementById("invoice");
+        var date = document.getElementById("date");
+        var warehouse_name = document.getElementById("adjustment_warehouse_name");
+        // var Room_name = document.getElementById("Room_name");
+        var modal = document.getElementById("myModal");
+
+        if(Invoice.value.length == 0){
+            strTemp += "Document Number is required. <br>" 
+            Invoice.style.borderColor = "red";
+            Invoice.focus()
+        }else{
+            Invoice.style.borderColor = "";
+        }
+
+    
+
+        if(date.value.length == 0){
+            strTemp += "Date is required. <br>"
+            date.style.borderColor = "red";
+            date.focus()
+        }else{
+            date.style.borderColor = "";
+        }
+
+        if(warehouse_name.value.length == 0){
+            strTemp += "Warehouse is required. <br>"
+            warehouse_name.style.borderColor = "red";
+            warehouse_name.focus()
+        }else{
+            warehouse_name.style.borderColor = "";
+        }
+
+        // if(Room_name.value.length == 0){
+        //     strTemp += "Room  is required. <br>"
+        //     Room_name.style.borderColor = "red";
+        //     Room_name.focus()
+        // }else{
+        //     Room_name.style.borderColor = "";
+        // }
+
+        
+
+
+ 
+
+
+        var prod_qty = document.getElementsByName("adjust_qty");
+        var x = 1;
+        for (let index = 0; index < prod_qty.length; index++) {
+            const inputElement  = prod_qty[index];
+
+            if(inputElement.value.length == 0){
+                modal.style.display = "none";
+                strTemp += x + ". Adjust Quantity  is required. <br>"
+                inputElement.style.borderColor = "red";
+                inputElement.focus()
+            }else{
+                inputElement.style.borderColor = "";
+            }
+            x++;
+        }
+
+
+
+
+        var table = document.getElementById("adjust_tbl_new");
+        var noofrow = table.rows.length -1;
+
+        if(noofrow == 0){
+            strTemp += "Product list is empty. <br>"
+            table.style.borderColor = "red";
+            document.getElementById("product_code").focus()
+        }else{
+            table.style.borderColor = "";
+        }
+
+        if(strTemp.length > 0){
+            modal.style.display = "none";
+            Swal.fire(
+            'Required ',
+            "<h5>" + strTemp + "</h5>",
+            'warning'
+            )
+            return;
+        }
+         document.getElementById("form").submit();
+         modal.style.display = "none";
+         Swal.fire({
+            title: "Loading...",
+            html: "Please wait a moment",
+            allowOutsideClick: false, 
+            })
+            Swal.showLoading()
+        }
+        function clearModalContent() {
+            document.getElementById("dateRec").innerHTML = "";
+            document.getElementById("houseware").innerHTML = "";
+            document.getElementById("moor").innerHTML = "";
+
+            // Clear the table inside the modal
+            var modalTable = document.getElementById("purchases_tbl_modal");
+            modalTable.innerHTML = "";
+        }
+
+
+          function showConfirmation() {
+
+            clearModalContent();
+            
+            var html = '';
+            var NodeList = document.getElementsByName("prod_code");
+            var NodeList2 = document.getElementsByName("prod_name");
+            var prod_unit = document.getElementsByName("unit");
+            var prod_qty = document.getElementsByName("new_adjust_qty");
+            var stock = document.getElementsByName("stock");
+
+            var batch_code = document.getElementsByName("batch_code");
+            var product_date = document.getElementsByName("product_date");
+            var expiry_date = document.getElementsByName("expiry_date");
+            var types = document.getElementsByName("types");
+            var level = document.getElementsByName("level");
+            var adjust_qty = document.getElementsByName("adjust_qty");
+            var level2 = document.getElementsByName("level2");
+
+            var nodeVal = '';
+            var productName = '';
+            var valprod_unit = '';
+            var valprod_qty = '';
+            var valstock = '';
+            for (var x = 0; x < NodeList.length; x++) {
+                nodeVal = NodeList[x].value;
+                productName = NodeList2[x].value;
+                valprod_unit = prod_unit[x].value;
+                valprod_qty = prod_qty[x].value;
+                valstock = stock[x].value;
+
+                valbatch_code = batch_code[x].value;
+                valproduct_date = product_date[x].value;
+                valexpiry_date = expiry_date[x].value;
+                valtypes = types[x].value;
+                vallevel = level[x].value;
+                valadjust_qty = adjust_qty[x].value;
+                vallevel2 = level2[x].value;
+
+                html += '<tr>';
+                html += '<td>';
+                html += '<p>' + nodeVal + '</p>';
+                html += '</td>';
+
+                html += '<td>';
+                html += productName;
+                html += '</td>';
+
+
+                html += '<td>';
+                html += valadjust_qty;
+                html += '</td>';
+
+                
+                
+                html += '<td>';
+                html += valbatch_code;
+                html += '</td>';
+
+                html += '<td>';
+                html += valproduct_date;
+                html += '</td>';
+
+                html += '<td>';
+                html += valexpiry_date;
+                html += '</td>';
+
+                
+
+                html += '<td>';
+                html += valstock;
+                html += '</td>';
+
+                html += '<td>';
+                html += valtypes;
+                html += '</td>';
+
+                html += '<td>';
+                html += valprod_unit;
+                html += '</td>';
+
+                html += '<td>';
+                html += vallevel2;
+                html += '</td>';
+
+                html += '<td>';
+                html += valprod_qty;
+                html += '</td>';
+
+                
+
+                html += '</tr>';
+            }
+
+            var htmlfinal = "";
+            htmlfinal += '<thead class="thead-primary">';
+            htmlfinal += '<tr>';
+            htmlfinal += '<th scope="col">Item Code </th>';
+            htmlfinal += '<th scope="col">Item Description </th>';
+            htmlfinal += '<th scope="col">Adjust Quantity </th>';
+            htmlfinal += '<th scope="col">Batch Code </th>';
+            htmlfinal += '<th scope="col">Production Date </th>';
+            htmlfinal += '<th scope="col">Expiry Date </th>';
+            htmlfinal += '<th scope="col">In Stock </th>';
+            htmlfinal += '<th scope="col">Type</th>';
+            htmlfinal += '<th scope="col">Unit of Measure</th>';
+            htmlfinal += '<th scope="col">Bin</th>';
+            htmlfinal += '<th scope="col">Stock - After Adjust</th>';
+            htmlfinal += '</tr>';
+            htmlfinal += '</thead>';
+            htmlfinal += '<tbody id="tblPage_new_modal">';
+            htmlfinal += html;
+            htmlfinal += '</tbody>';
+
+            var modal = document.getElementById("myModal");
+            var span = document.getElementsByClassName("close")[0];
+
+
+            modal.style.display = "block";
+            span.onclick = function () {
+                modal.style.display = "none";
+            };
+
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "block";
+                }
+            };
+
+  
+
+            var modalContent = document.getElementById("purchases_tbl_modal");
+            modalContent.innerHTML = "";
+
+        
+            document.getElementById("dateRec").innerHTML = document.getElementById("date").value;
+            document.getElementById("houseware").innerHTML = document.getElementById("adjustment_warehouse_name").value;
+            // document.getElementById("moor").innerHTML = document.getElementById("Room_name").value;
+
+            modalContent.innerHTML = htmlfinal;
+            
+        }
+
+
+    </script>
+
+</head>
+
+<body onload="showTextbox(); ComputeConversion();">
+    <!--*******************
+        Preloader start
+    ********************-->
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <!--*******************
+        Preloader end
+    ********************-->
+
+    <!--**********************************
+        Main wrapper start
+    ***********************************-->
+    <div id="main-wrapper">
+
+    <!--**********************************
+        Nav header start
+    ***********************************-->
+        
+        <%- include('./partials/header_logo'); -%>
+    <!--**********************************
+        Nav header end
+    ***********************************-->
+
+    <!--**********************************
+        Header start
+    ***********************************-->
+        
+        <%- include('./partials/header',{titel: "Adjustment for Finished Goods"}); -%>
+    <!--**********************************
+        Header end ti-comment-alt
+    ***********************************-->
+
+    <!--**********************************
+        Sidebar start
+    ***********************************-->
+
+        <%- include('./partials/sidebar'); -%>
+    <!--**********************************
+        Sidebar end
+    ***********************************-->
+
+    <!--**********************************
+        Content body start
+    ***********************************-->
+
+    
+                    <div class="content-body">
+                        <div class="container-fluid">
+
+                            <!-- row -->
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h4 class="card-title"><%= language.new_adjustments %> </h4>
+                                            <button type="button" class="btn btn-rounded btn-outline-info"
+                                                onclick="history.back()"><i class="la la-undo"></i> <%= language.go_back %> </button>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <div class="form-validation">
+
+                                                <form class="needs-validation" action="/adjustment_finished/view/add_adjustment"
+                                                    method="post" id="form">
+
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"> Document Number <span
+                                                                    class="text-red"> *</span></label>
+                                                                <input type="text" name="invoice" class="form-control" value="<%= invoice_no %>"
+                                                                id="invoice" readonly>
+                                                            </div>
+                                                        </div>
+                                                        <!-- <div class="col-4">
+
+
+                                                                <div class="form-group">
+                                                                    <label class="form-label">Job Order number</label>
+                                                                    <input type="text" class="form-control" name="JO_number">
+                                                                </div>
+                                                        </div> -->
+                                                        <div class="col-4">
+
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"><%= language.warehouse %> <span class="text-red">*</span></label>
+                                                                <select class="form-control" name="warehouse_name"
+                                                                    id="adjustment_warehouse_name" onchange="SelectRoom(); BayBin();" required>
+                                                                    <option value selected disabled>Select One</option>
+                                                                    <% warehouse.forEach((warehouse)=> { %>
+                                                                        <option value="<%= warehouse.name %>">
+                                                                            <%= warehouse.name %>
+                                                                        </option>
+                                                                        <% }) %>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="col-xl-3 col-sm-4">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no">Room  <span
+                                                                        class="text-red">*</span></label>
+                                                                <!-- <select class="form-control" name="Room_name"
+                                                                    id="Room_name" onchange="showTextbox(); BayBin();" required>
+                                                                    
+                                                                </select> -->
+
+
+                                                                <div id="showRoom">
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"><%= language.date %> <span class="text-red">*</span></label>
+                                                                <input type="date" name="date" class="form-control"
+                                                                    id="date" required>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <!-- <div class="col-xl-3 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label class="form-label">Expiry date</label>
+                                                            <input type="date" class="form-control" name="expiry_date">
+                                                            </div>
+                                                        </div> -->
+                                                         
+                                                    </div>
+                                                    
+                                                    
+                                                    <div class="row mb-3">
+                                                        <div class="col-xl-4 col-sm-6">
+                                                            <select class="form-control" id="choice-dropdown" onchange="showTextbox()">
+                                                                <!-- <option value="">Select an option</option> -->
+                                                                <option value="Primary">Please scan the barcode...</option>
+                                                                <!-- <option value="Secondary">Secondary</option> -->
+                                                            </select>
+                                                        </div>    
+                                                            
+                                              
+                                                             <div class="col-xl-12" id="primary-textbox" style="display: none;">
+                                                                <div class="form-group">
+                                                                    <label for="invoice_no">Barcode  <span
+                                                                            class="text-red">*</span></label>
+                                                                    <input type="text" name="product_code" class="form-control" id="product_code">
+                                                                </div>
+                                                             </div>
+                                                             
+                                                             
+                                                              <div class="col-xl-12" id="secondary-textbox" style="display: none;">
+                                                                <div class="form-group">
+                                                                    <label for="invoice_no2">Secondary Barcode  <span
+                                                                            class="text-red">*</span></label>
+                                                                    <input type="text" name="product_code2" class="form-control" id="product_code2">
+                                                                </div>
+                                                              </div>
+                                                        
+                                                    </div>
+
+                                                    <div class="col-12">
+                                                        <div class="table-responsive">
+                                                            <table class="table primary-table-bordered" id="adjust_tbl_new">
+                                                                <thead class="thead-primary">
+                                                                    <tr>
+                                                                        <th scope="col">Item Code </th>
+                                                                        <th scope="col">Item Description</th>
+                                                                        <th scope="col"><%= language.adjust_qty %>  <span class="text-red">*</span></th>
+                                                                        <th scope="col">Batch Code</th>
+                                                                        <th scope="col">Production Code</th>
+                                                                        <th scope="col">Expiry date </th>
+                                                                        <th><%= language.current_stock %> </th>
+                                                                        <th><%= language.type %> </th>
+                                                                        <th scope="col">Unit of Measure</th>
+                                                                        <th>Room</th>
+                                                                        <th>Location</th>
+                                                                        <th scope="col"><%= language.stock_after_adjust %> <span class="text-red">*</span> </th>
+                                                                        <th>Action</th>
+
+                                                                    </tr>
+                                                                </thead>    
+                                                                <tbody id="tblPage_new">
+                                                                    
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+ 
+                                                    <div class="col-12 mb-5">
+                                                        <div class="form-group">
+                                                            <label for="note"><%= language.note %> </label>
+                                                            <input type="text" class="form-control"
+                                                                placeholder="note" id="note" name="note">
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- <div class="row">
+                                                        <button class="btn btn-primary" type="submit"
+                                                            id="submit"><%= language.submit %> </button>
+                                                    </div> -->
+                                                </form>
+                                                <div class="row">
+                                                    <button class="btn btn-primary" onclick="showConfirmation()" type="submit"
+                                                        id="purchase_submit"  >Pre-Finalize</button>
+                                                        <!-- <input class="btn btn-primary"  type="submit"
+                                                        id="purchase_submit" onclick="showConfirmation()" ><%= language.submit %> </input> -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="myModal" class="modal">
+
+                        <!-- Modal content -->
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <span class="close">&times;</span>
+                            <h2>Summary</h2>
+                          </div>
+                          <div class="modal-body">
+
+                            <!-- <div>
+                                <span style="color:black;">Document Number: <b><%= invoice_no %></b></span>
+                            </div>
+                            <div>
+                                <span style="color:black;">Date received: <b id="dateRec"></b></span>
+                            </div>
+                            <div>
+                                <span style="color:black;">Warehouse: <b id="houseware"></b></span>
+                            </div>
+                            <div>
+                                <span style="color:black;">Room: <b id="moor"></b></span>
+                            </div> -->
+
+
+                            <table style="width:50%" >
+                                <thead>
+                                    <tr>
+                                        <td>Document Number:</td>
+                                        <td><b id="Inv"><%= invoice_no %></b></td>
+                                    </tr>
+        
+        
+                                    <tr>
+                                        <td>Date received:</td>
+                                        <td><b id="dateRec"></b></td>
+                                    </tr>
+        
+                                    <tr>
+                                        <td>Warehouse:</td>
+                                        <td><b id="houseware"></b></td>
+                                    </tr>
+        
+                                    <tr>
+                                        <td>Room:</td>
+                                        <td><b id="moor"></b></td>
+                                    </tr>
+                                </thead>
+                            </table>
+                            
+                            
+                          </div>
+                          <div class="table-responsive">
+                            <table class="table primary-table-bordered" style="width:100%" id="purchases_tbl_modal">
+
+                            </table>
+                          </div>
+                          
+                          <div class="modal-footer">
+                            <button class="btn btn-primary" onclick="saveAndContinue()">Save and Continue</button>
+                          </div>
+                        </div>
+                      
+                    </div>
+    <!--**********************************
+        Content body end
+    ***********************************-->
+
+    <!--**********************************
+        Footer start
+    ***********************************-->
+        <%- include('./partials/footer'); -%>
+    <!--**********************************
+        Footer end
+    ***********************************-->
+
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!-- start Toastr -->
+        <%- include('./partials/toastr'); -%>
+    <!-- End Toastr -->
+
+    <!--**********************************
+        Scripts
+    ***********************************-->
+    
+        <%- include('./partials/script'); -%>
+        
+     <script>
+            $(function(){
+                var dtToday = new Date();
+                
+                var month = dtToday.getMonth() + 1;
+                var day = dtToday.getDate();
+                var year = dtToday.getFullYear();
+                if(month < 10)
+                    month = '0' + month.toString();
+                if(day < 10)
+                    day = '0' + day.toString();
+                
+                var maxDate = year + '-' + month + '-' + day;
+                $('#date').attr('max', maxDate);
+            });
+        function showTextbox() {
+          var dropdown = document.getElementById("choice-dropdown");
+          var selectedChoice = dropdown.value;
+    
+          var primaryTextbox = document.getElementById("primary-textbox");
+          var secondaryTextbox = document.getElementById("secondary-textbox");
+    
+          if (selectedChoice === "Primary") {
+            primaryTextbox.style.display = "block";
+            secondaryTextbox.style.display = "none";
+            document.getElementById("product_code").focus()
+          } else if (selectedChoice === "Secondary") {
+            primaryTextbox.style.display = "none";
+            secondaryTextbox.style.display = "block";
+          } else {
+            primaryTextbox.style.display = "none";
+            secondaryTextbox.style.display = "none";
+          }
+        }
+
+        // function SelectRoom(){
+        
+        //     var varibale = document.getElementById("adjustment_warehouse_name").value;
+        //     var selectRoom = $('#Room_name');
+
+        //     $.ajax({
+        //         url: '/warehousemap_Income/Rooms_data', 
+        //         method: 'POST',
+        //         data: { warehouse_name: varibale }, 
+        //         success: function(response) {
+
+        //             selectRoom.empty();
+        //                 $.each(response, function(index, data) {
+        //                     var roomName = data.room_name;
+        //                     var roomCode = data.room_name
+        //                     var option = $('<option>').text(roomName).val(roomName).attr('roomcode', roomCode);;
+        //                     selectRoom.append(option);
+
+        //                     BayBin()
+        //                 })
+        //         }
+        //     })
+        // }
+
+        function SelectRoom() {
+            var variable = document.getElementById("adjustment_warehouse_name").value;
+            var selectRoom = $('#showRoom');
+
+            $.ajax({
+                url: '/warehousemap_Income/Rooms_data',
+                method: 'POST',
+                data: { warehouse_name: variable },
+                success: function (response) {
+                    selectRoom.empty();
+
+                    $.each(response, function (index, data) {
+                        var roomName = data.room_name;
+                        var roomCode = data.room_name;
+
+                        // Create checkbox element instead of option
+                        var checkboxElement = $('<input>')
+                            .attr('type', 'checkbox')
+                            .addClass('form-check-input')
+                            .val(roomName)
+                            .attr("name", "room_name")
+                            .attr("id", "room_data"+index)
+                            .attr('roomcode', roomCode);
+
+                        // Create label for the checkbox
+                        var labelElement = $('<h5>').text(roomName).prepend(checkboxElement);
+
+                        // Append the label to the container
+                        selectRoom.append(labelElement);
+
+                        labelElement.click(function () {
+                            checkboxElement.prop('checked', !checkboxElement.prop('checked'));
+                        });
+
+                        checkboxElement.click(function (event) {
+                            event.stopPropagation();
+                        });
+
+                        // BayBin();
+                        // checkboxElement.click(function () {
+                        //     BayBin(index);
+                        // });
+                    });
+                }
+            });
+        }
+        
+        function BayBin(codeprod, x){
+            // alert("MaxStocks_data"+codeprod +x)
+        const selectlevel= document.querySelectorAll(`select[level="levelOslie"]`);
+        var warehouse = document.getElementById("adjustment_warehouse_name").value;
+        var room = document.getElementById("Room_name").value;
+        var levels = [];
+        let outputArray = [];
+        if(warehouse == "DRY GOODS"){
+            switch(room){
+                case "Rack 1":
+                levels = [1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12,13,14,15,16];
+                break;
+                case "Rack 2":
+                levels = [17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32];
+                break;
+            }
+            
+            for (let i = 0; i < selectlevel.length; i++) {
+                var optionsHtml = '';
+                levels.forEach(function (num) {
+                     optionsHtml += '<option value="' + num + '">DG' + num + '</option>';
+                });
+                 selectlevel[i].innerHTML = optionsHtml;
+                 document.getElementById("MaxStocks_data"+codeprod+x).value = "192"
+                 document.getElementById("MaxStocks_data2"+codeprod+x).value = "192"
+            }        
+            
+        }else if(warehouse == "FROZEN GOODS"){
+            switch(room){
+                case "Rack 1":
+                levels = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+                break;
+                case "Rack 2":
+                levels = [10, 11, 12, 13, 14, 15, 16, 17, 18];
+                break;
+            }
+            
+            for (let i = 0; i < selectlevel.length; i++) {
+                var optionsHtml = '';
+                levels.forEach(function (num) {
+                     optionsHtml += '<option value="' + num + '">FG' + num + '</option>';
+                });
+                 selectlevel[i].innerHTML = optionsHtml;
+                 document.getElementById("MaxStocks_data"+codeprod+x).value = "130"
+                document.getElementById("MaxStocks_data2"+codeprod+x).value = "130"
+            }        
+            
+    }
+}
+
+        function checkers(codeprod, x){
+    var warehouse = document.getElementById("adjustment_warehouse_name").value;
+    // var room = document.getElementById("Room_name").value;
+    if(warehouse == "DRY GOODS"){
+        document.getElementById("MaxStocks_data"+codeprod+x).value = "192"
+        document.getElementById("MaxStocks_data2"+codeprod+x).value = "192"
+    }else if(warehouse == "FROZEN GOODS"){
+        document.getElementById("MaxStocks_data"+codeprod+x).value = "130"
+        document.getElementById("MaxStocks_data2"+codeprod+x).value = "130"
+    }
+}
+        function myFunctionCompute(row) {
+        var adjustQtyInput = document.getElementById("adjust_qty" + row);
+        var newAdjustQtyInput = document.getElementById("new_adjust_qty" + row);
+        var selectedOption = document.getElementById("types" + row).value;
+
+        var adjustQty = parseFloat(adjustQtyInput.value);
+        var stock = parseFloat(document.getElementById("stock" + row).value);
+
+            if (!isNaN(adjustQty) && !isNaN(stock)) {
+                var result;
+
+                if (selectedOption === "add") {
+                result = stock + adjustQty;
+                } else if (selectedOption === "minus") {
+                result = stock - adjustQty;
+                }
+
+                if (!isNaN(result)) {
+                newAdjustQtyInput.value = result;
+                } else {
+                newAdjustQtyInput.value = "";
+                }
+            } else {
+                newAdjustQtyInput.value = "";
+            }
+        }
+
+        function ValidationForMaxQTY(product_code, i){
+        var prod_qty = document.getElementById("adjust_qty"+i).value;
+        var stocks_qty = document.getElementById("MaxStocks_data"+product_code+i).value;
+        var curStocks = document.getElementById("stock"+i).value;
+        var new_adjust_qty = document.getElementById("new_adjust_qty"+i).value; 
+        var selectedOption = document.getElementById("types" + i).value;
+        var TotalStocksRemain = parseInt(stocks_qty) - parseInt(curStocks)
+
+            // alert(parseInt(prod_qty) + " <> " + parseInt(TotalStocksRemain) + " <> " +  selectedOption + " <> " + stocks_qty + " <> " + curStocks + " <> " + new_adjust_qty)
+        if (selectedOption === "add") {
+        if(parseInt(prod_qty) >  parseInt(TotalStocksRemain)){
+            // Swal.fire(
+            // 'Sorry',
+            // 'Sorry the maximum quantity has been reached.',
+            // 'warning'
+            // )
+            // document.getElementById("adjust_qty"+i).value = "";
+            // document.getElementById("new_adjust_qty"+i).value = "";
+        }
+        } else if (selectedOption === "minus") {
+            // alert(new_adjust_qty)
+            if( parseInt(curStocks) < parseInt(prod_qty)){
+                Swal.fire(
+                'Sorry',
+                'Sorry the maximum quantity has been reached.',
+                'warning'
+                )
+                document.getElementById("adjust_qty"+i).value = "";
+                document.getElementById("new_adjust_qty"+i).value = "";
+            }
+        }
+        
+    }
+
+
+    function checkingWarehouse(primarycode, secondarycode, productcode){
+        var Level = document.getElementById("prod_level"+productcode).value;
+        var warehouse = document.getElementById("warehouse_name").value;
+        var rooms = document.getElementById("Room_name").value;
+        var productName = document.getElementById("prod_name"+productcode).value;
+        var Quanity = document.getElementById("prod_qty"+productcode);
+        var tempMaxStocks = document.getElementById("MaxStocks_data2"+productcode).value;
+        $.ajax({
+            url: '/adjustment_finished/CheckingWarehouse', 
+            method: 'POST',
+            data: {  productCode: productcode, bay: Level , warehouses: warehouse, room: rooms  }, 
+            success: function(response) {
+
+                if(response.length > 0){
+                    $.each(response, function(index, data) {
+                    
+                        // alert(productName + '==' +  data.name + '&&' + Pallet + '==' + data.pallet)
+                        if(productName == data.name && Level == data.bay){
+                            const stocksData = parseInt(data.product_stock) - parseInt(Quanity.value);
+                            alert(stocksData)
+                            document.getElementById("MaxStocks_data"+productcode).value = Math.abs(parseInt(stocksData));
+                            const newVal = document.getElementById("MaxStocks_data"+productcode).value;
+                            if(parseInt(Quanity.value) > parseInt(newVal)){
+                                if(newVal == 0){
+                                    Swal.fire(
+                                    'Sorry',
+                                    'Sorry the maximum quantity has been reached in this pallet.',
+                                    'error'
+                                    )
+                                    Quanity.value = newVal;
+                                }else{
+                                    Swal.fire(
+                                    'Information',
+                                    'This pallet have ' + data.product_stock + ' quantity  you will allow only ' +  newVal,
+                                    'question'
+                                    )
+
+                                    Quanity.value = newVal;
+                                }
+                            }
+
+
+                        }else{
+                            Swal.fire(
+                            'Sorry',
+                            'Sorry the pallet already occupied.',
+                            'warning'
+                            )
+                            Quanity.value = "";
+                            document.getElementById("prod_pallet"+productcode).value = "";
+                            document.getElementById("MaxStocks_data"+productcode).value = parseInt(tempMaxStocks);
+                        }
+                        
+                    })
+
+                }else{
+                    
+                    document.getElementById("MaxStocks_data"+productcode).value = parseInt(tempMaxStocks);
+                    alert(tempMaxStocks)
+                }
+                
+            }
+        })
+
+    }
+
+        function removeSelfRow(event) {
+            
+            var row = $(event.target).closest('tr');
+            row.find('input[type=hidden].associated-hidden').remove();
+            
+            row.remove();
+        }
+
+        $(document).on('click', 'button#remove', function(event) {
+            removeSelfRow(event);
+        });
+
+        function ComputeConversion(x, c){
+            var stock = document.getElementById("stock"+x);
+            var types = document.getElementById("types"+x);
+            var unit = document.getElementById("unit"+x);
+            var new_adjust_qty = document.getElementById("new_adjust_qty"+x);
+            var prod_cat = document.getElementById("prod_cat"+x);
+            var adjust_qty = document.getElementById("adjust_qty"+x);
+            var Primary_Units = document.getElementById("Primary_Units"+x).value;
+            var Secondary_units = document.getElementById("Secondary_units"+x).value;
+   
+            var TotalQtyStock =0;
+            var UOM;
+            TotalQtyStock = stock.value;
+            UOM = Primary_Units;
+            if(prod_cat.value == "S"){
+                TotalQtyStock = stock.value * c;
+                UOM = Secondary_units;
+            }
+            stock.value = TotalQtyStock;
+            unit.value = UOM;
+            
+
+        }
+
+
+        function ComputeConversionI(x, c){
+            var stock = document.getElementById("stock"+x);
+            var types = document.getElementById("types"+x);
+            var unit = document.getElementById("unit"+x);
+            var new_adjust_qty = document.getElementById("new_adjust_qty"+x);
+            var prod_cat = document.getElementById("prod_cat"+x);
+            var adjust_qty = document.getElementById("adjust_qty"+x);
+            var Primary_Units = document.getElementById("Primary_Units"+x).value;
+            var Secondary_units = document.getElementById("Secondary_units"+x).value;
+            var New_Qty_Converted = document.getElementById("New_Qty_Converted"+x);
+            var New_Qty_Converted_adj = document.getElementById("New_Qty_Converted_adj"+x);
+   
+            var TotalQtyStock =0;
+            var UOM;
+            var TotalQtyAdjustment = 0;
+            TotalQtyStock = stock.value;
+            TotalQtyAdjustment = adjust_qty.value;
+            UOM = Primary_Units;
+            if(prod_cat.value == "S"){
+                TotalQtyStock = new_adjust_qty.value / c;
+                TotalQtyAdjustment = adjust_qty.value / c
+            }
+            New_Qty_Converted.value = TotalQtyStock;
+            New_Qty_Converted_adj.value = TotalQtyAdjustment;
+            // stock.value = TotalQtyStock;
+            // unit.value = UOM;
+            // console.log(TotalQtyAdjustment + " <> " + adjust_qty + " <> " + c )
+
+        }
+
+        $(document).ready(function() {
+            
+            var x=1;
+            $('#product_code').on('keydown', function(e) {
+            if (e.which === 13) {
+              e.preventDefault();
+              return false;
+            }
+          });
+          // AJAX request when the value in the text box changes
+          $('#product_code').on('input', function() {
+            var productCode = $(this).val(); // Get the entered product code
+            var Warehouses = $("#adjustment_warehouse_name").val(); // Get the entered product code
+            var Rooms = $("#Room_name").val(); // Get the entered product code
+            var valCatwars;
+            if(Warehouses == "DRY GOODS"){
+                valCatwars = "DG";
+            }else{
+                valCatwars = "FG";
+            }
+            
+            // Check if the product code already exists in the table
+            var isProductExists = false;
+            $('#tblPage_new tr').each(function() {
+              var existingProductCode = $(this).find('td:nth-child(2)').text();
+              if (existingProductCode === productCode) {
+                isProductExists = true;
+                return false; // Exit the loop if the product is found
+              }
+            });
+          
+            if (!isProductExists) {
+                var rooms_data = document.getElementsByName("room_name");
+                var RoomAssign = [];
+
+                for (let index = 0; index < rooms_data.length; index++) {
+                    const element = rooms_data[index];
+
+                    if (element.checked) {
+                        RoomAssign.push(element.value);
+                    }
+                }
+
+                var output = RoomAssign.join(',');
+
+              $.ajax({
+                url: '/adjustment_finished/barcode_scanner', 
+                method: 'POST',
+                data: { primary_code: productCode, warehouse_data: Warehouses , room_data: Rooms, Roomslist:output }, 
+                success: function(response) {
+                  // Populate the table with the received data
+                 
+                  $.each(response, function(index, data1) {
+
+                    data1.forEach((data) => {
+                        if(data.product_stock > 0){
+                        var row = $('<tr>');
+                        const levelData = data.level === null ? 0 : data.level;
+                        const isleData =  data.isle === null ? 0 : data.isle;
+                        const palletData =  data.pallet === null ? 0 : data.pallet; 
+
+                        
+                        row.append($('<td>').html('<input type="text" class="form-control" style="width: 130px;" name="prod_code" value="' + data.product_code + '" readonly>'));
+                        row.append($('<td>').html('<input type="text" class="form-control" style="width: 400px;" name="prod_name" value="' + data.name + '" readonly>'));
+                        row.append($('<td>').html('<input type="number" class="form-control adjust_qty" style="width: 150px;" name="adjust_qty" id="adjust_qty' + x + '" oninput="myFunctionCompute('+ x +')"  onkeyup="ValidationForMaxQTY('+ data.product_code +', ' + x + '); ComputeConversionI('+x+', '+data.maxPerUnit+');" value="">'));
+                        row.append($('<td>').html('<input type="text" class="form-control batch_code" style="width: 150px;" name="batch_code" id="batch_code' + x + '" value="'+data.batch_code+'" readonly>'));
+                        row.append($('<td>').html('<input type="date" class="form-control" style="width: 150px;" name="product_date" value="'+ data.production_date +'" readonly>'));
+                        row.append($('<td>').html('<input type="date" class="form-control" style="width: 150px;" name="expiry_date" value="'+ data.expiry_date +'" readonly>'));
+                        row.append($('<td>').html('<input type="text" class="form-control stock" style="width: 150px;" name="stock" id="stock' + x + '" value="' + data.product_stock + '" readonly>'));
+                        
+                        row.append($('<td>').html('<select class="form-control" style="width: 150px;" onchange="myFunctionCompute('+ x +')" name="types" id="types' + x + '"> <option value="minus"> Subtract </option> <option value="add"> Add </option></select>'));
+                        row.append($('<td>').html('<input type="text" class="form-control unit" style="width: 100px;" name="unit" id="unit' + x + '" value="" readonly>'));
+                        row.append($('<td>').html('<input type="text" class="form-control" style="width: 100px;" name="Rooms" value="' + data.roomNamed + '" readonly>'));
+                        row.append($('<td>').html('<input type="text" class="form-control level" style="width: 80px;" name="level2" id="level2'+data.product_code+ x +'" value="' + valCatwars+levelData + '" readonly>'));
+                        row.append($('<td>').html('<input type="number" class="form-control new_adjust_qty" style="width: 95px;" name="new_adjust_qty" id="new_adjust_qty' + x + '" value="" readonly>'));
+                        row.append($('<td>').html('<button type="button" class="btn btn-square btn-outline-danger" id="remove">Remove</button>'));
+                    
+
+                        
+
+                        $('<input>').attr({
+                        type: 'hidden',
+                        id: 'level'+data.product_code,
+                        name: 'level',
+                        value: levelData
+                        }).appendTo(row);
+
+                        $('<input>').attr({
+                        type: 'hidden',
+                        id: 'Primary_Units'+x,
+                        name: 'Primary_Units',
+                        value: data.unit
+                        }).appendTo(row);
+                        
+                        $('<input>').attr({
+                        type: 'hidden',
+                        id: 'Secondary_units'+x,
+                        name: 'Secondary_units',
+                        value: data.secondary_unit
+                        }).appendTo(row);
+
+                        $('<input>').attr({
+                        type: 'hidden',
+                        id: 'MaxStocks_data'+data.product_code+x,
+                        name: 'MaxStocks_data',
+                        value: ""
+                        }).appendTo(row);
+
+                        $('<input>').attr({
+                        type: 'hidden',
+                        id: 'MaxStocks_data2'+data.product_code+x,
+                        name: 'MaxStocks_data2',
+                        value:""
+                        }).appendTo(row);
+
+
+                        $('<input>').attr({
+                            type: 'hidden',
+                            id: 'storage',
+                            name: 'storage',
+                            value: data.storage
+                        }).appendTo(row);
+
+                        $('<input>').attr({
+                            type: 'hidden',
+                            id: 'rak',
+                            name: 'rak',
+                            value: data.rack
+                        }).appendTo(row);
+
+                        $('<input>').attr({
+                            type: 'hidden',
+                            id: 'prod_cat'+x,
+                            name: 'prod_cat',
+                            value: data.product_cat
+                        }).appendTo(row);
+
+
+                        $('<input>').attr({
+                            type: 'hidden',
+                            id: 'New_Qty_Converted'+x,
+                            name: 'New_Qty_Converted',
+                            value: ""
+                        }).appendTo(row);
+
+
+                        $('<input>').attr({
+                            type: 'hidden',
+                            id: 'New_Qty_Converted_adj'+x,
+                            name: 'New_Qty_Converted_adj',
+                            value: ""
+                        }).appendTo(row);
+
+                        $('<input>').attr({
+                            type: 'hidden',
+                            id: 'maxPerUnit'+x,
+                            name: 'maxPerUnit',
+                            value: data.maxPerUnit
+                        }).addClass('associated-hidden').appendTo(row);
+
+                        $('<input>').attr({
+                            type: 'hidden',
+                            id: 'prod_invoice'+x,
+                            name: 'prod_invoice',
+                            value: data.invoice
+                        }).appendTo(row);
+
+                        $('#tblPage_new').append(row);
+
+                        checkers(data.product_code, x)
+                        ComputeConversion(x, data.maxPerUnit)
+                        x++
+                        
+                    }
+                    
+                    })
+                    
+                    
+                  });
+                  
+                  // Clear the product code input field
+                  $("#product_code").val('');
+                },
+                error: function(xhr, status, error) {
+                  // Handle the error appropriately
+                }
+              });
+            }
+          });
+        });
+    </script>
+    <!--**********************************
+        Scripts end
+    ***********************************-->
+</body>
+
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+    <style>
+        /* .cv-tbl tr,td,th{
+            border: 1px solid;
+            width: 200%;
+        } */
+
+        .cv-tbl td{
+            border: 1px solid;
+            /* width: 100%; */
+        }
+        
+        .center {
+          text-align: center;
+        }
+        
+        
+        .table-responsive {
+            overflow-x: scroll;
+            /* max-width: 100%; */
+        }
+        
+        .vertical-text {
+            writing-mode: vertical-lr;
+            text-orientation: sideways;
+        }
+    </style>
+</head>
+
+<body>
+    <!--*******************
+    Preloader start
+********************-->
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <!--*******************
+    Preloader end
+********************-->
+
+    <!--**********************************
+    Main wrapper start
+***********************************-->
+    <div id="main-wrapper">
+
+        <!--**********************************
+        Nav header start
+    ***********************************-->
+        <%- include('./partials/header_logo'); -%>
+
+            <!--**********************************
+        Nav header end
+    ***********************************-->
+
+            <!--**********************************
+        Header start
+    ***********************************-->
+            <%- include('./partials/header',{titel: language.WareHouse_Map}); -%>
+
+                <!--**********************************
+        Header end ti-comment-alt
+    ***********************************-->
+
+                <!--**********************************
+        Sidebar start
+    ***********************************-->
+                <%- include('./partials/sidebar'); -%>
+
+                    <!--**********************************
+        Sidebar end
+    ***********************************-->
+
+                    <div class="content-body">
+                        <div class="card">
+                            <div class="container-fluid">
+                                <div class="card-header">
+                                            <h4 class="card-title">Warehouse Map</h4>
+                                             
+                                         
+                                </div>
+                                
+                                <div class="card-header" style="display: flex; flex-direction: column; align-items: center;">
+                                <div class="row">
+                                    <div class="mb-3 col-md-4">
+                                        <label for="warrehouse">Warehouse <span class="text-red">*</span> </label>
+                                        <select class="form-control" name="warehouse" id="warehouse" required>
+                                           
+                                            <% warehouse.forEach((data)=> { %>
+                                            <option value="<%= data.name %>"><%= data.name %></option>
+                                            <% }) %>
+                                        </select>
+                                    </div>
+                                    
+                                    
+                                    <div class="mb-3 col-md-4">
+                                        <label for="warrehouse">Room <span class="text-red">*</span> </label>
+                                        <select class="form-control" name="room" id="room" required>
+                                            <option value="Ambient" >Ambient</option>
+                                            <option value="Enclosed" >Enclosed</option>
+                                        </select>
+                                    </div>
+                                    
+                                  
+                                    <div class="mb-3 col-md-4">
+                                        <label for="warrehouse">Level <span class="text-red">*</span> </label>
+                                        <select class="form-control" name="level" id="level" required>
+                                        
+                                            <option value="1" >One</option>
+                                            <option value="2" >Two</option>
+                                            <option value="3" >Three</option>
+                                            <option value="4" >Four</option>
+                                        </select>
+                                    </div>
+
+
+                                    <!-- <div class="mb-3 col-md-3">
+                                        <label for="warrehouse">Isle <span class="text-red">*</span> </label>
+                                        <select class="form-control" name="isle" id="isle" required>
+                                            <option value="ALL" >All</option>
+                                            <option value="A" >A</option>
+                                            <option value="B" >B</option>
+                                            <option value="C" >C</option>
+                                            <option value="D" >D</option>
+                                        </select>
+                                    </div> -->
+                                    
+
+
+
+                                </div> 
+                                
+                                <div class="row">
+                                    <button type="submit" class="btn btn-primary w-100" id="filterButton">Generate</button>
+                                </div> 
+                            </div>
+                            
+                           <!--<div class="container-fluid"> -->
+                           <!--     <table id="dataTable" border="1" style="border-collapse: collapse;" class="cv-tbl table-responsive">-->
+                           <!--         <tbody>-->
+                                        
+                           <!--         </tbody>-->
+                           <!--     </table>-->
+                           <!-- </div>-->
+                           
+                           <div class="container-fluid">
+                            <div class="table-responsive">
+                                <table id="dataTable" class="cv-tbl">
+                                    <tbody>
+                                   
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                           </div>
+                       </div>
+                    </div>
+
+                    <!--**********************************
+            Footer start
+        ***********************************-->
+                    <%- include('./partials/footer'); -%>
+
+                        <!--**********************************
+            Footer end
+        ***********************************-->
+
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!-- start Toastr -->
+    <%- include('./partials/toastr'); -%>
+    <!-- End Toastr -->
+
+    <!--**********************************
+        Scripts
+    ***********************************-->
+   
+    <%- include('./partials/script'); -%>
+
+        <!--**********************************
+        Scripts end
+    ***********************************-->
+</body>
+
+</html>

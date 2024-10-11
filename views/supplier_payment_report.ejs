@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+
+</head>
+
+<body>
+    <!--*******************
+    Preloader start
+********************-->
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <!--*******************
+    Preloader end
+********************-->
+
+    <!--**********************************
+    Main wrapper start
+***********************************-->
+    <div id="main-wrapper">
+
+        <!--**********************************
+        Nav header start
+    ***********************************-->
+        <%- include('./partials/header_logo'); -%>
+
+            <!--**********************************
+        Nav header end
+    ***********************************-->
+
+            <!--**********************************
+        Header start
+    ***********************************-->
+            <%- include('./partials/header',{titel: language.payment_report}); -%>
+
+                <!--**********************************
+        Header end ti-comment-alt
+    ***********************************-->
+
+                <!--**********************************
+        Sidebar start
+    ***********************************-->
+                <%- include('./partials/sidebar'); -%>
+
+                    <!--**********************************
+        Sidebar end
+    ***********************************-->
+
+                    <div class="content-body">
+                        <div class="container-fluid">
+                            <!-- row -->
+
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title col-6"><%= language.supplier_payment %> </h4>
+                                        <div class="card-title col-6 text-end">
+
+                                            <button type="button" id="supplier_payment_report" class="btn btn-rounded btn-info">
+                                                <span class="btn-icon-start text-info"><i class="la la-download"></i>
+                                                </span><%= language.download %> 
+                                            </button>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body">
+
+                                        <div class="table-responsive">
+                                            <table class="table info-table-bordered" id="supplier_payment_report_table">
+                                                <thead class="thead-info">
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th><%= language.invoice %> </th>
+                                                        <th><%= language.date %> </th>
+                                                        <th><%= language.supplier %> </th>
+                                                        <th><%= language.reason %> </th>
+                                                        <th><%= language.amount %> </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% var i=1 %>
+                                                        <% suppliers_data.forEach((suppliers)=> { %>
+                                                            
+                                                            <% if(master_shop[0].currency_placement == 1) { %>
+                                                                <tr>
+                                                                    <% if(suppliers.reason == "Received For Purchase Return") { %>
+                                                                        <td class="text-red">
+                                                                            <%= i %>
+                                                                        </td>
+    
+                                                                        <td class="text-red">
+                                                                            <%= suppliers.invoice %>
+                                                                        </td>
+    
+                                                                        <td class="text-red">
+                                                                            <%= suppliers.date %>
+                                                                        </td>
+    
+                                                                        <td class="text-red">
+                                                                            <%= suppliers.suppliers %>
+                                                                        </td>
+    
+                                                                        <td class="text-red">
+                                                                            <%= suppliers.reason %>
+                                                                        </td>
+    
+                                                                        <td class="text-red">
+                                                                            <%= suppliers.amount.toLocaleString() %> <%= master_shop[0].currency %>
+                                                                        </td>
+    
+                                                                    <% } else { %>
+    
+                                                                        <td>
+                                                                            <%= i %>
+                                                                        </td>
+        
+                                                                        <td>
+                                                                            <%= suppliers.invoice %>
+                                                                        </td>
+        
+                                                                        <td>
+                                                                            <%= suppliers.date %>
+                                                                        </td>
+                                                                        
+                                                                        <td>
+                                                                            <%= suppliers.suppliers %>
+                                                                        </td>
+        
+                                                                        <td>
+                                                                            <%= suppliers.reason %>
+                                                                        </td>
+        
+                                                                        <td>
+                                                                            <%= suppliers.amount.toLocaleString() %> <%= master_shop[0].currency %>
+                                                                        </td>
+    
+                                                                    <% } %>
+                                                                </tr>
+                                                                
+                                                            <% } else { %>
+
+                                                                <tr>
+
+                                                                    <% if(suppliers.reason == "Received For Purchase Return") { %>
+                                                                        <td class="text-red">
+                                                                            <%= i %>
+                                                                        </td>
+    
+                                                                        <td class="text-red">
+                                                                            <%= suppliers.invoice %>
+                                                                        </td>
+    
+                                                                        <td class="text-red">
+                                                                            <%= suppliers.date %>
+                                                                        </td>
+    
+                                                                        <td class="text-red">
+                                                                            <%= suppliers.suppliers %>
+                                                                        </td>
+    
+                                                                        <td class="text-red">
+                                                                            <%= suppliers.reason %>
+                                                                        </td>
+    
+                                                                        <td class="text-red">
+                                                                            <%= master_shop[0].currency %> <%= suppliers.amount.toLocaleString() %>
+                                                                        </td>
+    
+                                                                    <% } else { %>
+    
+                                                                        <td>
+                                                                            <%= i %>
+                                                                        </td>
+        
+                                                                        <td>
+                                                                            <%= suppliers.invoice %>
+                                                                        </td>
+        
+                                                                        <td>
+                                                                            <%= suppliers.date %>
+                                                                        </td>
+                                                                        
+                                                                        <td>
+                                                                            <%= suppliers.suppliers %>
+                                                                        </td>
+        
+                                                                        <td>
+                                                                            <%= suppliers.reason %>
+                                                                        </td>
+        
+                                                                        <td>
+                                                                            <%= master_shop[0].currency %> <%= suppliers.amount.toLocaleString() %>
+                                                                        </td>
+    
+                                                                    <% } %>
+                                                                </tr>
+                                                            <% } %>
+
+                                                        <% i++ %>
+                                                    <% }) %>    
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!--**********************************
+            Footer start
+        ***********************************-->
+                    <%- include('./partials/footer'); -%>
+
+                        <!--**********************************
+            Footer end
+        ***********************************-->
+
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!-- start Toastr -->
+    <%- include('./partials/toastr'); -%>
+        <!-- End Toastr -->
+
+        <!--**********************************
+        Scripts
+    ***********************************-->
+  
+    <%- include('./partials/script'); -%>
+    
+            <!--**********************************
+        Scripts end
+    ***********************************-->
+</body>
+
+</html>

@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+
+</head>
+
+<body onload="SelectRoom(); SelectRoom_QA(); showCategorize(); BayBin();">
+    <!--*******************
+        Preloader start
+    ********************-->
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <!--*******************
+        Preloader end
+    ********************-->
+
+    <!--**********************************
+        Main wrapper start
+    ***********************************-->
+    <div id="main-wrapper">
+
+        <!--**********************************
+            Nav header start
+        ***********************************-->
+        <%- include('./partials/header_logo'); -%>
+
+            <!--**********************************
+            Nav header end
+        ***********************************-->
+
+            <!--**********************************
+            Header start
+        ***********************************-->
+            <%- include('./partials/header',{titel: language.sales_return}); -%>
+
+                <!--**********************************
+            Header end ti-comment-alt
+        ***********************************-->
+
+                <!--**********************************
+            Sidebar start
+        ***********************************-->
+                <%- include('./partials/sidebar'); -%>
+
+                    <!--**********************************
+            Sidebar end
+        ***********************************-->
+
+                    <div class="content-body">
+                        <div class="container-fluid">
+
+                            <!-- row -->
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h4 class="card-title"><%= language.edit_sale_return %> </h4>
+                                            <button type="button" class="btn btn-rounded btn-outline-info"
+                                                onclick="history.back()"><i class="la la-undo"></i> <%= language.go_back %> </button>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-validation">
+
+                                                <form class="needs-validation"
+                                                    action="/all_sales_finished/view/return_sales/<%= user._id %>"
+                                                    method="post" id="form">
+
+                                                    <div class="row mb-3">
+                                                        <div class="col-xl-3 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"><%= language.invoice %> </label>
+                                                                <input type="text" name="invoice"
+                                                                    value="<%= user.invoice %>" class="form-control"
+                                                                    id="invoice" readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-3 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"><%= language.customer %> </label>
+                                                                <input type="text" name="customer"
+                                                                    value="<%= user.customer %>" class="form-control"
+                                                                    id="customer" readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-3 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"><%= language.date %> </label>
+                                                                <input type="date" name="date" class="form-control"
+                                                                    id="date" value="<%= user.date %>" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-3 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no">Previous <%= language.warehouse %> </label>
+                                                                <input type="text" name="warehouse_name"
+                                                                    value="<%= user.warehouse_name %>" class="form-control"
+                                                                    id="warehouse_name" readonly>
+                                                            </div>
+                                                        </div>
+
+                                          
+                                                
+                                                    <div class="col-xl-3 col-sm-6">
+                                                        <div class="form-group">
+                                                            <label for="invoice_no"> <span
+                                                                    class="text-red"></span></label>
+                                                            <select class="form-control" name="for_categorize"
+                                                                id="for_categorize" onchange="showCategorize();" required>
+                                                                <option value="QA">QA </option>
+                                                                <option value="GS">GOOD STOCKS</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+
+
+                                                <div class="row" id="goods_section" style="display: none;" >
+                                                    <div class="col-xl-3 col-sm-6">
+                                                        <div class="form-group">
+                                                            <label for="invoice_no">To <%= language.warehouse %>  <span
+                                                                    class="text-red">*</span></label>
+                                                            <select class="form-control" name="to_warehouse_name"
+                                                                id="warehouse_name3" onchange="SelectRoom();" required>
+                                                                <% warehouses.forEach((warehouse)=> { %>
+                                                                    <option value="<%= warehouse.name %>">
+                                                                        <%= warehouse.name %>
+                                                                    </option>
+                                                                    <% }) %>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="col-xl-3 col-sm-6">
+                                                        <div class="form-group">
+                                                            <label for="invoice_no">To Room  <span
+                                                                    class="text-red">*</span></label>
+                                                            <select class="form-control" name="to_Room_name"
+                                                                id="Room_name3" onchange="BayBin()" required>
+                                      
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                
+
+
+                                                    <div class="col-xl-12">
+                                                        <div class="table-responsive">
+                                                            <table class="table primary-table-bordered">
+                                                                <thead class="thead-primary">
+                                                                    <tr>
+                                                                      
+                                                                        <th scope="col"><%= language.name %> </th>
+                                                                        <th scope="col">Primary Code</th>
+                                                                        <th scope="col">Secondary Code</th>
+                                                                        <th scope="col">Product Code</th>
+                                                                        <th scope="col">Room</th>
+                                                                        <th scope="col">Bin</th>
+                                                                        <th scope="col"><%= language.sale_qty %> </th>
+                                                                        <th scope="col"><%= language.return_qty %>  <span class="text-red">*</span></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <% var x = 0; %>
+                                                                    <% user.sale_product.forEach((user)=> { %>
+                                                                    <tr>
+
+                                                               
+                                                                        
+                                                                        <td scope="col" class="align-top">
+                                                                            <input type="text" name="product_name"
+                                                                                class="form-control" style="width: 350px;" id="product_name"
+                                                                                value="<%= user.product_name %>"
+                                                                                readonly>
+                                                                        </td>
+
+                                                                        <td scope="col" class="align-top">
+                                                                            <div class="input-group"> 
+                                                                                <input type="text" name="primary_code" class="form-control primary_code" style="width: 150px;" id="primary_code" value="<%= user.primary_code %>" readonly> 
+                                                                              
+                                                                            </div>
+                                                                        </td>
+
+
+                                                                        <td scope="col" class="align-top">
+                                                                            <div class="input-group"> 
+                                                                                <input type="text" name="secondary_code" class="form-control secondary_code" style="width: 150px;"  id="secondary_code" value="<%= user.secondary_code %>" readonly> 
+                                                                              
+                                                                            </div>
+                                                                        </td>
+
+
+                                                                        <td scope="col" class="align-top">
+                                                                            <div class="input-group"> 
+                                                                                <input type="text" name="product_code" class="form-control product_code" style="width: 150px;"  id="product_code" value="<%= user.product_code %>" readonly> 
+                                                                              
+                                                                            </div>
+                                                                        </td>
+
+
+                                                                        <td scope="col" class="align-top">
+                                                                            <div class="input-group"> 
+                                                                                <input type="text" name="room_code" class="form-control room_code" style="width: 150px;"  id="room_code" value="<%= user.room_name %>" readonly> 
+                                                                              
+                                                                            </div>
+                                                                        </td>
+
+
+
+                                                                        <td scope="col" class="align-top">
+                                                                            <div class="input-group"> 
+                                                                                <!-- <input type="text" name="bay" class="form-control bay" style="width: 150px;"  id="bay" value="<%= user.bay %>">  -->
+
+                                                                                <select class="form-control" name="bay" level="levelOslie" id="bay<%= x %>" style="width: 150px;"></select>
+                                                                              
+                                                                            </div>
+                                                                        </td>
+
+
+
+                                                                        
+
+
+
+                                                                        <td scope="col" class="align-top">
+                                                                            <div class="input-group"> 
+                                                                                <input type="text" name="sales_quantity" class="form-control sales_quantity" style="width: 150px;"  id="sales_quantity" value="<%= user.quantity %>" readonly> 
+                                                                              
+                                                                            </div>
+                                                                        </td>
+
+                                                                        <% if (stock.length == 0) { %>
+                                                                            <td scope="col" class="align-top">
+                                                                                <div class="input-group"> 
+                                                                                    <input type="text" name="stocks" class="form-control stocks" style="width: 150px;"  id="stocks" value="0" readonly> 
+                                                                                  
+                                                                                </div>
+                                                                            </td>
+                                                                        <% } else { %>
+
+                                                                            <% stock.forEach((stocksdata)=> { %>
+                                                                                <% if (user.product_name == stocksdata.name && user.bay ==  stocksdata.bay && user.bay == stocksdata.bay && user.expiry_date == stocksdata.expiry_date  && user.production_date == stocksdata.production_date && user.batch_code == stocksdata.batch_code) { %>
+                  
+                                                                                    <!-- <td scope="col" class="align-top">
+                                                                                        <div class="input-group"> 
+                                                                                            <input type="text" name="stocks" class="form-control stocks" style="width: 150px;"  id="stocks" value="<%= stocksdata.product_stock %>" readonly> 
+                                                                                          
+                                                                                        </div>
+                                                                                    </td> -->
+
+                                                                                    <input type="hidden" name="maxPerUnit" class="form-control maxPerUnit" id="maxPerUnit" value="<%= stocksdata.maxPerUnit %>"> 
+                                                                                    <input type="hidden" name="maxProducts" class="form-control maxProducts" id="maxProducts" value="<%= stocksdata.maxProducts %>"> 
+                                                                                    <input type="hidden" name="batch_code" class="form-control batch_code" id="batch_code" value="<%= stocksdata.batch_code %>">
+                                                                                    <input type="hidden" name="secondary_unit" class="form-control secondary_unit" id="secondary_unit" value="<%= stocksdata.secondary_unit %>"> 
+                                                                                    <input type="hidden" name="unit" class="form-control unit" id="unit" value="<%= stocksdata.unit %>">  
+                                                                                    <input type="hidden" name="production_date" class="form-control production_date" id="production_date" value="<%= stocksdata.production_date %>">  
+                                                                                    <input type="hidden" name="expiry_date" class="form-control expiry_date" id="expiry_date" value="<%= stocksdata.expiry_date %>">  
+                                                                             
+                                                                                <% } %>
+                                                                            <% }) %>
+
+                                                                        <% } %>
+                                                                       
+                                                    
+
+                                                                        <td scope="col" class="align-top">
+                                                                            <div class="input-group"> 
+                                                                                <input type="text" name="return_qty" class="form-control return_qty" style="width: 150px;"  id="return_qty" value=""> 
+                                                                                
+                                                                            </div>
+                                                                        </td>
+
+                                                                    </tr>
+                                                                    <% x++ %>
+                                                                    <% }) %>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+
+                                                <div class="row" id="QA-section" style="display: none;" >
+                                                    <div class="col-xl-3 col-sm-6">
+                                                        <div class="form-group">
+                                                            <label for="invoice_no">To <%= language.warehouse %>  <span
+                                                                    class="text-red">*</span></label>
+                                                            <select class="form-control" name="to_warehouse_name_QA"
+                                                                id="warehouse_name3_QA" onchange="SelectRoom_QA();" required>
+                                                                <% warehouse_QA.forEach((warehouse)=> { %>
+                                                                    <option value="<%= warehouse.name %>">
+                                                                        <%= warehouse.name %>
+                                                                    </option>
+                                                                    <% }) %>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="col-xl-3 col-sm-6">
+                                                        <div class="form-group">
+                                                            <label for="invoice_no">To Room  <span
+                                                                    class="text-red">*</span></label>
+                                                            <select class="form-control" name="to_Room_name_QA"
+                                                                id="Room_name3_QA" required>
+                                      
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                
+
+
+                                                    <div class="col-xl-12">
+                                                        <div class="table-responsive">
+                                                            <table class="table primary-table-bordered">
+                                                                <thead class="thead-primary">
+                                                                    <tr>
+                                                                        <th scope="col"><%= language.name %> </th>
+                                                                        <th scope="col">Primary Code</th>
+                                                                        <th scope="col">Secondary Code</th>
+                                                                        <th scope="col">Product Code</th>
+                                                                        <th scope="col">Room</th>
+                                                                        <th scope="col"><%= language.sale_qty %> </th>
+                                                   
+                                                                        <th scope="col"><%= language.return_qty %>  <span class="text-red">*</span></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <% user.sale_product.forEach((user)=> { %>
+                                                                    <tr>
+
+                                                                        
+                                                                        <td scope="col" class="align-top">
+                                                                            <input type="text" name="product_name_QA1"
+                                                                                class="form-control" style="width: 350px;" id="product_name_QA1"
+                                                                                value="<%= user.product_name %>"
+                                                                                readonly>
+                                                                        </td>
+
+                                                                        <td scope="col" class="align-top">
+                                                                            <div class="input-group"> 
+                                                                                <input type="text" name="primary_code_QA" class="form-control primary_code" style="width: 150px;" id="primary_code_QA" value="<%= user.primary_code %>" readonly> 
+                                                                              
+                                                                            </div>
+                                                                        </td>
+
+
+                                                                        <td scope="col" class="align-top">
+                                                                            <div class="input-group"> 
+                                                                                <input type="text" name="secondary_code_QA" class="form-control secondary_code" style="width: 150px;"  id="secondary_code_QA" value="<%= user.secondary_code %>" readonly> 
+                                                                              
+                                                                            </div>
+                                                                        </td>
+
+
+                                                                        <td scope="col" class="align-top">
+                                                                            <div class="input-group"> 
+                                                                                <input type="text" name="product_code_QA" class="form-control product_code" style="width: 150px;"  id="product_code_QA" value="<%= user.product_code %>" readonly> 
+                                                                              
+                                                                            </div>
+                                                                        </td>
+
+                                                                        <td scope="col" class="align-top">
+                                                                            <div class="input-group"> 
+                                                                                <input type="text" name="room_code_QA" class="form-control room_code_QA" style="width: 150px;"  id="room_code_QA" value="<%= user.room_name %>" readonly> 
+                                                                              
+                                                                            </div>
+                                                                        </td>
+
+
+                                                                        <td scope="col" class="align-top">
+                                                                            <div class="input-group"> 
+                                                                                <input type="text" name="sales_quantity_QA" class="form-control sales_quantity" style="width: 150px;"  id="sales_quantity_QA" value="<%= user.quantity %>" readonly> 
+                                                                              
+                                                                            </div>
+                                                                        </td>
+
+                                                                        <% if (stock.length == 0) { %>
+                                                                            <!-- <td scope="col" class="align-top">
+                                                                                <div class="input-group"> 
+                                                                                    <input type="text" name="stocks_QA" class="form-control stocks" style="width: 150px;"  id="stocks_QA" value="0" readonly> 
+                                                                                  
+                                                                                </div>
+                                                                            </td> -->
+                                                                        <% } else { %>
+
+                                                                            <% stock.forEach((stocksdata)=> { %>
+                                                                                <% if (user.product_name == stocksdata.name ) { %>
+                  
+                                                                                    <!-- <td scope="col" class="align-top">
+                                                                                        <div class="input-group"> 
+                                                                                            <input type="text" name="stocks_QA" class="form-control stocks" style="width: 150px;"  id="stocks_QA" value="<%= stocksdata.product_stock %>" readonly> 
+                                                                                          
+                                                                                        </div>
+                                                                                    </td> -->
+
+                                                                                    <input type="hidden" name="maxPerUnit_QA" class="form-control maxPerUnit_QA" id="maxPerUnit_QA" value="<%= stocksdata.maxPerUnit %>"> 
+                                                                                    <input type="hidden" name="maxProducts_QA" class="form-control maxProducts_QA" id="maxProducts_QA" value="<%= stocksdata.maxProducts %>"> 
+                                                                                    <input type="hidden" name="batch_code_QA" class="form-control batch_code_QA" id="batch_code_QA" value="<%= stocksdata.batch_code %>">
+                                                                                    <input type="hidden" name="secondary_unit_QA" class="form-control secondary_unit_QA" id="secondary_unit_QA" value="<%= stocksdata.secondary_unit %>"> 
+                                                                                    <input type="hidden" name="unit_QA" class="form-control unit_QA" id="unit_QA" value="<%= stocksdata.unit %>">  
+                                                                                    <input type="hidden" name="production_date_QA" class="form-control production_date_QA" id="production_date_QA" value="<%= stocksdata.production_date %>">  
+                                                                                    <input type="hidden" name="expiry_date_QA" class="form-control expiry_date_QA" id="expiry_date_QA" value="<%= stocksdata.expiry_date %>">  
+                                                                             
+                                                                                <% } %>
+                                                                            <% }) %>
+
+                                                                        <% } %>
+                                                                       
+                                                                        
+
+                                                                        <td scope="col" class="align-top">
+                                                                            <div class="input-group"> 
+                                                                                <input type="text" name="return_qty_QA" class="form-control return_qty" style="width: 150px;"  id="return_qty_QA" value=""> 
+                                                                                
+                                                                            </div>
+                                                                        </td>
+
+                                                                    </tr>
+                                                                    <% }) %>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                    <div class="row">
+                                                        <div class="col-md-8 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="note"><%= language.return_note %> </label>
+                                                                <input type="text" class="form-control" id="note"
+                                                                    placeholder="Enter Note" name="note">
+                                                            </div>
+                                                        </div>
+
+                                                   
+
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <button class="btn btn-primary" type="submit"
+                                                            id="submit"><%= language.submit %> </button>
+                                                    </div>
+
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--**********************************
+            Footer start
+        ***********************************-->
+                    <%- include('./partials/footer'); -%>
+
+                        <!--**********************************
+            Footer end
+        ***********************************-->
+
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!-- start Toastr -->
+    <%- include('./partials/toastr'); -%>
+        <!-- End Toastr -->
+
+        <!--**********************************
+        Scripts
+    ***********************************-->
+
+        <%- include('./partials/script'); -%>
+
+        <script>
+            function SelectRoom(){
+        
+                var varibale = document.getElementById("warehouse_name3").value;
+                var selectRoom = $('#Room_name3');
+
+                $.ajax({
+                    url: '/warehousemap_Income/Rooms_data3', 
+                    method: 'POST',
+                    data: { warehouse_name: varibale, cat: "Finished Goods" }, 
+                    success: function(response) {
+
+                    
+                        selectRoom.empty();
+                            $.each(response, function(index, data) {
+                                var roomName = data.room_name;
+                                var roomCode = data.room_name
+                                var option = $('<option>').text(roomName).val(roomName).attr('roomcode', roomCode);;
+                                selectRoom.append(option);
+                            })
+
+
+                        
+                    }
+                })
+
+                
+                
+            }
+
+
+            function SelectRoom_QA(){
+                var varibale = document.getElementById("warehouse_name3_QA").value;
+                var selectRoom = $('#Room_name3_QA');
+
+                $.ajax({
+                    url: '/warehousemap_Income/Rooms_data3', 
+                    method: 'POST',
+                    data: { warehouse_name: varibale, cat: "Finished Goods" }, 
+                    success: function(response) {
+
+                    
+                        selectRoom.empty();
+                            $.each(response, function(index, data) {
+                                var roomName = data.room_name;
+                                var roomCode = data.room_name
+                                var option = $('<option>').text(roomName).val(roomName).attr('roomcode', roomCode);;
+                                selectRoom.append(option);
+                            })
+
+
+                        
+                    }
+                })
+            }
+        
+            function showCategorize(){
+                var for_categorize = document.getElementById("for_categorize").value;
+                var goods_section = document.getElementById("goods_section")
+                var QA_section = document.getElementById("QA-section")
+
+
+                if (for_categorize === "GS") {
+                    goods_section.style.display = "block";
+                    QA_section.style.display = "none";
+                    SelectRoom();
+                }else{
+                    goods_section.style.display = "none";
+                    QA_section.style.display = "block"; 
+                    SelectRoom_QA();
+                }
+
+                BayBin()
+
+            }
+       
+            function BayBin(x){
+            const selectlevel= document.querySelectorAll(`select[level="levelOslie"]`);
+            var warehouse = document.getElementById("warehouse_name").value;
+            var room = document.getElementById("Room_name3").value;
+            var levels = [];
+            let outputArray = [];
+           
+
+            if(warehouse == "DRY GOODS"){
+                switch(room){
+                    case "Rack 1":
+                    levels = [1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12,13,14,15,16];
+                    break;
+                    case "Rack 2":
+                    levels = [17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32];
+                    break;
+
+                    case "AISLE":
+                    levels = [0];
+                    break;
+                }
+                
+                for (let i = 0; i < selectlevel.length; i++) {
+                    var optionsHtml = '';
+                    levels.forEach(function (num) {
+                        optionsHtml += '<option value="' + num + '">DG' + num + '</option>';
+                    });
+                    selectlevel[i].innerHTML = optionsHtml;
+                    // document.getElementById("MaxStocks_data"+x).value = "192"
+                    // document.getElementById("MaxStocks_data2"+x).value = "192"
+                }        
+                
+            }else if(warehouse == "FROZEN GOODS"){
+                switch(room){
+                    case "Rack 1":
+                    levels = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+                    break;
+                    case "Rack 2":
+                    levels = [10, 11, 12, 13, 14, 15, 16, 17, 18];
+                    break;
+                    case "AISLE":
+                    levels = [0];
+                    break;
+                }
+                
+                for (let i = 0; i < selectlevel.length; i++) {
+                    var optionsHtml = '';
+                    levels.forEach(function (num) {
+                        optionsHtml += '<option value="' + num + '">FG' + num + '</option>';
+                    });
+                    selectlevel[i].innerHTML = optionsHtml;
+                    // document.getElementById("MaxStocks_data"+x).value = "130"
+                    // document.getElementById("MaxStocks_data2"+x).value = "130"
+                }        
+                
+          }
+}
+       </script>
+
+            <!--**********************************
+        Scripts end
+    ***********************************-->
+</body>
+
+</html>

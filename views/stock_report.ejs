@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+
+    <style>
+        /* Define A4 landscape page styles for printing */
+        @media print {
+          @page {
+            size: 297mm 210mm ;
+            margin: 0; /* Remove default margins */
+          }
+          
+          body {
+            margin: 0mm; /* Add margin to the body for spacing */
+          }
+          
+          .print-size {
+            width: 100%; /* Content width will match A4 landscape width */
+            font-size: 300px; /* Adjust font size as needed */
+          }
+        }
+      </style>
+      <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+
+</head>
+
+<body onload="myFunction_Stocks(); LogicDropdown(); SelectRoom();">
+    <!--*******************
+        Preloader start
+    ********************-->
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <!--*******************
+        Preloader end
+    ********************-->
+
+    <!--**********************************
+        Main wrapper start
+    ***********************************-->
+    <div id="main-wrapper">
+
+        <!--**********************************
+            Nav header start
+        ***********************************-->
+        <%- include('./partials/header_logo'); -%>
+
+            <!--**********************************
+            Nav header end
+        ***********************************-->
+
+            <!--**********************************
+            Header start
+        ***********************************-->
+            <%- include('./partials/header',{titel: language.stock_report}); -%>
+
+                <!--**********************************
+            Header end ti-comment-alt
+        ***********************************-->
+
+                <!--**********************************
+            Sidebar start
+        ***********************************-->
+                <%- include('./partials/sidebar'); -%>
+
+                    <!--**********************************
+            Sidebar end
+        ***********************************-->
+
+                    <div class="content-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-header d-block">
+                                            <h4 class="card-title"><%= language.product_stock_report %> </h4>
+                                        </div>
+
+                                        <form action="" method="post">
+
+                                            <div class="card-body">
+                                                <div class="row mb-3">
+                                                    <div class="col-xl-6 col-sm-5">
+                                                        <div class="form-group">
+                                                            <label for="filter"><%= language.filter_by %> <span
+                                                                    style="color: red;">*</span></label>
+                                                            <select class="form-control" name="filter" id="stock_report_warehouse" onchange="myFunction_Stocks()" style="width: 150px;">
+                                                                <option id="warehouse_stocks" value="warehouse"><%= language.warehouse %></option>
+                                                                <option id="product" value="product"><%= language.products %></option>
+                                                            </select>
+
+
+
+
+
+                                                            
+                                 
+                                                          </div>
+                                                    </div>
+                                                </div>
+
+                                                    <div id="primary-textbox" style="display: none;">
+                                                        <div class="card-header" style="display: flex; flex-direction: column; align-items: center;">
+                                                            <div class="row">
+                            
+                            
+                                                              <div class="mb-3 col-md-4">
+                                                                <label for="warrehouse">Category <span class="text-red">*</span> </label>
+                                                                <select class="form-control" name="A" id="A" onchange="LogicDropdown()" required>
+                                                                    <option value="All" >All</option>
+                                                                    <option value="raw" >Raw Materials</option>
+                                                                    <option value="finish" >Finished Goods</option>
+                                                                </select>
+                                                              </div>
+                            
+                            
+                                                            <div class="mb-3 col-md-4">
+                                                                <label for="warrehouse"> Type <span class="text-red">*</span> </label>
+                                                                <select class="form-control" name="B" id="B" onchange="SelectRoomSelect();" required>
+                                                                </select>
+                                                            </div>
+                            
+                            
+                                                                <div class="mb-3 col-md-4">
+                                                                    <label for="warrehouse">Warehouse <span class="text-red">*</span> </label>
+                                                                    <select class="form-control" name="warehouse" id="warehouse" onchange="SelectRoom()" required>
+                                                                       
+                                                                        <% warehouse.forEach((data)=> { %>
+                                                                        <option value="<%= data.name %>"><%= data.name %></option>
+                                                                        <% }) %>
+                                                                    </select>
+                                                                </div>
+                                                                
+                                                                
+                                                                <div class="mb-3 col-md-4">
+                                                                    <label for="warrehouse">Rack <span class="text-red">*</span> </label>
+                                                                    <select class="form-control" name="room" id="room" required>
+                                                                    </select>
+                                                                </div>
+                                                                
+                                                                <div class="mb-3 col-md-4" id="LevelTpes">
+                                                                    <label for="warrehouse">Level <span class="text-red">*</span> </label>
+                                                                    <select class="form-control" name="Type" id="Type" required>
+                                                                    
+                                                                        <option value="Level" >Level</option>
+                                                                        <option value="Floor" >Floor</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div> 
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="col-xl-12" id="secondary-textbox" style="display: none;">
+                                                        <div class="form-group">
+                                                            <!-- <label for="invoice_no2">Secondary Barcode  <span
+                                                                    class="text-red">*</span></label>
+                                                            <input type="text" name="product_code2" class="form-control" id="product_code2"> -->
+                                                        </div>
+                                                    </div>
+
+                                        
+                                                
+                                                    <div class="col-xl-12 mt-3">
+                                                        <div class="form-group">
+                                                            <button type="button" class="btn btn-primary h-45 w-100" id="filter">
+                                                                <i class="la la-filter"></i><%= language.filter %> 
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                            </div>
+                                    </div>
+                                        </form>
+
+                                </div>
+                            </div>
+
+                                <div class="col-lg-12 table-responsive print-size" id="stock_report_table"> </div>
+                                <div class="col-lg-12" id="stock_report_table_print"> </div>
+                                
+
+                        </div>
+                    </div>
+    </div>
+
+                    <!--**********************************
+            Footer start
+        ***********************************-->
+                    <%- include('./partials/footer'); -%>
+
+                        <!--**********************************
+            Footer end
+        ***********************************-->
+
+    <!-- </div> -->
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!--**********************************
+        Scripts
+    ***********************************-->
+
+    <%- include('./partials/script'); -%>
+
+
+    <script>
+        function ExportToExcel( fn, dl) {
+                var type = 'xlsx';
+                var elt = document.getElementById('example');
+                var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+                return dl ?
+                    XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+                    XLSX.writeFile(wb, fn || ('stocks_'+new Date()+'.' + (type || 'xlsx')));
+        }
+    </script>
+
+        <!--**********************************
+        Scripts end
+    ***********************************-->
+</body>
+
+</html>

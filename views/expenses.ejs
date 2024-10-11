@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+
+</head>
+
+<body>
+    <!--*******************
+    Preloader start
+********************-->
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <!--*******************
+    Preloader end
+********************-->
+
+    <!--**********************************
+    Main wrapper start
+***********************************-->
+    <div id="main-wrapper">
+
+        <!--**********************************
+        Nav header start
+    ***********************************-->
+        <%- include('./partials/header_logo'); -%>
+
+            <!--**********************************
+        Nav header end
+    ***********************************-->
+
+            <!--**********************************
+        Header start
+    ***********************************-->
+            <%- include('./partials/header',{titel: language.expense}); -%>
+
+                <!--**********************************
+        Header end ti-comment-alt
+    ***********************************-->
+
+                <!--**********************************
+        Sidebar start
+    ***********************************-->
+                <%- include('./partials/sidebar'); -%>
+
+                    <!--**********************************
+        Sidebar end
+    ***********************************-->
+
+                    <div class="content-body">
+                        <div class="container-fluid">
+                            <!-- row -->
+
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title col-6"><%= language.expense %> </h4>
+                                        <div class="card-title col-6 text-end">
+                                            <a href="/all_expenses/view/add_expenses" class="btn btn-rounded btn-info text-white">
+                                                <%= language.add_expense %> 
+                                                <span class="btn-icon-start text-info">
+                                                    <i class="fa fa-plus color-info"></i>
+                                                </span>
+                                            </a>
+                                        </div>
+                                            
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table id="example" class="table table-responsive-sm text-center">
+                                                <thead>
+                                                    <tr>
+                                                        <th><%= language.no %> </th>
+                                                        <th><%= language.reason %> </th>
+                                                        <th><%= language.date %> </th>
+                                                        <th><%= language.amount %> </th>
+                                                        <th><%= language.action %> </th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    <% var i=1 %>
+                                                        <% expenses_data.forEach((expenses_data)=> { %>
+
+                                                            <% if(master_shop[0].currency_placement == 1) { %>
+                                                                
+                                                                <tr>
+                                                                    <td>
+                                                                        <%= i %>
+                                                                    </td>
+    
+                                                                    <td>
+                                                                        <%= expenses_data.type %>
+                                                                    </td>
+    
+                                                                    <td>
+                                                                        <%= expenses_data.date %>
+                                                                    </td>
+                                                                    
+                                                                    <td>
+                                                                        <%= expenses_data.amount.toLocaleString() %> <%= master_shop[0].currency %>
+                                                                    </td>
+                                                                    
+                                                                    <td>
+                                                                        <button type="button" class="badge badge-lg badge-success">
+                                                                            <a href="/all_expenses/view/<%= expenses_data._id %>" class="text-white">
+                                                                                <i class="la la-pencil"></i> <%= language.edit %> 
+                                                                            </a>
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+
+                                                            <% } else { %>
+
+                                                                <tr>
+                                                                    <td>
+                                                                        <%= i %>
+                                                                    </td>
+    
+                                                                    <td>
+                                                                        <%= expenses_data.type %>
+                                                                    </td>
+    
+                                                                    <td>
+                                                                        <%= expenses_data.date %>
+                                                                    </td>
+                                                                    
+                                                                    <td>
+                                                                        <%= master_shop[0].currency %> <%= expenses_data.amount.toLocaleString() %>
+                                                                    </td>
+                                                                    
+                                                                    <td>
+                                                                        <button type="button" class="badge badge-lg badge-success">
+                                                                            <a href="/all_expenses/view/<%= expenses_data._id %>" class="text-white">
+                                                                                <i class="la la-pencil"></i> <%= language.edit %> 
+                                                                            </a>
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+
+                                                            <% } %>
+
+                                                        <% i++ %>
+                                                    <% }) %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--**********************************
+            Footer start
+        ***********************************-->
+                    <%- include('./partials/footer'); -%>
+
+                        <!--**********************************
+            Footer end
+        ***********************************-->
+
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!-- start Toastr -->
+    <%- include('./partials/toastr'); -%>
+    <!-- End Toastr -->
+
+    <!--**********************************
+        Scripts
+    ***********************************-->
+ 
+    <%- include('./partials/script'); -%>
+
+        <!--**********************************
+        Scripts end
+    ***********************************-->
+</body>
+
+</html>

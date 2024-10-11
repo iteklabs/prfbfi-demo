@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+    <style>
+        body {font-family: Arial, Helvetica, sans-serif;}
+        
+        /* The Modal (background) */
+        .modal {
+          display: none; /* Hidden by default */
+          position: fixed; /* Stay in place */
+          z-index: 9999999999999; /* Sit on top */
+          padding-top: 100px; /* Location of the box */
+          left: 0;
+          top: 0;
+          width: 100%; /* Full width */
+          height: 100%; /* Full height */
+          overflow: auto; /* Enable scroll if needed */
+          background-color: rgb(0,0,0); /* Fallback color */
+          background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+        }
+        
+        /* Modal Content */
+        .modal-content {
+          position: relative;
+          background-color: #fefefe;
+          margin: auto;
+          padding: 0;
+          border: 1px solid #888;
+          width: 50%;
+          box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+          -webkit-animation-name: animatetop;
+          -webkit-animation-duration: 0.4s;
+          animation-name: animatetop;
+          animation-duration: 0.4s
+        }
+        
+        /* Add Animation */
+        @-webkit-keyframes animatetop {
+          from {top:-300px; opacity:0} 
+          to {top:0; opacity:1}
+        }
+        
+        @keyframes animatetop {
+          from {top:-300px; opacity:0}
+          to {top:0; opacity:1}
+        }
+        
+        /* The Close Button */
+        .close {
+          color: white;
+          float: right;
+          font-size: 28px;
+          font-weight: bold;
+        }
+        
+        .close:hover,
+        .close:focus {
+          color: #000;
+          text-decoration: none;
+          cursor: pointer;
+        }
+        
+        .modal-header {
+          padding: 2px 16px;
+          background-color: rgba(34, 34, 51, 0.705);
+          color: white;
+        }
+        
+        .modal-body {padding: 2px 16px;}
+        
+        .modal-footer {
+          padding: 2px 16px;
+          background-color: rgba(34, 34, 51, 0.705);
+          color: white;
+          display: flex;
+          justify-content: center;
+          display: grid;
+            place-items: center;
+        }
+
+        .color-legend {
+            display: flex;
+            align-items: center;
+        }
+
+        .color-box {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+    </style>
+    <script>
+        function saveAndContinue() {
+
+        var strTemp = '';
+        var Invoice = document.getElementById("invoice");
+        var SCRN = document.getElementById("SCRN");
+        var customer = document.getElementById("customer");
+        var date = document.getElementById("date");
+        var warehouse_name = document.getElementById("warehouse_name");
+        // var Room_name = document.getElementById("room");
+        var modal = document.getElementById("myModal");
+
+        if(Invoice.value.length == 0){
+            strTemp += "Document Number is required. <br>" 
+            Invoice.style.borderColor = "red";
+            Invoice.focus()
+        }else{
+            Invoice.style.borderColor = "";
+        }
+
+        if(SCRN.value.length == 0){
+            strTemp += "Supplier/Client Ref Number is required. <br>"
+            SCRN.style.borderColor = "red";
+            SCRN.focus()
+        }else{
+            SCRN.style.borderColor = "";
+        }
+
+        if(customer.value.length == 0){
+            strTemp += "Customers is required. <br>"
+            customer.style.borderColor = "red";
+            customer.focus()
+        }else{
+            customer.style.borderColor = "";
+        }
+
+        if(date.value.length == 0){
+            strTemp += "Date received is required. <br>"
+            date.style.borderColor = "red";
+            date.focus()
+        }else{
+            date.style.borderColor = "";
+        }
+
+        if(warehouse_name.value.length == 0){
+            strTemp += "Warehouse is required. <br>"
+            warehouse_name.style.borderColor = "red";
+            warehouse_name.focus()
+        }else{
+            warehouse_name.style.borderColor = "";
+        }
+
+        // if(Room_name.value.length == 0){
+        //     strTemp += "Room  is required. <br>"
+        //     Room_name.style.borderColor = "red";
+        //     Room_name.focus()
+        // }else{
+        //     Room_name.style.borderColor = "";
+        // }
+
+
+
+        var prod_qty = document.getElementsByName("quantity");
+        var x =1;
+        for (let index = 0; index < prod_qty.length; index++) {
+            const inputElement  = prod_qty[index];
+
+            if(inputElement.value.length == 0){
+                modal.style.display = "none";
+                strTemp += x + ". Quantity  is required. <br>"
+                inputElement.style.borderColor = "red";
+                inputElement.focus()
+            }else{
+                inputElement.style.borderColor = "";
+            }
+            x++;
+            
+        }
+
+
+
+        var table = document.getElementById("sales_tbl_new");
+        var noofrow = table.rows.length -1;
+
+        if(noofrow == 0){
+            strTemp += "Product list is empty. <br>"
+            table.style.borderColor = "red";
+            document.getElementById("product_code").focus()
+        }else{
+            table.style.borderColor = "";
+        }
+
+        if(strTemp.length > 0){
+            modal.style.display = "none";
+            Swal.fire(
+            'Required ',
+            "<h5>" + strTemp + "</h5>",
+            'warning'
+            )
+            return;
+        }
+  
+         document.getElementById("form").submit();
+         modal.style.display = "none";
+         Swal.fire({
+            title: "Loading...",
+            html: "Please wait a moment",
+            allowOutsideClick: false, 
+            })
+        Swal.showLoading()
+        }
+        function clearModalContent() {
+        // Reset the values of elements with specific IDs to empty
+        document.getElementById("SRNC").innerHTML = "";
+        document.getElementById("customers").innerHTML = "";
+        document.getElementById("dateRec").innerHTML = "";
+        document.getElementById("houseware").innerHTML = "";
+        document.getElementById("moor").innerHTML = "";
+
+        // Clear the table inside the modal
+        var modalTable = document.getElementById("purchases_tbl_modal");
+        modalTable.innerHTML = "";
+        }
+
+
+          function showConfirmation() {
+
+            clearModalContent();
+            
+            var html = '';
+            var NodeList = document.getElementsByName("prod_code");
+            var NodeList2 = document.getElementsByName("product_name");
+            var prod_unit = document.getElementsByName("unitodmeasure");
+            var prod_qty = document.getElementsByName("quantity");
+            var stock = document.getElementsByName("stock");
+            var batch_code = document.getElementsByName("batch_code");
+            var product_date = document.getElementsByName("product_date");
+            var expiry_date = document.getElementsByName("expiry_date");
+            var prod_level = document.getElementsByName("level2");
+            var test = document.getElementsByName("test");
+            
+            var nodeVal = '';
+            var productName = '';
+            var valprod_unit = '';
+            var valprod_qty = '';
+            var valstock = '';
+            for (var x = 0; x < NodeList.length; x++) {
+                nodeVal = NodeList[x].value;
+                productName = NodeList2[x].value;
+                valprod_unit = prod_unit[x].value;
+                valprod_qty = prod_qty[x].value;
+                valstock = stock[x].value;
+                valbatch_code = batch_code[x].value;
+                valproduct_date = product_date[x].value;
+                valexpiry_date = expiry_date[x].value;
+                // const selectedIndex = prod_level[x].selectedIndex;
+                // const selectedValue = prod_level[x].value;
+                // valprod_level = prod_level[x].options[selectedIndex].text;
+                valprod_level = prod_level[x].value;
+                valConver = test[x].value;
+                html += '<tr>';
+                html += '<td>';
+                html += '<p>' + nodeVal + '</p>';
+                html += '</td>';
+
+                html += '<td>';
+                html += productName;
+                html += '</td>';
+
+                html += '<td>';
+                html += valbatch_code;
+                html += '</td>';
+
+                html += '<td>';
+                html += valproduct_date;
+                html += '</td>';
+
+                html += '<td>';
+                html += valexpiry_date;
+                html += '</td>';
+
+                html += '<td>';
+                html += valprod_qty;
+                html += '</td>';
+
+                html += '<td>';
+                html += valprod_unit;
+                html += '</td>';
+
+                html += '<td>';
+                html += valConver;
+                html += '</td>';
+
+                html += '<td>';
+                html += valstock;
+                html += '</td>';
+
+                html += '<td>';
+                html += valprod_level;
+                html += '</td>';
+
+                html += '</tr>';
+            }
+
+            var htmlfinal = "";
+            htmlfinal += '<thead class="thead-primary">';
+            htmlfinal += '<tr>';
+            htmlfinal += '<th scope="col">Item Code </th>';
+            htmlfinal += '<th scope="col">Item Description </th>';
+            htmlfinal += '<th scope="col">Batch Code </th>';
+            htmlfinal += '<th scope="col">Production Date </th>';
+            htmlfinal += '<th scope="col">Expiry Date </th>';
+            htmlfinal += '<th scope="col">Quantity </th>';
+            htmlfinal += '<th scope="col">Unit of Measure </th>';
+            htmlfinal += '<th scope="col">Conversion </th>';
+            htmlfinal += '<th scope="col">In Stock </th>';
+            htmlfinal += '<th scope="col">Bin </th>';
+            htmlfinal += '</tr>';
+            htmlfinal += '</thead>';
+            htmlfinal += '<tbody id="tblPage_new_modal">';
+            htmlfinal += html;
+            htmlfinal += '</tbody>';
+
+            var modal = document.getElementById("myModal");
+            var span = document.getElementsByClassName("close")[0];
+
+
+            modal.style.display = "block";
+            span.onclick = function () {
+                modal.style.display = "none";
+            };
+
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "block";
+                }
+            };
+
+  
+
+            var modalContent = document.getElementById("purchases_tbl_modal");
+            modalContent.innerHTML = "";
+
+            document.getElementById("SRNC").innerHTML = document.getElementById("SCRN").value;
+            // document.getElementById("PONumber").innerHTML = document.getElementById("PO_number").value;
+            document.getElementById("customers").innerHTML = document.getElementById("customer").value;
+            document.getElementById("dateRec").innerHTML = document.getElementById("date").value;
+            document.getElementById("houseware").innerHTML = document.getElementById("warehouse_name").value;
+            // document.getElementById("moor").innerHTML = document.getElementById("room").value;
+
+            modalContent.innerHTML = htmlfinal;
+            
+        }
+
+
+    </script>
+</head>
+
+<body onload="showTextbox()">
+    <!--*******************
+        Preloader start
+    ********************-->
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <!--*******************
+        Preloader end
+    ********************-->
+
+    <!--**********************************
+        Main wrapper start
+    ***********************************-->
+    <div id="main-wrapper">
+
+        <!--**********************************
+            Nav header start
+        ***********************************-->
+        <%- include('./partials/header_logo'); -%>
+
+            <!--**********************************
+            Nav header end
+        ***********************************-->
+
+            <!--**********************************
+            Header start
+        ***********************************-->
+            <%- include('./partials/header',{titel: "Outgoing for Finished Goods"}); -%>
+
+                <!--**********************************
+            Header end ti-comment-alt
+        ***********************************-->
+
+                <!--**********************************
+            Sidebar start
+        ***********************************-->
+                <%- include('./partials/sidebar'); -%>
+
+                    <!--**********************************
+            Sidebar end
+        ***********************************-->
+
+                    <!--**********************************
+            Content body start
+        ***********************************-->
+                    <div class="content-body">
+                        <div class="container-fluid">
+
+                            <!-- row -->
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h4 class="card-title"><%= language.add_new_sales %></h4>
+                                            <button type="button" class="btn btn-rounded btn-outline-info"
+                                                onclick="history.back()"><i class="la la-undo"></i> <%= language.go_back %> </button>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-validation">
+
+                                                <form class="needs-validation" action="/all_sales_finished/view/add_sales"
+                                                    method="post" id="form">
+
+                                                    <div class="row mb-3">
+                                                        <div class="col-xl-4 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"> Document Number <span class="text-red">*</span></label>
+                                                                <input type="text" name="invoice" class="form-control"
+                                                                    id="invoice" value="<%= invoice %>" readonly>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xl-4 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"> Supplier / Client Ref Number <span class="text-red">*</span></label>
+                                                                <input type="text" name="SCRN" class="form-control"
+                                                                    id="SCRN" value="">
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="col-xl-4 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"><%= language.customer %>  <span class="text-red">*</span></label>
+                                                                <select class="form-control" name="customer"
+                                                                    id="customer" required>
+                                                                    <option value selected disabled>Select One</option>
+                                                                    <% customer.forEach((customer)=> { %>
+                                                                        <option value="<%= customer.name %>">
+                                                                            <%= customer.name %>
+                                                                        </option>
+                                                                        <% }) %>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-4 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"><%= language.date %> <span class="text-red">*</span></label>
+                                                                <input type="date" name="date" class="form-control"
+                                                                    id="date" required>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <!-- <div class="col-xl-3 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label class="form-label">Expiry date</label>
+                                                            <input type="date" class="form-control" name="expiry_date">
+                                                            </div>
+                                                        </div> -->
+                                                        <!-- <div class="col-xl-4 col-sm-6"> -->
+                                                            
+                                                            
+                                                            <div class="col-xl-3 col-sm-6">
+
+                                                                <div class="form-group">
+                                                                    <label for="invoice_no"><%= language.warehouse %> <span class="text-red">*</span></label>
+                                                                    <select class="form-control" name="warehouse_name"
+                                                                        id="warehouse_name" onchange="SelectRoom(); BayBin();" required>
+                                                                        <option value selected disabled>Select One</option>
+                                                                        <% warehouse.forEach((warehouse)=> { %>
+                                                                            <option value="<%= warehouse.name %>">
+                                                                                <%= warehouse.name %>
+                                                                            </option>
+                                                                            <% }) %>
+                                                                    </select>
+                                                                    
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xl-3 col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label for="invoice_no">Room <span class="text-red">*</span></label>
+                                                                    <!-- <select class="form-control" name="room" id="room"
+                                                                       onchange="showTextbox(); BayBin();" required>
+                                                               
+                                                                    </select> -->
+
+                                                                    <div id="showRoom">
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                    </div>
+                                                    <div class="row mb-3">
+                                                        <div class="col-xl-4 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"><%= language.mode_transpo %> Mode of transportation</label>
+                                                                <input type="text" name="mode_transpo" class="form-control" id="mode_transpo">
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- <div class="col-xl-4 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"><%= language.job_order_no %> Job Order No<span class="text-red">*</span></label>
+                                                                <input type="text" name="job_order_no" class="form-control" id="job_order_no">
+                                                            </div>
+                                                        </div> -->
+
+                                                        <div class="col-xl-4 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="invoice_no"><%= language.name_driver %> Driver's Name</label>
+                                                                <input type="text" name="name_driver" class="form-control" id="name_driver">
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+                                                    <div class="row mb-3">
+                                                        <div class="col-xl-4 col-sm-6">
+                                                            <select class="form-control" id="choice-dropdown" onchange="showTextbox()">
+                                                                <option value="Primary">Please Scan the Barcode...</option>
+                                                                <!-- <option value="">Select an option</option> -->
+                                                                <!-- <option value="Primary">Primary</option> -->
+                                                                <!-- <option value="Secondary">Secondary</option> -->
+                                                            </select>
+                                                        </div>    
+                                                            
+                                              
+                                                             <div class="col-xl-12" id="primary-textbox" style="display: none;">
+                                                                <div class="form-group">
+                                                                    <label for="invoice_no">Barcode<span
+                                                                            class="text-red">*</span></label>
+                                                                    <input type="text" name="product_code" class="form-control" id="product_code">
+                                                                </div>
+                                                             </div>
+                                                             
+                                                             
+                                                              <div class="col-xl-12" id="secondary-textbox" style="display: none;">
+                                                                <div class="form-group">
+                                                                    <label for="invoice_no2">Secondary Barcode  <span
+                                                                            class="text-red">*</span></label>
+                                                                    <input type="text" name="product_code2" class="form-control" id="product_code2">
+                                                                </div>
+                                                              </div>
+                                                        
+                                                    </div>
+
+                                                    <fieldset>
+                                                        <legend>Expiration Color Legend</legend>
+
+                                                        <div class="color-legend">
+                                                            <div class="color-box" style="background-color: red;"></div>
+
+                                                            <span>The product has expired.</span>
+
+                                                        </div>
+                                                        <div class="color-legend">
+                                                            <div class="color-box" style="background-color: grey;"></div>
+                                                            <span>1 month before expiration</span>
+                                                        </div>
+                                                        <div class="color-legend">
+                                                            <div class="color-box" style="background-color: yellow;"></div>
+                                                            <span>2 to 4 months before expiration</span>
+                                                        </div>
+                                                        <div class="color-legend">
+                                                            <div class="color-box" style="background-color: green;"></div>
+                                                            <span>4 months and beyond expiration</span>
+                                                        </div>
+                                                        <!-- Add more color legend items as needed -->
+                                                    </fieldset>
+
+
+                                                    <div class="col-xl-12">
+                                                        <div class="table-responsive">
+                                                            <table class="table primary-table-bordered" id="sales_tbl_new">
+                                                                <thead class="thead-primary">
+                                                                    <tr>
+                                                                        <th scope="col">Item Code </th>
+                                                                        <th scope="col">Item Description </th>
+                                                                        <th scope="col">Primary Barcode </th>
+                                                                        <th scope="col">Batch Code</th>
+                                                                        <th scope="col">Production date</th>
+                                                                        <th scope="col">Expiry date </th>
+                                                                        <th scope="col"><%= language.in_stock %> </th>
+                                                                        <th scope="col"><%= language.quantity %> <span class="text-red">*</span></th>
+                                                                        <th scope="col">Unit of Measure </th>
+                                                                        <th scope="col"> Conversion</th>
+                                                                        <th scope="col"> Room</th>
+                                                                        <th scope="col">Bin </th>
+                                                                        <th scope="col">Action</th>
+                                                                        
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="tblPage_NewOut">
+                                                                    
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-md-8 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label for="note"><%= language.note %> </label>
+                                                                <input type="text" class="form-control"
+                                                                    placeholder="note" id="note" name="note">
+                                                            </div>
+                                                        </div>
+
+                                                       
+                                                    </div>
+
+                                                    <!-- <div class="row">
+                                                        <button class="btn btn-primary" type="submit"
+                                                            id="submit"><%= language.submit %> </button>
+                                                    </div> -->
+                                                </form>
+                                                <div class="row">
+                                                    <button class="btn btn-primary" onclick="showConfirmation()" type="submit"
+                                                        id="purchase_submit"  ><%= language.submit %> </button>
+                                                        <!-- <input class="btn btn-primary"  type="submit"
+                                                        id="purchase_submit" onclick="showConfirmation()" ><%= language.submit %> </input> -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="myModal" class="modal">
+
+                        <!-- Modal content -->
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <span class="close">&times;</span>
+                            <h2> Pre-Final Summary</h2>
+                          </div>
+                          <div class="modal-body">
+
+      
+
+                        <table style="width:50%" >
+                            <thead>
+                            <tr>
+                                <td>Document Number:</td>
+                                <td><b id="Inv"><%= invoice %></b></td>
+                            </tr>
+
+                            <tr>
+                                <td>Supplier/Client Ref Number:</td>
+                                <td><b id="SRNC"></b></td>
+                            </tr>
+
+                            <tr>
+                                <td>Customer: </td>
+                                <td><b id="customers"></b></td>
+                            </tr>
+
+                            <tr>
+                                <td>Date:</td>
+                                <td><b id="dateRec"></b></td>
+                            </tr>
+
+                            <tr>
+                                <td>Warehouse:</td>
+                                <td><b id="houseware"></b></td>
+                            </tr>
+
+                            <tr>
+                                <td>Room:</td>
+                                <td><b id="moor"></b></td>
+                            </tr>
+                        </thead>
+                    </table>
+                            
+                            
+                          </div>
+                          <div class="table-responsive">
+                            <table class="table primary-table-bordered" style="width:100%" id="purchases_tbl_modal">
+
+                            </table>
+                          </div>
+                          
+                          <div class="modal-footer">
+                            <button class="btn btn-primary" onclick="saveAndContinue()">Save and Continue</button>
+                          </div>
+                        </div>
+                      
+                    </div>
+                    <!--**********************************
+            Content body end
+        ***********************************-->
+
+                    <!--**********************************
+            Footer start
+        ***********************************-->
+                    <%- include('./partials/footer'); -%>
+
+                        <!--**********************************
+            Footer end
+        ***********************************-->
+
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!-- start Toastr -->
+    <%- include('./partials/toastr'); -%>
+        <!-- End Toastr -->
+
+        <!--**********************************
+        Scripts
+    ***********************************-->
+        <%- include('./partials/script'); -%>
+
+            <!--**********************************
+        Scripts end
+    ***********************************-->
+</body>
+<script>
+    $(function(){
+        var dtToday = new Date();
+        
+        var month = dtToday.getMonth() + 1;
+        var day = dtToday.getDate();
+        var year = dtToday.getFullYear();
+        if(month < 10)
+            month = '0' + month.toString();
+        if(day < 10)
+            day = '0' + day.toString();
+        
+        var maxDate = year + '-' + month + '-' + day;
+        $('#date').attr('max', maxDate);
+    });
+
+
+
+    function SelectRoom() {
+        var variable = document.getElementById("warehouse_name").value;
+        var selectRoom = $('#showRoom');
+
+        $.ajax({
+            url: '/warehousemap_Income/Rooms_data',
+            method: 'POST',
+            data: { warehouse_name: variable },
+            success: function (response) {
+                selectRoom.empty();
+
+                $.each(response, function (index, data) {
+                    var roomName = data.room_name;
+                    var roomCode = data.room_name;
+
+                    // Create checkbox element instead of option
+                    var checkboxElement = $('<input>')
+                        .attr('type', 'checkbox')
+                        .addClass('form-check-input')
+                        .val(roomName)
+                        .attr("name", "room_name")
+                        .attr("id", "room_data"+index)
+                        .attr('roomcode', roomCode);
+
+                    // Create label for the checkbox
+                    var labelElement = $('<h5>').text(roomName).prepend(checkboxElement);
+
+                    // Append the label to the container
+                    selectRoom.append(labelElement);
+
+                    labelElement.click(function () {
+                        checkboxElement.prop('checked', !checkboxElement.prop('checked'));
+                    });
+
+                    checkboxElement.click(function (event) {
+                        event.stopPropagation();
+                    });
+
+                    // BayBin();
+                    checkboxElement.click(function () {
+                        // BayBin(index);
+                    });
+                });
+            }
+        });
+    }
+    function BayBin(){
+        const selectlevel= document.querySelectorAll(`select[level="levelOslie"]`);
+        const selecttype= document.querySelectorAll(`select[types="types"]`);
+        const selectlevelfloor= document.querySelectorAll(`select[palletsa="palletsa"]`);
+        const selectisle= document.querySelectorAll(`select[isle="isle"]`);
+        const storageData = document.querySelectorAll("[id^='storage']");
+        const rakData = document.querySelectorAll("[id^='rak']");
+        var warehouse = document.getElementById("warehouse_name").value;
+        var room = document.getElementById("room").value;
+        // alert("5000000111")
+        var levels = [];
+        var Isle = [];
+        var type = [];
+        var rack = [];
+        let outputArray = [];
+        if(warehouse == "DRY STORAGE"){
+            switch(room){
+                case "Rack A":
+                levels = [1, 2, 3, 4, 5, 6, 7, 8];
+                Isle = [1,2]; 
+                rack = [1,2,3,4,5]
+                type = ["Level", "Floor"];
+                storage = ["D"];
+                rak = ["A"];
+                break;
+                case "Rack B":
+                levels = [6,5,4,3,2,1];
+                Isle = [1,2]; 
+                rack = [1,2,3,4,5]
+                type = ["Level", "Floor"];
+                storage = ["D"];
+                rak = ["B"];
+                break;
+                case "Shelves":
+                levels = [0];
+                Isle = [0]; 
+                rack = [1,2,3,4,5]
+                type = ["Floor"];
+                storage = ["D"];
+                rak = ["S"];
+                break;
+                case "Receiving Area":
+                levels = [0];
+                Isle = [0]; 
+                rack = [1,2,3,4,5,6, 7,8,9,10,11,12,13,14,15,16];
+                type = ["Floor"];
+                storage = ["D"];
+                rak = ["R"];
+                break;
+            }
+            
+            for (let i = 0; i < selectlevel.length; i++) {
+                var optionsHtml = '';
+                levels.forEach(function (num) {
+                     optionsHtml += '<option value="' + num + '">' + num + '</option>';
+                });
+                 selectlevel[i].innerHTML = optionsHtml;
+            }        
+            
+           
+            for (let i = 0; i < selecttype.length; i++) {
+                var optionsHtml3 = '';
+                type.forEach(function (num) {
+                optionsHtml3 += '<option value="' + num + '">' + num + '</option>';
+                });
+                selecttype[i].innerHTML = optionsHtml3;
+            }
+           
+            
+            for (let i = 0; i < selectisle.length; i++) {
+                var optionsHtml1 = '';
+                Isle.forEach(function (num) {
+                    optionsHtml1 += '<option value="' + num + '">' + num + '</option>';
+                });
+                selectisle[i].innerHTML = optionsHtml1;
+            }
+           
+            
+           
+            for (let i = 0; i < selectlevelfloor.length; i++) {
+                var optionsHtml2 = '';
+                rack.forEach(function (num) {
+                    optionsHtml2 += '<option value="' + num + '">' + num + '</option>';
+                });
+                selectlevelfloor[i].innerHTML = optionsHtml2;
+            }
+
+            for (let i = 0; i < storageData.length; i++) {
+                storageData[i].value = storage[0];
+            }
+
+            for (let i = 0; i < rakData.length; i++) {
+                rakData[i].value = rak[0];
+            }
+        }else if(warehouse == "COLD STORAGE"){
+            switch(room){
+                case "Rack A":
+                levels = [1, 2, 3, 4, 5, 6, 7];
+                Isle = ["B", "F"]; 
+                rack = [1,2,3,4,5]
+                type = ["Level", "Floor"];
+                storage = ["C"];
+                rak = ["A"];
+                break;
+                case "Rack B":
+                levels = [5,4,3,2,1];
+                Isle = ["F", "B", "S"]; 
+                rack = [1,2,3,4,5]
+                type = ["Level", "Floor"];
+                storage = ["C"];
+                rak = ["B"];
+                break;
+                case "Rack C":
+                levels = [1,2,3,4,5];
+                Isle = ["B", "F", "S"]; 
+                rack = [5,4,3,2,1]
+                type = ["Level", "Floor"];
+                storage = ["C"];
+                rak = ["C"];
+                break;
+                case "Rack D":
+                levels = [5,4,3,2,1];
+                Isle = ["F", "B", "S"]; 
+                rack = [1,2,3,4,5];
+                type = ["Level", "Floor"];
+                storage = ["C"];
+                rak = ["D"];
+                break;
+                case "Rack E":
+                levels = [4,3,2,1];
+                Isle = [1,2]; 
+                rack = [1,2,3,4,5];
+                type = ["Level", "Floor"];
+                storage = ["C"];
+                rak = ["E"];
+                break;
+
+                case "Rack F":
+                levels = [1,2,3];
+                Isle = [1,2]; 
+                rack = [1,2,3,4,5];
+                type = ["Level"];
+                storage = ["C"];
+                rak = ["F"];
+                break;
+            }
+            
+            for (let i = 0; i < selectlevel.length; i++) {
+                var optionsHtml = '';
+                levels.forEach(function (num) {
+                     optionsHtml += '<option value="' + num + '">' + num + '</option>';
+                });
+                 selectlevel[i].innerHTML = optionsHtml;
+            }        
+            
+           
+            for (let i = 0; i < selecttype.length; i++) {
+                var optionsHtml3 = '';
+                type.forEach(function (num) {
+                optionsHtml3 += '<option value="' + num + '">' + num + '</option>';
+                });
+                selecttype[i].innerHTML = optionsHtml3;
+            }
+           
+            
+            for (let i = 0; i < selectisle.length; i++) {
+                var optionsHtml1 = '';
+                Isle.forEach(function (num) {
+                    optionsHtml1 += '<option value="' + num + '">' + num + '</option>';
+                });
+                selectisle[i].innerHTML = optionsHtml1;
+            }
+           
+        
+            for (let i = 0; i < selectlevelfloor.length; i++) {
+                var optionsHtml2 = '';
+                rack.forEach(function (num) {
+                    optionsHtml2 += '<option value="' + num + '">' + num + '</option>';
+                });
+                selectlevelfloor[i].innerHTML = optionsHtml2;
+            }
+            for (let i = 0; i < storageData.length; i++) {
+                storageData[i].value = storage[0];
+            }
+
+            for (let i = 0; i < rakData.length; i++) {
+                rakData[i].value = rak[0];
+            }
+        }
+    }
+
+
+
+    function showTextbox() {
+      var dropdown = document.getElementById("choice-dropdown");
+      var selectedChoice = dropdown.value;
+
+      var primaryTextbox = document.getElementById("primary-textbox");
+      var secondaryTextbox = document.getElementById("secondary-textbox");
+
+      if (selectedChoice === "Primary") {
+        primaryTextbox.style.display = "block";
+        secondaryTextbox.style.display = "none";
+        document.getElementById("product_code").focus()
+      } else if (selectedChoice === "Secondary") {
+        primaryTextbox.style.display = "none";
+        secondaryTextbox.style.display = "block";
+      } else {
+        primaryTextbox.style.display = "none";
+        secondaryTextbox.style.display = "none";
+      }
+    }
+    
+    
+    function removeSelfRow(event) {
+       
+       var row = $(event.target).closest('tr');
+       
+       row.remove();
+   }
+
+   $(document).on('click', 'button#remove', function(event) {
+       removeSelfRow(event);
+   });
+
+   function checkExpiration(expirationDate, x) {
+    const currentDate = new Date();
+    const expirationDate1 = new Date(expirationDate); 
+    const timeDifference = expirationDate1 - currentDate;
+    const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
+    if(daysDifference <= 0){
+        const element = document.getElementById("trtable" + x);
+        element.style.backgroundColor = "red";
+    }else if (daysDifference <= 30) {
+        const element = document.getElementById("trtable" + x);
+        element.style.backgroundColor = "grey";
+    } else if (daysDifference <= 60 || daysDifference <= 120) {
+        const element = document.getElementById("trtable" + x);
+        element.style.backgroundColor = "yellow";
+    } else {
+        const element = document.getElementById("trtable" + x);
+        element.style.backgroundColor = "green";
+    }
+    return
+}
+    
+        function ConversionKit(x,c){
+            var unit = document.getElementById("prod_unit"+x).value;
+            var qty = document.getElementById("prod_qty"+x).value;
+            var prod_cat = document.getElementById("prod_cat"+x).value;
+            var prod_othUnit = document.getElementById("primary_unit"+x).value;
+            var prod_othUnit2 = document.getElementById("secondary_unit"+x).value;
+
+            var totalQty = 0;
+            var totalQty1 = 0;
+            var Carton = 0;
+            // console.log(prod_othUnit + " <> " + prod_othUnit2  + " <> " +  prod_cat + " <> " +  qty + " <> " + c)
+
+            if(prod_cat == "S"){
+                totalQty1 = qty/c
+                totalQty = totalQty1 + " " + prod_othUnit
+                Carton =totalQty1;
+            }else if(prod_cat == "P"){
+                totalQty1 = qty*c
+                totalQty = totalQty1 + " " + prod_othUnit2
+                Carton =qty;
+            }
+            document.getElementById("carton"+x).value = Carton;
+
+            // console.log(totalQty1 + " <> " + prod_cat + " <> " + Carton)
+            
+            document.getElementById("Conver"+x).value = totalQty 
+
+        }
+
+
+$(document).ready(function() {
+    $('#product_code').on('keydown', function(e) {
+    if (e.which === 13) {
+      e.preventDefault();
+      return false;
+    }
+  });
+  // AJAX request when the value in the text box changes
+  var x = 0;
+  $('#product_code').on('input', function() {
+    var productCode = $(this).val(); // Get the entered product code
+    var warehouseName = $('#warehouse_name').val();
+    var rooms = $('#room').val();
+    var valCatwars ;
+    if(warehouseName == "DRY GOODS"){
+        valCatwars = "DG";
+    }else{
+        valCatwars = "FG";
+    }
+    
+    // Check if the product code already exists in the table
+    var isProductExists = false;
+    $('#tblPage_NewOut tr').each(function() {
+      var existingProductCode = $(this).find('td:nth-child(2)').text();
+      if (existingProductCode === productCode) {
+        isProductExists = true;
+        return false; // Exit the loop if the product is found
+      }
+    });
+
+    if (!isProductExists) {
+      // AJAX request to fetch data based on the entered product code
+
+        var rooms_data = document.getElementsByName("room_name");
+        var RoomAssign = [];
+
+        for (let index = 0; index < rooms_data.length; index++) {
+            const element = rooms_data[index];
+
+            if (element.checked) {
+                RoomAssign.push(element.value);
+            }
+        }
+
+        var output = RoomAssign.join(',');
+
+
+      $.ajax({
+        url: '/all_sales_finished/barcode_scanner', // Replace with your backend endpoint URL
+        method: 'POST',
+        data: { product_code: productCode, warehouse_name: warehouseName, rooms_data: rooms, Roomslist:output }, // Pass the product code as a parameter
+        success: function(response) {
+          // Populate the table with the received data
+          $.each(response, function(index, data1) {
+            data1.forEach((data) => {
+            if(data.product_stock > 0){
+
+                console.log(data.computeUsed)
+                var Instock = data.product_stock;
+                var TotalQty = 0;
+                var theUnit ;
+                if(data.computeUsed == "P"){
+                    TotalQty = data.product_stock;
+                    theUnit = data.unit;
+                    // if(data.product_cat == "S"){
+                    //     TotalQty = data.product_stock / data.maxPerUnit ;
+                    // }
+
+                }else if(data.computeUsed == "S"){
+                    TotalQty = data.product_stock * data.maxPerUnit;
+                    if(data.product_cat == "P"){
+                        TotalQty = data.product_stock * data.maxPerUnit ;
+                    }
+
+                    theUnit = data.secondary_unit;
+                }
+                
+                
+                var row = $('<tr id="trtable'+x+'">');
+                
+                row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 150px;" name="prod_code" value="' + data.product_code + '" readonly>'));
+                row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" style="width: 400px;" name="product_name" value="' + data.name + '" readonly>'));
+                row.append($('<td>').html('<input type="text" class="form-control" style="width: 200px;" name="primary_code" value="' + data.primary_code + '" readonly>'));
+                row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" name="batch_code" value="'+data.batch_code+'">'));
+                row.append($('<td>').html('<input type="date" class="form-control" style="width: 150px;" name="product_date" value="' + data.production_date + '" readonly>'));  
+                row.append($('<td>').html('<input type="date" class="form-control" style="width: 150px;" name="expiry_date" value="' + data.expiry_date + '" readonly>'));
+                row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" name="stock" value="' + TotalQty + '" readonly>'));
+                
+                row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" name="quantity" id="prod_qty'+x+'" onkeyup="ConversionKit('+x+','+data.maxPerUnit+')" value="">'));
+                
+                row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" name="unitodmeasure" value="' + theUnit + '" readonly>'));
+                row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" name="test" id="Conver'+x+'" value="" readonly>'));
+                row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" name="RoomAssigned" id="RoomAssigned'+x+'" value="'+data.roomNamed+'" readonly>'));
+                
+                row.append($('<td>').html('<input type="text" class="form-control" style="width: 150px;" name="level2" value="' + valCatwars+data.level + '" readonly>'));
+                row.append($('<td>').html('<button type="button" class="btn btn-square btn-dark" id="remove">Remove</button>'));
+                
+
+                $('<input>').attr({
+                    type: 'hidden',
+                    id: 'level',
+                    name: 'level',
+                    value: data.level
+                }).appendTo(row);
+
+
+                $('<input>').attr({
+                    type: 'hidden',
+                    id: 'primary_unit'+x,
+                    name: 'primary_unit',
+                    value: data.unit
+                }).appendTo(row);
+
+
+                $('<input>').attr({
+                    type: 'hidden',
+                    id: 'secondary_unit'+x,
+                    name: 'secondary_unit',
+                    value: data.secondary_unit
+                }).appendTo(row);
+
+                $('<input>').attr({
+                    type: 'hidden',
+                    id: 'secondary_code',
+                    name: 'secondary_code',
+                    value: data.secondary_code
+                }).appendTo(row);
+
+                $('<input>').attr({
+                    type: 'hidden',
+                    id: 'storage',
+                    name: 'storage',
+                    value: data.storage
+                }).appendTo(row);
+
+                $('<input>').attr({
+                    type: 'hidden',
+                    id: 'rak',
+                    name: 'rak',
+                    value: data.rack
+                }).appendTo(row);
+
+
+                $('<input>').attr({
+                    type: 'hidden',
+                    id: 'max_per_unit',
+                    name: 'max_per_unit',
+                    value: data.maxPerUnit
+                }).appendTo(row);
+
+
+                $('<input>').attr({
+                    type: 'hidden',
+                    id: 'prod_unit'+x,
+                    name: 'prod_unit',
+                    value: data.unit
+                }).appendTo(row);
+
+
+                $('<input>').attr({
+                    type: 'hidden',
+                    id: 'prod_cat'+x,
+                    name: 'prod_cat',
+                    value: data.computeUsed
+                }).appendTo(row);
+
+
+                $('<input>').attr({
+                    type: 'hidden',
+                    id: 'carton'+x,
+                    name: 'carton',
+                    value: ""
+                }).appendTo(row);
+
+                $('<input>').attr({
+                    type: 'hidden',
+                    id: 'prod_invoice'+x,
+                    name: 'prod_invoice',
+                    value: data.invoice
+                }).appendTo(row);
+
+
+                $('<input>').attr({
+                    type: 'hidden',
+                    id: 'id_transaction_from'+x,
+                    name: 'id_transaction_from',
+                    value: data._id
+                }).appendTo(row);
+
+
+                $('#tblPage_NewOut').append(row);
+
+                checkExpiration(data.expiry_date , x);
+                x++;
+
+                
+            }
+         })    
+          });
+          
+          // Clear the product code input field
+          $("#product_code").val('');
+        },
+        error: function(xhr, status, error) {
+            $("#product_code").val('');
+            Swal.fire(
+            '',
+            'We were unable to locate the barcode you entered. Please try scanning another barcode.',
+            'warning'
+            )
+        }
+      });
+    }
+  });
+});
+</script>
+</html>

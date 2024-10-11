@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head'); -%>
+      
+</head>
+
+<body>
+    <!--*******************
+        Preloader start
+    ********************-->
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <!--*******************
+        Preloader end
+    ********************-->
+
+    <!--**********************************
+        Main wrapper start
+    ***********************************-->
+    <div id="main-wrapper">
+
+        <!--**********************************
+            Nav header start
+        ***********************************-->
+        <%- include('./partials/header_logo'); -%>
+
+            <!--**********************************
+            Nav header end
+        ***********************************-->
+
+            <!--**********************************
+            Header start
+        ***********************************-->
+            <%- include('./partials/header',{titel: language.manage_product}); -%>
+
+                <!--**********************************
+            Header end ti-comment-alt
+        ***********************************-->
+
+                <!--**********************************
+            Sidebar start
+        ***********************************-->
+                <%- include('./partials/sidebar'); -%>
+
+                    <!--**********************************
+            Sidebar end
+        ***********************************-->
+
+                    <!--**********************************
+            Content body start
+        ***********************************-->
+                    <div class="content-body">
+                        <div class="container-fluid">
+
+                            <!-- row -->
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h4 class="card-title "><%= language.add_products %> </h4>
+                                            <button type="button" class="btn btn-rounded btn-outline-info " onclick="history.back()"><i class="la la-undo"></i> <%= language.go_back %></button>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-validation">
+                                                <form class="needs-validation" action="/products/view/add_products" method="post" enctype="multipart/form-data">
+                                                    <div class="row">
+
+                                                        <!-- left side -->
+
+                                                        <div class="col-xl-4">
+                                                            <center>
+                                                                <div class="form-input">
+                                                                    
+                                                                    <img id="file-preview" width="250px" height="325px" src="/images/dummy-user.png"
+                                                                        alt="image">
+                                                                   
+                                                                    <input class="d-none" type="file" id="file-1" name="image"
+                                                                        onchange="showPreview(event)">
+                
+                                                                </div>
+
+
+                                                            </center>
+                                                            <div class="d-flex align-items-end">
+                                                                <label class="btn btn-primary mt-4 w-100" id="add_product_image" for="file-1"><%= language.upload_image %></label>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- right side -->
+
+                                                        <div class="col-xl-8">
+                                                            <div class="row">
+                                                                <div class="mb-3 col-md-6">
+                                                                    <label class="form-label"><%= language.name %> <span class="text-red">*</span></label>
+                                                                    <input type="text" placeholder="Name" class="form-control"
+                                                                        name="name" required>
+                                                                </div>
+
+                                                                <div class="mb-3 col-md-6">
+                                                                    <label class="form-label"><%= language.category %> <span class="text-red">*</span></label>
+                                                                    <select class="form-control" name="category" id="category" required>
+                                                                        <option value selected disabled>Select One</option>
+                                                                        <% categories.forEach((categories) => { %>
+                                                                            <option value="<%= categories.name %>"><%= categories.name %></option>
+                                                                        <% }) %>
+                                                                    </select>
+                                                                </div>
+                                                                
+                                                            </div>
+
+
+                                                            <div class="row">
+                                                                <div class="mb-3 col-md-6">
+                                                                    <label class="form-label"><%= language.brands %> <span class="text-red">*</span></label>
+                                                                    <select class="form-control" name="brand" id="brand" required>
+                                                                        <option value selected disabled>Select One</option>
+                                                                        <% brands.forEach((brands) => { %>
+                                                                            <option value="<%= brands.name %>"><%= brands.name %></option>
+                                                                        <% }) %>
+                                                                    </select>
+                                                                </div>
+
+                                                                <!--<div class="mb-3 col-md-6">-->
+                                                                <!--    <label class="form-label"><%= language.sku %><span class="text-red">*</span></label>-->
+                                                                <!--    <input type="text" placeholder="SKU" class="form-control"-->
+                                                                <!--        name="sku" required>-->
+                                                                <!--</div>-->
+                                                                
+                                                                
+                                                               
+                                                                
+                                                                
+                                                                
+                                                                <div class="mb-2 col-md-6">
+                                                                    <label class="form-label"><%= language.alert_qty %></label>
+                                                                    <input type="number" placeholder="Quantity" class="form-control"
+                                                                        name="alertquantity">
+                                                                </div>
+
+                                                                <div class="mb-3 col-md-6">
+                                                                    <input type="hidden" class="form-control"
+                                                                        name="stock" value="0">
+                                                                </div>
+
+                                                            </div>
+
+                                                            <div class="row">
+                                                                 <div class="mb-3 col-md-6">
+                                                                    <label class="form-label"><%= language.units %> <span class="text-red">*</span></label>
+                                                                    <select class="form-control" name="unit" id="unit" onchange="ChangedLabel()" required>
+                                                                        <option value selected disabled>Select One</option>
+                                                                        <% units.forEach((units) => { %>
+                                                                            <option value="<%= units.name %>"><%= units.name %></option>
+                                                                        <% }) %>
+                                                                    </select>
+                                                                </div>
+                                                                
+                                                                
+                                                                 <div class="mb-3 col-md-6">
+                                                                    <label class="form-label">Secondary <%= language.units %> <span class="text-red">*</span></label>
+                                                                    <select class="form-control" name="second_unit" id="second_unit" onchange="ChangedLabel()" required>
+                                                                        <option value selected disabled>Select One</option>
+                                                                        <% units.forEach((units) => { %>
+                                                                            <option value="<%= units.name %>"><%= units.name %></option>
+                                                                        <% }) %>
+                                                                    </select>
+                                                                </div>
+
+                                                                
+                                                            </div>
+
+                                                            <div class="row">
+                                                                
+                                                                <div class="mb-2 col-md-3">
+                                                                    <label class="form-label">Primary Barcode</label>
+                                                                    <input type="text" placeholder="Primary Code" class="form-control"
+                                                                        name="primary_ItemCode">
+                                                                </div>
+                                                                
+                                                                
+                                                                <div class="mb-2 col-md-3">
+                                                                    <label class="form-label">Secondary Barcode</label>
+                                                                    <input type="text" placeholder="Secondary Code" class="form-control"
+                                                                        name="second_ItemCode">
+                                                                </div>
+                                                                
+                                                                <div class="mb-3 col-md-3">
+                                                                    <label class="form-label"><%= language.product_code %> / Item Code</label>
+                                                                    <input type="text" placeholder="Product Code" class="form-control" name="product_code" id="product_code1" required>
+                                                                </div>
+
+                                                                <div class="mb-3 col-md-3">
+                                                                    <label class="form-label">No. of <b id="maxPerSecunit"></b> per <b id="maxPerunit"></b></label>
+                                                                    <input type="text" placeholder="" class="form-control" name="maxPerUnit" id="maxPerUnit" required>
+                                                                </div>
+
+                                                                <div class="mb-3 col-md-3">
+                                                                    <label class="form-label">Maximum no. per pallet</label>
+                                                                    <input type="text" placeholder="" class="form-control" name="MaxPerProduct" id="MaxPerProduct" required>
+                                                                </div>
+
+
+                                                                <div class="mb-3 col-md-3">
+                                                                    <label class="form-label">Product Category</label>
+                                                                    <select class="form-control" name="prod_catdata" id="prod_catdata" required>
+                                                                        <option>Select</option>
+                                                                        <option>Raw Materials</option>
+                                                                        <option>Finished Goods</option>
+                                                                    </select>
+                                                                </div>
+
+
+                                                                
+
+                                                                <!-- <div class="mb-3 col-md-3">
+                                                                    <button type="button" class="btn btn-primary btn-sm mt-4" id="gen_code" onclick="gfg_Run()"><i class="fa fa-refresh" aria-hidden="true" ></i> <%= language.generate_code %></button>
+                                                                </div> -->
+                                                                
+                                                                
+                                                            </div>
+                                                            
+                                              
+
+                                                        </div>
+                                                        
+                                                        
+
+                                                        <hr>
+
+                                                    
+                                                           
+                                                      
+
+
+
+                                                        <div class="text-end">
+                                                            <button class="btn btn-primary mt-4 w-25" type="submit"><%= language.submit %></button>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--**********************************
+            Content body end
+        ***********************************-->
+
+                    <!--**********************************
+            Footer start
+        ***********************************-->
+                    <%- include('./partials/footer'); -%>
+
+                        <!--**********************************
+            Footer end
+        ***********************************-->
+
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!--**********************************
+        Scripts
+    ***********************************-->
+
+        <%- include('./partials/script'); -%>
+        <script>
+            function ChangedLabel(){
+                var Primary = document.getElementById("unit").value;
+                var Secondary = document.getElementById("second_unit").value;
+                document.getElementById("maxPerSecunit").innerHTML = Secondary
+                document.getElementById("maxPerunit").innerHTML = Primary  
+            }
+        </script>
+
+    <!--**********************************
+        Scripts end
+    ***********************************-->
+</body>
+
+</html>

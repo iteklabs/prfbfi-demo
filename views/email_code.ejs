@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+
+<head>
+    <%- include('./partials/head'); -%>
+
+    <style>
+        .modal {
+          display: none; /* Hidden by default */
+          position: fixed; /* Stay in place */
+          z-index: 1; /* Sit on top */
+          padding-top: 100px; /* Location of the box */
+          left: 0;
+          top: 0;
+          width: 100%; /* Full width */
+          height: 100%; /* Full height */
+          overflow: auto; /* Enable scroll if needed */
+          background-color: rgb(0,0,0); /* Fallback color */
+          background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+        }
+
+        /* Add Animation */
+        @-webkit-keyframes animatetop {
+          from {top:-300px; opacity:0} 
+          to {top:0; opacity:1}
+        }
+        
+        @keyframes animatetop {
+          from {top:-300px; opacity:0}
+          to {top:0; opacity:1}
+        }
+    </style>
+
+</head>
+
+<body class="h-100">
+    <div class="authincation h-100">
+        <div class="container h-100">
+            <div class="row justify-content-center h-100 align-items-center">
+                <div class="col-md-6">
+                    <div class="authincation-content">
+                        <div class="row no-gutters">
+                            <div class="col-xl-12">
+                                <div class="auth-form">
+
+									<div class="text-center mb-3 text-nowrap">
+										<img src="/upload/<%= master_shop[0].image %>" class="logo-abbr mx-2 rounded" width="76.5px" height="76.5px">
+									</div>
+                                    
+                                    <h4 class="text-center mb-4">Password Reset</h4><div id="getmsg"></div>
+                                    
+
+                                        <!-- <form action="/forgotPassword/code" method="post" id="login_form"> -->
+                                            <div class="form-group">
+                                                <label class="mb-1"><strong>Enter Valid Code</strong></label>
+                                                <input type="text" class="form-control" placeholder="Enter Valid Code" name="code"  id="code" required>
+                                            </div>
+    
+                                            
+    
+                                            <div class="text-center">
+                                                <button id="sub_activate" class="btn btn-primary btn-block">Validate My Account</button>
+                                            </div>
+                                        <!-- </form>                                         -->
+
+                                        
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    
+        <div class="modal" id="EditModal">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary ">
+                        <h5 class="modal-title text-white" id="EditModalLabel">
+                            Password Reset
+                        </h5>
+
+                    </div>
+                    <div class="modal-body">
+                        <form id="form" action="/forgotPassword/code_password/" method="post">
+
+                            <div class="row">
+                                <div class="mb-3 col-md-6">
+                                    <label for="recipient-name" class="col-form-label">Password <span class="text-red">*</span>
+                                    </label>
+                                    <input type="password" class="form-control" id="password"
+                                        value="" name="password" required>
+                                </div>
+    
+                                <div class="mb-3 col-md-6">
+                                    <label for="recipient-email" class="col-form-label">Confirm Password<span class="text-red">*</span>
+                                    </label>
+                                    <input type="password" class="form-control" id="cpassword"
+                                        value="" name="cpassword" required>
+                                </div>
+                            </div>
+                            <input type="hidden" name="email" id="email" value="">
+                            <input type="hidden" name="codex" id="codex" value="">
+
+                        </form>
+                        
+                        
+                        
+                      
+                        <button type="submit" class="btn btn-primary w-100" onclick="CheckingConfirmData();">Submit</button>
+
+                    </div>
+                    <div class="modal-footer">
+                        <div class="d-flex">
+                            <button type="button" class="btn btn-danger"
+                                data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    <!-- start Toastr -->
+    <%- include('./partials/toastr'); -%>
+        <!-- End Toastr -->
+
+    <!--**********************************
+        Scripts
+    ***********************************-->
+
+    <%- include('./partials/script'); -%>
+
+
+    <script>
+
+        function CheckingConfirmData(){
+            var password = document.getElementById("password").value;
+            var cpassword = document.getElementById("cpassword").value;
+            var modal = document.getElementById("EditModal");
+            var strTemp = '';
+            if(password != cpassword){
+                strTemp += "Password is not match. <br>";
+            }
+
+            if(strTemp.length > 0){
+                Swal.fire(
+                '',
+                "<h1>" + strTemp + "</h1>",
+                'warning'
+                )
+                return;
+                }
+            document.getElementById("form").submit();
+            modal.style.display = "none";
+            Swal.fire({
+            title: "Loading...",
+            html: "Please wait a moment",
+            allowOutsideClick: false, 
+            })
+             Swal.showLoading()
+        }
+
+
+
+        $('#sub_activate').click(function(){
+           
+            var codeNum = document.getElementById("code").value;
+            $.ajax({
+                url: '/forgotPassword/code/',
+                type: 'POST',
+                data: { code: codeNum },
+                success: function(response) {
+                    console.log(response.length)
+                    if(response.length > 0){
+                        $.each(response, function(index, data) {
+                            var modal = document.getElementById("EditModal");
+                            modal.style.display = "block";
+                            var span = document.getElementsByClassName("btn btn-danger")[0];
+                            span.onclick = function () {
+                                modal.style.display = "none";
+                            };
+
+                            var email = document.getElementById("email").value = data.email
+                      
+                            document.getElementById("codex").value = document.getElementById("code").value
+                        })
+                    }else{
+                        Swal.fire(
+                        '',
+                        "<h1> Code is Invalid</h1>",
+                        'error'
+                        )
+                    }
+                }
+            })
+        });
+    </script>
+
+</body>
+
+</html>

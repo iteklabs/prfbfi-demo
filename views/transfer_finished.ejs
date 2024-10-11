@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./partials/head'); -%>
+
+</head>
+<body>
+     <!--*******************
+        Preloader start
+    ********************-->
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <!--*******************
+        Preloader end
+    ********************-->
+
+    <!--**********************************
+        Main wrapper start
+    ***********************************-->
+    <div id="main-wrapper">
+
+        <!--**********************************
+            Nav header start
+        ***********************************-->
+        <%- include('./partials/header_logo'); -%>
+
+        <!--**********************************
+            Nav header end
+        ***********************************-->
+
+        <!--**********************************
+            Header start
+        ***********************************-->
+        <%- include('./partials/header',{titel: "Transfer for Finished Goods"}); -%>
+
+        <!--**********************************
+            Header end ti-comment-alt
+        ***********************************-->
+
+        <!--**********************************
+            Sidebar start
+        ***********************************-->
+        <%- include('./partials/sidebar'); -%>
+
+        <!--**********************************
+            Sidebar end
+        ***********************************-->
+
+        <div class="content-body">
+            <div class="container-fluid">
+                <!-- row -->
+
+                <div class="col-lg-12">
+                    <div class="card">
+
+                        <div class="card-header">
+                            <h4 class="card-title col-6"><%= language.all_transfers %> </h4>
+                            <div class="card-title col-6 text-end">
+                                <a href="/transfer_finished/view/add_transfer" class="btn btn-rounded btn-info text-white">
+                                    <%= language.add_transfers %> 
+                                    <span class="btn-icon-start text-info">
+                                        <i class="fa fa-plus color-info"></i>
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="example"
+                                    class="table table-responsive-sm text-center">
+                                    <thead>
+                                        <tr>
+
+                                            <th>Document Number</th>
+                                            <th><%= language.date %></th>
+                                            <th><%= language.from %> Warehouse </th>
+                                            <th><%= language.from %> Room </th>
+                                            <th><%= language.to %> Warehouse </th>
+                                            <th><%= language.to %> Room </th>
+                                            <th><%= language.to %> Status </th>
+                                            <th>Print </th>
+                                            <!-- <th><%= language.action %> </th> -->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <% var i = 1 %>
+                                    <% transfer.forEach((transfer)=> { %>
+                                        <tr>
+                                            <td>
+                                                <%= transfer.invoice %>
+                                            </td>
+
+                                            <td>
+                                                <%= transfer.date %>
+                                            </td>
+
+                                            <td>
+                                                <%= transfer.from_warehouse %>
+                                            </td>
+
+                                            <td>
+                                                <%= transfer.from_room_name %>
+                                            </td>
+
+                                            <td>
+                                                <%= transfer.to_warehouse %>
+                                            </td>
+
+                                            <td>
+                                                <%= transfer.to_room_name %>
+                                            </td>
+
+                                            <td>
+                                                <% if(transfer.finalize == "True"){ %>
+                                                    Finalized
+                                                <% } else { %>
+                                                    Pre-Finalize
+                                                <% } %>
+                                            </td>
+
+
+                                            <td class="text-nowrap">
+                                                <% if(transfer.finalize == "True"){ %>
+
+                                                    <!-- <a href="/picking_list/PDF_transfer/<%= transfer._id %>" id="barcode" data-id="<%= transfer._id %>"
+                                                        class="btn btn-warning btn-sm">
+                                                        <i class="feather icon-printer"></i>
+                                                    </a> -->
+
+                                                    <a href="/transfer_finished/preview/<%= transfer._id %>">
+                                                        <button type="button"
+                                                            class="btn btn-success btn-xl m-1 mx-3">view </button>
+                                                    </a>
+                                                   
+                                                <% } else { %>
+
+                        
+                                                    <a href="/transfer_finished/preview/<%= transfer._id %>">
+                                                        <button type="button"
+                                                            class="btn btn-success btn-xl m-1 mx-3">view </button>
+                                                    </a>
+                                            
+                                            
+                                                <% } %>
+                                            </td>
+
+                                            <!-- <td>
+                                                <a href="/transfer_finished/view/<%= transfer._id %>">
+                                                    <button type="button"
+                                                        class="btn btn-success btn-xl m-1 mx-3"><%= language. edit %> </button>
+                                                </a>
+                                            </td> -->
+
+                                        </tr>
+                                    <% i++ %>
+                                    <% }) %>
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--**********************************
+            Footer start
+        ***********************************-->
+        <%- include('./partials/footer'); -%>
+
+        <!--**********************************
+            Footer end
+        ***********************************-->   
+
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!-- start Toastr -->
+    <%- include('./partials/toastr'); -%>
+    <!-- End Toastr -->
+
+
+    <!--**********************************
+        Scripts
+    ***********************************-->
+   
+	<%- include('./partials/script'); -%>
+
+	<!--**********************************
+        Scripts end
+    ***********************************-->
+</body>
+</html>
